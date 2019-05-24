@@ -1,0 +1,62 @@
+<mat-card class="add-match-container">
+  <form class="add-match-form">
+    <div class="team1">
+      <h2>Team1</h2>
+      <div class="result">
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+          <mat-button-toggle value="0">0</mat-button-toggle>
+          <mat-button-toggle value="1">1</mat-button-toggle>
+          <mat-button-toggle value="2">2</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-form-field>
+        <mat-label>Select User</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let user of users" [value]="user.firstname">
+            {{user.firstname}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Select User</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let user of users" [value]="user.firstname">
+            {{user.firstname}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="versus">
+      vs.
+    </div>
+    <div class="team2">
+      <h2>Team2</h2>
+      <div class="result">
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+          <mat-button-toggle value="0">0</mat-button-toggle>
+          <mat-button-toggle value="1">1</mat-button-toggle>
+          <mat-button-toggle value="2">2</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-form-field>
+        <mat-label>Select User</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let user of users" [value]="user.firstname">
+            {{user.firstname}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Select User</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let user of users" [value]="user.firstname">
+            {{user.firstname}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+  <mat-card-actions>
+    <button mat-raised-button color="primary">Save</button>
+  </mat-card-actions>
+</mat-card>

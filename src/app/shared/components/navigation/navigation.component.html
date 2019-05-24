@@ -1,0 +1,54 @@
+<div class="navigation-container" [class.is-mobile]="mobileQuery.matches">
+  <mat-toolbar color="primary" class="navigation-toolbar">
+    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    <h1 class="app-name">{{'app.name' | translate}}</h1>
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="menuLanguage">
+      <mat-icon class="icon" aria-hidden="false" aria-label="language icon">language</mat-icon>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menuPerson">
+      <mat-icon class="icon" aria-hidden="false" aria-label="personal icon">person</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container"
+                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/" routerLinkActive="active">Match</a>
+        <a mat-list-item routerLink="/statistic" routerLinkActive="active">Statistik</a>
+        <a mat-list-item routerLink="/tournament" routerLinkActive="active">Turniere</a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+<mat-menu #menuLanguage="matMenu">
+  <button mat-menu-item (click)="changeLanguage('de')">
+    <span>Deutsch</span>
+  </button>
+  <button mat-menu-item (click)="changeLanguage('en')">
+    <span>Englisch</span>
+  </button>
+</mat-menu>
+
+
+<mat-menu #menuPerson="matMenu">
+  <button mat-menu-item>
+    <mat-icon>dialpad</mat-icon>
+    <span>Redial</span>
+  </button>
+  <button mat-menu-item disabled>
+    <mat-icon>voicemail</mat-icon>
+    <span>Check voicemail</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon>notifications_off</mat-icon>
+    <span>Disable alerts</span>
+  </button>
+</mat-menu>
