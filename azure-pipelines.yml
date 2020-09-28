@@ -31,5 +31,5 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'firebase deploy --token "$(Firebase Token)" -m "$(Build.BuildNumber)"'
+    script: 'firebase deploy  use evia-desk --token "$(Firebase Token)" -m "$(Build.BuildNumber)"'
   displayName: 'firebase publish -m "$(Build.BuildNumber)"'
