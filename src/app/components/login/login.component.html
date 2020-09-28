@@ -1,0 +1,27 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <h2>{{ 'auth.login' | translate}}</h2>
+      <mat-error *ngIf="loginInvalid">
+        {{ 'auth.error.recognised' | translate}}
+      </mat-error>
+      <mat-form-field class="full-width-input">
+        <input matInput [placeholder]="'auth.email' | translate" formControlName="username" required>
+        <mat-error>
+          {{ 'auth.error.email' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input matInput type="password" [placeholder]="'auth.password' | translate" formControlName="password" required>
+        <mat-error>
+          {{ 'auth.error.password' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary">{{ 'auth.login' | translate}}</button>
+    </form>
+  </mat-card-content>
+  <mat-card-footer>
+    <button mat-button color="primary" routerLink="/reset-password">{{ 'auth.forgotPassword' | translate}}</button>
+    <button mat-button color="primary" routerLink="/register">{{ 'auth.register' | translate}}</button>
+  </mat-card-footer>
+</mat-card>

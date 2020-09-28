@@ -1,0 +1,6 @@
+{
+    "i18n-ally.localesPaths": [
+        "src/assets/i18n",
+        "dist/kicker-portal/assets/i18n"
+    ]
+}

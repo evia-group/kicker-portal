@@ -1,0 +1,45 @@
+{
+  "app": {
+    "name": "Kicker Portal",
+    "tournaments": "Tournaments",
+    "matches": "Matches",
+    "statistics": "Statistics",
+    "matchmaking": "Search Match",
+    "language": {
+      "de": "German",
+      "en": "English"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "kicker": "Kicker"
+    },
+    "settings": "Settings",
+    "logout": "Login"
+  },
+  "auth": {
+    "email": "e-mail",
+    "password": "password",
+    "register": "register",
+    "login": "login",
+    "forgotPassword": "forgot password",
+    "name": "name",
+    "backToLogin": "back to login",
+    "error": {
+      "recognised": "The username and password were not recognised",
+      "email": "Please provide a valid email address",
+      "password": "Please provide a valid password",
+      "name": "Please provide a valid name"
+    }
+  },
+  "common": {
+    "save": {
+      "": "save",
+      "match": "save match"
+    },
+    "team1": "Team 1",
+    "team2": "Team 2",
+    "team": "Team",
+    "domination": "domination",
+    "player": "Player"
+  }
+}

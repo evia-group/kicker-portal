@@ -1,3 +1,40 @@
+.match-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: auto;
+
+  .match-header {
+    display: grid;
+    grid-template-columns: auto 5% 5% auto;
+
+    & * {
+      text-align: center;
+    }
+  }
+
+  .spacer {
+    position: absolute;
+    border:none;
+    border-top:1px dotted #333333;
+    margin-left: calc(50% - 17px);
+    background-color:#333333;
+    width:1px;
+    height: 93%;
+  }
+
+  .mat-divider {
+    position: relative;
+    margin: 10px 0;
+  }
+
+  .mat-card-actions {
+    display: flex;
+    justify-content: center;
+  }
+}
+
 .add-match-container {
   height: 100%;
   .add-match-form {
@@ -19,4 +56,6 @@
     }
   }
 }
+
+
 

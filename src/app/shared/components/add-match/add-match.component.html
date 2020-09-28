@@ -1,62 +1,40 @@
-<mat-card class="add-match-container">
-  <form class="add-match-form">
-    <div class="team1">
-      <h2>Team1</h2>
-      <div class="result">
-        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-          <mat-button-toggle value="0">0</mat-button-toggle>
-          <mat-button-toggle value="1">1</mat-button-toggle>
-          <mat-button-toggle value="2">2</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <mat-form-field>
-        <mat-label>Select User</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let user of users" [value]="user.firstname">
-            {{user.firstname}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Select User</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let user of users" [value]="user.firstname">
-            {{user.firstname}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="versus">
-      vs.
-    </div>
-    <div class="team2">
-      <h2>Team2</h2>
-      <div class="result">
-        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-          <mat-button-toggle value="0">0</mat-button-toggle>
-          <mat-button-toggle value="1">1</mat-button-toggle>
-          <mat-button-toggle value="2">2</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <mat-form-field>
-        <mat-label>Select User</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let user of users" [value]="user.firstname">
-            {{user.firstname}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Select User</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let user of users" [value]="user.firstname">
-            {{user.firstname}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+<mat-card class="match-container">
+  <hr class="spacer"/>
+  <div class="match-header">
+    <div>{{'common.team1' | translate}}</div>
+    <div>{{ getWins('team1') }}</div>
+    <div>{{ getWins('team2') }}</div>
+    <div>{{'common.team2' | translate}}</div>
+  </div>
+  <mat-divider></mat-divider>
+  <form [formGroup]="addMatchForm" (ngSubmit)="saveMatch()">
+    <app-select-players [players]="data"
+                        [matchForm]="addMatchForm"
+                        [showingTeams]="showingTeams"></app-select-players>
+    <mat-divider></mat-divider>
+
+    <app-round-result
+      [matchForm]="addMatchForm"
+      [round]="'one'">
+    </app-round-result>
+
+    <mat-divider></mat-divider>
+
+    <app-round-result
+      [matchForm]="addMatchForm"
+      [round]="'two'">
+    </app-round-result>
+
+    <mat-divider></mat-divider>
+
+    <app-round-result
+      *ngIf="checkRounds()"
+      [matchForm]="addMatchForm"
+      [round]="'three'">
+    </app-round-result>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!addMatchForm.valid">{{'common.save.match' | translate}}</button>
+    </mat-card-actions>
   </form>
-  <mat-card-actions>
-    <button mat-raised-button color="primary">Save</button>
-  </mat-card-actions>
 </mat-card>

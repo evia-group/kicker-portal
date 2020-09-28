@@ -1,0 +1,14 @@
+<div class="grid-container">
+  <div class="add-match-container">
+    <mat-tab-group mat-stretch-tabs class="mat-elevation-z4">
+      <mat-tab [label]="'common.player' | translate">
+        <app-add-match [data]="users$"></app-add-match>
+      </mat-tab>
+      <mat-tab [label]="'common.team' | translate">
+        <app-add-match [showingTeams]="true" [data]="teams$"></app-add-match>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+{{ (users$ | async | json)  }}
