@@ -27,6 +27,7 @@
     "error": {
       "recognised": "The username and password were not recognised",
       "email": "Please provide a valid email address",
+      "specialEmail": "Only evia email addresses are allowed",
       "password": "Please provide a valid password",
       "name": "Please provide a valid name"
     }

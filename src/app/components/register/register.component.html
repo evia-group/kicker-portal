@@ -13,8 +13,11 @@
       </mat-form-field>
       <mat-form-field class="full-width-input">
         <input matInput [placeholder]="'auth.email' | translate" formControlName="username" required>
-        <mat-error>
+        <mat-error *ngIf="form.get('username').hasError('email')">
           {{ 'auth.error.email' | translate}}
+        </mat-error>
+        <mat-error *ngIf="form.get('username').hasError('pattern')">
+          {{ 'auth.error.specialEmail' | translate}}
         </mat-error>
       </mat-form-field>
       <mat-form-field class="full-width-input">

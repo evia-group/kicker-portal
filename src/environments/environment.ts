@@ -5,13 +5,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyCvwwnn8z9MO74uL6K2ls1Zw3nYYIfGGuc',
-    authDomain: 'kicker-portal.firebaseapp.com',
-    databaseURL: 'https://kicker-portal.firebaseio.com',
-    projectId: 'kicker-portal',
-    storageBucket: 'kicker-portal.appspot.com',
-    messagingSenderId: '1016427992922',
-    appId: '1:1016427992922:web:020ddd0f7bfffeec'
+    apiKey: 'AIzaSyBbBYhVMNcLUm3PRatlB2IPACxO_VamlkA',
+    authDomain: 'evia-desk.firebaseapp.com',
+    databaseURL: 'https://evia-desk.firebaseio.com',
+    projectId: 'evia-desk',
+    storageBucket: 'evia-desk.appspot.com',
+    messagingSenderId: '124473984293',
+    appId: '1:124473984293:web:578828e4a4140cad2fc6cc',
   },
   globals: {
     team1: 0,

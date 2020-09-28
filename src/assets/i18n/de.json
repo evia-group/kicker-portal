@@ -27,6 +27,7 @@
     "error": {
       "recognised": "Der Benutzername und das Passwort sind falsch",
       "email": "Bitte geben sie eine gültige E-Mail Adresse an",
+      "specialEmail": "Es sind nur evia E-Mail Adressen erlaubt",
       "password": "Bitte geben sie ein gültiges Passwort an",
       "name": "Bitte geben sie ein gültigen Namen an"
     }
