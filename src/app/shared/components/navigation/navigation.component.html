@@ -15,7 +15,7 @@
                          [hasBackdrop]="true"
                          [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #sidenav
-                 [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [mode]="'over'"
                  (click)="sidenav.toggle()"
                  [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <mat-nav-list>
