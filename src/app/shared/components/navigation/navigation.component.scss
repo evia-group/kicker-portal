@@ -33,6 +33,12 @@ h1.app-name {
   flex: 1;
   .mat-sidenav {
     width: 20%;
+
+    .footer {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+    }
   }
 }
 
