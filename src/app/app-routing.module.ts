@@ -8,9 +8,25 @@ import {KickerComponent} from './components/kicker/kicker.component';
 import {MatchFinderComponent} from './components/kicker/match-finder/match-finder.component';
 import {LoginComponent} from './components/login/login.component';
 import {RegisterComponent} from './components/register/register.component';
-import {AngularFireAuthGuard, redirectUnauthorizedTo, redirectLoggedInTo} from '@angular/fire/auth-guard';
+import {
+  AngularFireAuthGuard,
+  redirectUnauthorizedTo,
+  redirectLoggedInTo,
+  emailVerified,
+  canActivate,
+} from '@angular/fire/auth-guard';
+import {pipe} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {NotVerifiedComponent} from './components/not-verified/not-verified.component';
 
-const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
+const redirectUnauthorized = () => {
+  return pipe(
+    emailVerified,
+    map(user => {
+        return user ? user : ['verified']
+      }
+    ));
+};
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
 
 const routes: Routes = [
@@ -21,34 +37,22 @@ const routes: Routes = [
       {
         path: 'statistics',
         component: StatisticComponent,
-        canActivate: [AngularFireAuthGuard],
-        data: {
-          authGuardPipe: redirectUnauthorizedToLogin
-        },
+        ...canActivate(redirectUnauthorized),
       },
       {
         path: 'tournaments',
         component: TournamentsComponent,
-        canActivate: [AngularFireAuthGuard],
-        data: {
-          authGuardPipe: redirectUnauthorizedToLogin
-        },
+        ...canActivate(redirectUnauthorized),
       },
       {
         path: 'matches',
         component: MatchesComponent,
-        canActivate: [AngularFireAuthGuard],
-        data: {
-          authGuardPipe: redirectUnauthorizedToLogin
-        },
+        ...canActivate(redirectUnauthorized),
       },
       {
         path: 'matchmaking',
         component: MatchFinderComponent,
-        canActivate: [AngularFireAuthGuard],
-        data: {
-          authGuardPipe: redirectUnauthorizedToLogin
-        },
+        ...canActivate(redirectUnauthorized),
       },
       {path: '', pathMatch: 'full', redirectTo: 'matches',}
     ]
@@ -57,18 +61,15 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AngularFireAuthGuard],
-    data: {
-      authGuardPipe: redirectUnauthorizedToLogin
-    },
+    data: { authGuardPipe: redirectUnauthorized }
   },
   {
     path: 'login',
     component: LoginComponent,
-    data: {
-      authGuardPipe: redirectLoggedInToDashboard
-    },
+    ...canActivate(redirectLoggedInToDashboard),
   },
   {path: 'register', component: RegisterComponent},
+  {path: 'verified', component: NotVerifiedComponent},
   {path: '**', pathMatch: 'full', redirectTo: 'login'}
 ];
 

@@ -18,7 +18,5 @@ export class MatchesComponent {
               protected teamService: TeamsService) {
     this.users$ = this.userService.users$;
     this.teams$ = this.teamService.teams$;
-
-    console.log('this', this.users$.subscribe(data => console.log('data', data)));
   }
 }

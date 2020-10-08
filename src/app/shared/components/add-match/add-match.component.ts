@@ -74,7 +74,6 @@ export class AddMatchComponent {
   }
 
   public saveMatch() {
-    console.log('FORM', this.addMatchForm);
     if (!this.showingTeams) {
       this.addMatchForm.get('players.team1.teamId')
         .setValue(this.createTeamId([

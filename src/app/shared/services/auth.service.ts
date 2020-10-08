@@ -43,22 +43,31 @@ export class AuthService {
   }
 
   async register(email: string, password: string, name: string) {
-    const user = await this.afAuth.createUserWithEmailAndPassword(email, password);
-    const newUser: IUser = {
-      id: user.user.uid,
-      name,
-      wins: 0,
-      losses: 0,
-      defeats: 0,
-      dominations: 0,
-      stats: {
-        '0:2': 0,
-        '2:0': 0,
-        '1:2': 0,
-        '2:1': 0,
-      },
-    };
-    await this.userSerice.add(newUser);
+    await this.afAuth.createUserWithEmailAndPassword(email, password).then((user) => {
+      const newUser: IUser = {
+        id: user.user.uid,
+        name,
+        wins: 0,
+        losses: 0,
+        defeats: 0,
+        dominations: 0,
+        stats: {
+          '0:2': 0,
+          '2:0': 0,
+          '1:2': 0,
+          '2:1': 0,
+        },
+      };
+      this.userSerice.add(newUser);
+    }).then(() => this.afAuth.onAuthStateChanged((user) => {
+      if(!user.emailVerified) {
+        user.sendEmailVerification();
+        console.log('Email send to:', user.email);
+      } else {
+        console.log('Email is verified', user);
+      }
+    }));
+
   }
 
   async sendPasswordResetEmail(passwordResetEmail: string) {

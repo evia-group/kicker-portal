@@ -10,7 +10,6 @@ import {UsersService} from './users.service';
 import {TeamsService} from './teams.service';
 
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -46,9 +45,6 @@ export class MatchesService {
   }
 
   public async add(match: FormGroup) {
-    console.log('!-----ADD-----!');
-    console.log('match:', match);
-
     const team1 = match.get('players.team1.teamId').value;
     const team2 = match.get('players.team2.teamId').value;
 
@@ -99,9 +95,8 @@ export class MatchesService {
       type: `${winTeam1}:${winTeam2}`
     };
 
-    await this.updateTeamAndUserStats(match);
-
     this.collection.add(resultMatch)
+      .then(() => this.updateTeamAndUserStats(match))
       .then(() => {
         this.infoBar.openCustomSnackBar('Dein Spiel wurde erfolgreich gespeichert!', 'close', 5);
       })
@@ -113,80 +108,95 @@ export class MatchesService {
     const winTeam2 = MatchesService.getRoundInfos('team2', match, 'win');
     const dominationsTeam1 = MatchesService.getRoundInfos('team1', match, 'dominationTeamOne');
     const dominationsTeam2 = MatchesService.getRoundInfos('team1', match, 'dominationTeamTwo');
+    const userIdTeam1One = match.get('players.team1.one').value.id;
+    const userIdTeam1Two = match.get('players.team1.two').value.id;
+    const userIdTeam2One = match.get('players.team2.one').value.id;
+    const userIdTeam2Two = match.get('players.team2.two').value.id;
     const type = `${winTeam1}:${winTeam2}`;
+    const userUpdateStats: IUserIncrement[] = [];
 
-    console.log('DOMINATION 1', dominationsTeam1);
-    console.log('DOMINATION 2', dominationsTeam2);
+    userUpdateStats.push(
+      this.generatUserUpdateObject(
+        userIdTeam1One, dominationsTeam2, dominationsTeam1, winTeam1, type),
+      this.generatUserUpdateObject(
+        userIdTeam2One, dominationsTeam1, dominationsTeam2, winTeam2, type),
+    );
 
-    const userUpdateStats: IUserIncrement[] = [
-      {
-        defeat: dominationsTeam2 >= 1,
-        domination: dominationsTeam1 >= 1,
-        loss: winTeam1 < 2,
-        win: winTeam1 >= 2,
-        userId: match.get('players.team1.one').value.id,
-        statsType: type,
-      },
-      {
-        defeat: dominationsTeam2 >= 1,
-        domination: dominationsTeam1 >= 1,
-        loss: winTeam1 < 2,
-        win: winTeam1 >= 2,
-        userId: match.get('players.team1.two').value.id,
-        statsType: type,
-      },
-      {
-        defeat: dominationsTeam1 >= 1,
-        domination: dominationsTeam2 >= 1,
-        loss: winTeam2 < 2,
-        win: winTeam2 >= 2,
-        userId: match.get('players.team2.one').value.id,
-        statsType: type,
-      },
-      {
-        defeat: dominationsTeam1 >= 1,
-        domination: dominationsTeam2 >= 1,
-        loss: winTeam2 < 2,
-        win: winTeam2 >= 2,
-        userId: match.get('players.team2.two').value.id,
-        statsType: type,
-      }
-    ];
+    if (userIdTeam1One !== userIdTeam1Two) {
+      userUpdateStats.push(this.generatUserUpdateObject(
+        userIdTeam1Two, dominationsTeam2, dominationsTeam1, winTeam1, type));
+    }
+    if (userIdTeam2One !== userIdTeam2Two) {
+      userUpdateStats.push(this.generatUserUpdateObject(
+        userIdTeam2Two, dominationsTeam1, dominationsTeam2, winTeam2, type));
+    }
 
     // Teams
     const teamUpdateStats: ITeamIncrement[] = [
-      {
-        defeat: dominationsTeam2 >= 1,
-        domination: dominationsTeam1 >= 1,
-        loss: winTeam1 < 2,
-        win: winTeam1 >= 2,
-        teamId: match.get('players.team1.teamId').value,
-        statsType: type,
-      },
-      {
-        defeat: dominationsTeam1 >= 1,
-        domination: dominationsTeam2 >= 1,
-        loss: winTeam2 < 2,
-        win: winTeam2 >= 2,
-        teamId: match.get('players.team2.teamId').value,
-        statsType: type,
-      },
+      this.generatTeamUpdateObject(
+        match.get('players.team1.teamId').value, dominationsTeam2, dominationsTeam1, winTeam1, type),
+      this.generatTeamUpdateObject(
+        match.get('players.team2.teamId').value, dominationsTeam1, dominationsTeam2, winTeam2, type),
     ];
 
-    this.updateUserStats(userUpdateStats);
-    this.updateTeam(teamUpdateStats);
+    try {
+      this.updateUserStats(userUpdateStats);
+      this.updateTeam(teamUpdateStats);
+    } catch(error) {
+     console.log('error', error);
+    }
   }
 
   updateUserStats(userIncrement: IUserIncrement[]) {
     userIncrement.forEach((user) => {
       this.userService.incrementUserStates(user.userId, user.win, user.loss, user.defeat, user.domination, user.statsType);
-    })
+    });
   }
 
   updateTeam(teamIncrement: ITeamIncrement[]) {
     teamIncrement.forEach((team) => {
-      this.teamService.incrementTeamStates(team.teamId, team.win, team.loss, team.defeat, team.domination, team.statsType )
-    })
+      this.teamService.incrementTeamStates(team.teamId, team.win, team.loss, team.defeat, team.domination, team.statsType);
+    });
+  }
+
+  private changeType(type: string, teamWin: boolean): string {
+    if ((teamWin && (type === '2:0' || type === '2:1')) || (!teamWin && (type === '0:2' || type === '1:2'))) {
+      return type;
+    }
+    if (teamWin && type === '0:2') {
+      return '2:0';
+    }
+    if (teamWin && type === '1:2') {
+      return '2:1';
+    }
+    if (!teamWin && type === '2:0') {
+      return '0:2';
+    }
+    if (!teamWin && type === '2:1') {
+      return '1:2';
+    }
+  }
+
+  private generatUserUpdateObject(userId: string, defeat, domination, team, type): IUserIncrement {
+    return {
+      defeat: defeat >= 1,
+      domination: domination >= 1,
+      loss: team < 2,
+      win: team >= 2,
+      userId,
+      statsType: this.changeType(type, team >= 2),
+    };
+  }
+
+  private generatTeamUpdateObject(teamId: string, defeat, domination, team, type): ITeamIncrement {
+    return {
+      defeat: defeat >= 1,
+      domination: domination >= 1,
+      loss: team < 2,
+      win: team >= 2,
+      teamId,
+      statsType: this.changeType(type, team >= 2),
+    };
   }
 
   delete(matchId) {

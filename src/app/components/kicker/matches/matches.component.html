@@ -4,11 +4,9 @@
       <mat-tab [label]="'common.player' | translate">
         <app-add-match [data]="users$"></app-add-match>
       </mat-tab>
-      <mat-tab [label]="'common.team' | translate">
+      <mat-tab [label]="'common.team' | translate" [disabled]="true">
         <app-add-match [showingTeams]="true" [data]="teams$"></app-add-match>
       </mat-tab>
     </mat-tab-group>
   </div>
 </div>
-
-{{ (users$ | async | json)  }}
