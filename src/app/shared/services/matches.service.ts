@@ -44,7 +44,7 @@ export class MatchesService {
     }).length;
   }
 
-  public async add(match: FormGroup) {
+  public async add(match: FormGroup): Promise<void> {
     const team1 = match.get('players.team1.teamId').value;
     const team2 = match.get('players.team2.teamId').value;
 
@@ -95,12 +95,12 @@ export class MatchesService {
       type: `${winTeam1}:${winTeam2}`
     };
 
-    this.collection.add(resultMatch)
+    return this.collection.add(resultMatch)
       .then(() => this.updateTeamAndUserStats(match))
       .then(() => {
         this.infoBar.openCustomSnackBar('Dein Spiel wurde erfolgreich gespeichert!', 'close', 5);
       })
-      .catch(() => this.infoBar.openComponentSnackBar(5));
+      .catch((err) => {this.infoBar.openComponentSnackBar(5); console.log('ERROR', err)});
   }
 
   updateTeamAndUserStats(match: FormGroup) {

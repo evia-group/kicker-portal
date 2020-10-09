@@ -73,7 +73,7 @@ export class AddMatchComponent {
     return rounds;
   }
 
-  public saveMatch() {
+  public async saveMatch() {
     if (!this.showingTeams) {
       this.addMatchForm.get('players.team1.teamId')
         .setValue(this.createTeamId([
@@ -88,8 +88,9 @@ export class AddMatchComponent {
         ]));
     }
 
-    this.matchesService.add(this.addMatchForm);
-
+    this.matchesService.add(this.addMatchForm).then(() => {
+      this.addMatchForm.reset();
+    });
   }
 
   getWins(team: string): number {
