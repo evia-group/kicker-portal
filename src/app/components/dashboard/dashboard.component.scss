@@ -1,0 +1,34 @@
+mat-card {
+  max-width: 250px;
+  margin: 10em auto;
+  text-align: center;
+
+  mat-card-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    mat-icon {
+      font-size: 2rem;
+    }
+
+    div {
+      display: flex;
+      align-items: center;
+      padding-left: 2rem;
+      text-align: initial;
+    }
+  }
+
+  mat-card-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 10px;
+  }
+}
+
+mat-form-field {
+  display: block;
+  margin-bottom: 1rem;
+}

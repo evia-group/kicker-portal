@@ -1,7 +1,7 @@
-import {Component, Input} from '@angular/core';
+import {AfterContentChecked, AfterViewChecked, AfterViewInit, Component, DoCheck, Input, OnDestroy} from '@angular/core';
 import {IPlayers} from '../../interfaces/match.interface';
 import {ITeam, IUser} from '../../interfaces/user.interface';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {MatchesService} from '../../services/matches.service';
 import {TeamsService} from '../../services/teams.service';
 import {Validators, FormBuilder} from '@angular/forms';
@@ -12,13 +12,16 @@ import {Validators, FormBuilder} from '@angular/forms';
   templateUrl: './add-match.component.html',
   styleUrls: ['./add-match.component.scss']
 })
-export class AddMatchComponent {
+export class AddMatchComponent implements AfterContentChecked{
 
   @Input()
   showingTeams = false;
 
   @Input()
   data: Observable<IUser[]> | Observable<ITeam[]>;
+
+  winsTeam1 = new BehaviorSubject<number>(0);
+  winsTeam2 = new BehaviorSubject<number>(0);
 
   public addMatchForm = this.fb.group({
     players: this.fb.group({
@@ -58,19 +61,9 @@ export class AddMatchComponent {
               private fb: FormBuilder) {
   }
 
-  public checkRounds(): boolean {
-    const rounds = !(this.addMatchForm.get('rounds.one.win').value === null
-      || this.addMatchForm.get('rounds.two.win').value === null
-      || (this.addMatchForm.get('rounds.one.win').value === this.addMatchForm.get('rounds.two.win').value));
-
-    if (!rounds) {
-      this.addMatchForm.get('rounds.three.win').setValue(null);
-      this.addMatchForm.get('rounds.three.dominationTeamOne').setValue(false);
-      this.addMatchForm.get('rounds.three.dominationTeamTwo').setValue(false);
-      this.addMatchForm.get('rounds.three.dominationTeamOne').enable();
-      this.addMatchForm.get('rounds.three.dominationTeamTwo').enable();
-    }
-    return rounds;
+  ngAfterContentChecked() {
+    this.getWins('team1');
+    this.getWins('team2');
   }
 
   public async saveMatch() {
@@ -93,15 +86,36 @@ export class AddMatchComponent {
     });
   }
 
-  getWins(team: string): number {
+  private getWins(team: string) {
+    this.checkRounds();
+
     let wins = 0;
     wins = this.addMatchForm.get('rounds.one.win').value === team ? wins + 1 : wins;
     wins = this.addMatchForm.get('rounds.two.win').value === team ? wins + 1 : wins;
     wins = this.addMatchForm.get('rounds.three.win').value === team ? wins + 1 : wins;
 
-    return wins;
+    if (team === 'team1') {
+      this.winsTeam1.next(wins);
+    } else if (team === 'team2') {
+      this.winsTeam2.next(wins);
+    }
   }
 
+  private checkRounds(): boolean {
+    const rounds = !(this.addMatchForm.get('rounds.one.win').value === null
+      || this.addMatchForm.get('rounds.two.win').value === null
+      || (this.addMatchForm.get('rounds.one.win').value === this.addMatchForm.get('rounds.two.win').value));
+
+    if (!rounds) {
+      this.addMatchForm.get('rounds.three.win').setValue(null);
+      this.addMatchForm.get('rounds.three.dominationTeamOne').setValue(false);
+      this.addMatchForm.get('rounds.three.dominationTeamTwo').setValue(false);
+      this.addMatchForm.get('rounds.three.dominationTeamOne').enable();
+      this.addMatchForm.get('rounds.three.dominationTeamTwo').enable();
+    }
+
+    return rounds;
+  }
 
   private createTeamId(team): string {
     const sortetTeam: IPlayers[] = team.sort((a, b) => a.id.localeCompare(b.id));

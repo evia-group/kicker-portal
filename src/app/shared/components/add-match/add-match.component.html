@@ -2,8 +2,8 @@
   <hr class="spacer"/>
   <div class="match-header">
     <div>{{'common.team1' | translate}}</div>
-    <div>{{ getWins('team1') }}</div>
-    <div>{{ getWins('team2') }}</div>
+    <div>{{ winsTeam1 | async }}</div>
+    <div>{{ winsTeam2 | async }}</div>
     <div>{{'common.team2' | translate}}</div>
   </div>
   <mat-divider></mat-divider>
@@ -28,7 +28,7 @@
     <mat-divider></mat-divider>
 
     <app-round-result
-      *ngIf="checkRounds()"
+      *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
       [matchForm]="addMatchForm"
       [round]="'three'">
     </app-round-result>

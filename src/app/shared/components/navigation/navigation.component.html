@@ -19,16 +19,16 @@
                  (click)="sidenav.toggle()"
                  [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <mat-nav-list>
-        <mat-list-item>
-          <a matLine routerLink="/dashboard" routerLinkActive="active">{{'app.navigation.dashboard' | translate}}</a>
+        <mat-list-item routerLink="/dashboard" routerLinkActive="active">
+          <a matLine >{{'app.navigation.dashboard' | translate}}</a>
           <mat-icon mat-list-icon>dashboard</mat-icon>
         </mat-list-item>
-        <mat-list-item>
-          <a matLine routerLink="/kicker" routerLinkActive="active">{{'app.navigation.kicker' | translate}}</a>
+        <mat-list-item routerLink="/kicker" routerLinkActive="active">
+          <a matLine>{{'app.navigation.kicker' | translate}}</a>
           <mat-icon mat-list-icon>sports_soccer</mat-icon>
         </mat-list-item>
       </mat-nav-list>
-      <div class="footer">v0.0.1</div>
+      <div class="footer">v0.0.5</div>
     </mat-sidenav>
 
     <mat-sidenav-content>

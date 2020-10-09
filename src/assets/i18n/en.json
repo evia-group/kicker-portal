@@ -14,7 +14,8 @@
       "kicker": "Kicker"
     },
     "settings": "Settings",
-    "logout": "Login"
+    "logout": "Login",
+    "welcome": "welcome at EVIA Desk"
   },
   "auth": {
     "email": "e-mail",
