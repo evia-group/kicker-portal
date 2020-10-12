@@ -4,6 +4,7 @@
 
 export const environment = {
   production: true,
+  prefix: '',
   firebase: {
     apiKey: 'AIzaSyBbBYhVMNcLUm3PRatlB2IPACxO_VamlkA',
     authDomain: 'evia-desk.firebaseapp.com',

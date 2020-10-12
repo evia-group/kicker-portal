@@ -8,6 +8,7 @@ import {FormGroup} from '@angular/forms';
 import {ITeamIncrement, IUserIncrement} from '../interfaces/user.interface';
 import {UsersService} from './users.service';
 import {TeamsService} from './teams.service';
+import {environment} from '../../../environments/environment';
 
 
 @Injectable({
@@ -20,7 +21,7 @@ export class MatchesService {
               protected teamService: TeamsService,
               protected infoBar: InfoBarService) {
 
-    this.collection = this.db.collection<IMatch>('Matches');
+    this.collection = this.db.collection<IMatch>(`${environment.prefix}Matches`);
     this.matches$ = this.collection.valueChanges().pipe(shareReplay(1));
   }
 

@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {ITeam} from '../interfaces/user.interface';
 import * as firebase from 'firebase';
+import {environment} from '../../../environments/environment';
 
 const increment = firebase.firestore.FieldValue.increment(1);
 
@@ -18,7 +19,7 @@ export class TeamsService {
 
   constructor(protected db: AngularFirestore) {
 
-    this.collection = this.db.collection<ITeam>('Teams');
+    this.collection = this.db.collection<ITeam>(`${environment.prefix}Teams`);
     this.teams$ = this.collection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
