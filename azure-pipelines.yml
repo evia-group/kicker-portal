@@ -26,7 +26,7 @@ steps:
     script: |
       npm install -g @angular/cli
       npm install
-      ng build
+      npm build
   displayName: 'npm install and build'
 
 - task: CmdLine@2
