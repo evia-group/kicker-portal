@@ -14,7 +14,13 @@ stages:
     jobs:
       - job:
         steps:
-          - script: echo Hello, world!
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "10.x"
+          - script: npm install
+          - script: npm run build 
+          - publish: dist
+            artifact: dist
 
   - stage: deploy_dev
     displayName: Deploy to development
