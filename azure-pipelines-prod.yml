@@ -34,16 +34,6 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: NodeTool@0
-                  inputs:
-                    versionSpec: "10.x"
-                - task: DownloadPipelineArtifact@2
-                  inputs:
-                    buildType: 'current'
-                    artifactName: 'dist'
-                    targetPath: '$(Pipeline.Workspace)'
-                - script: npm install -g firebase-tools
-                - script: 'firebase deploy --project="$(Firebase Project)" --token "$(Firebase Token)" -m "$(Build.BuildNumber)"'
                 - task: replacetokens@3
                   inputs:
                     targetFiles: "$(Pipeline.Workspace)/dist/**/main*.js"
@@ -56,3 +46,13 @@ stages:
                     tokenSuffix: "}#"
                     useLegacyPattern: false
                     enableTelemetry: true
+                - task: NodeTool@0
+                  inputs:
+                    versionSpec: "10.x"
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'dist'
+                    targetPath: '$(Pipeline.Workspace)'
+                - script: npm install -g firebase-tools
+                - script: 'firebase deploy --project="$(Firebase Project)" --token "$(Firebase Token)" -m "$(Build.BuildNumber)"'
