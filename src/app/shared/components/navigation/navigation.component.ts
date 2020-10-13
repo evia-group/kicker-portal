@@ -3,6 +3,7 @@ import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {AuthService} from '../../services/auth.service';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-navigation',
@@ -10,6 +11,7 @@ import {AuthService} from '../../services/auth.service';
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnDestroy {
+  versionNumber: string = environment.versionNumber;
   isLoggedIn$: Observable<boolean>;
   mobileQuery: MediaQueryList;
   private mobileQueryListener: () => void;

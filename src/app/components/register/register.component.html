@@ -6,9 +6,15 @@
         {{ 'auth.error.recognised' | translate}}
       </mat-error>
       <mat-form-field class="full-width-input">
-        <input matInput [placeholder]="'auth.name' | translate" formControlName="name" required>
+        <input matInput [placeholder]="'auth.firstname' | translate" formControlName="firstname" required>
         <mat-error>
-          {{ 'auth.error.name' | translate}}
+          {{ 'auth.error.firstname' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input matInput [placeholder]="'auth.lastname' | translate" formControlName="lastname" required>
+        <mat-error>
+          {{ 'auth.error.lastname' | translate}}
         </mat-error>
       </mat-form-field>
       <mat-form-field class="full-width-input">

@@ -27,14 +27,11 @@ export class RegisterComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
 
     this.form = this.fb.group({
-      name: ['', Validators.maxLength(40)],
+      firstname: ['', Validators.maxLength(25)],
+      lastname: ['', Validators.maxLength(25)],
       username: ['', [Validators.email, Validators.pattern('^[a-zA-Z0-9_-_._@]*evia\.de$')]],
       password: ['', Validators.required]
     });
-
-    // if (await this.authService.checkAuthenticated()) {
-    //   await this.router.navigate([this.returnUrl]);
-    // }
   }
 
   async onSubmit() {
@@ -42,7 +39,7 @@ export class RegisterComponent implements OnInit {
     this.formSubmitAttempt = false;
     if (this.form.valid) {
       try {
-        const name = this.form.get('name').value;
+        const name = `${this.form.get('firstname').value} ${this.form.get('lastname').value}`;
         const username = this.form.get('username').value;
         const password = this.form.get('password').value;
         await this.authService.register(username, password, name);
