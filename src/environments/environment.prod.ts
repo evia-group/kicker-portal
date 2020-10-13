@@ -5,7 +5,7 @@
 export const environment = {
   production: true,
   versionNumber: '#{versionNumber}#',
-  prefix: '#{prefix}#',
+  prefix: '',
   firebase: {
     apiKey: '#{firebaseApiKey}#',
     authDomain: '#{firebaseAuthDomain}#',
