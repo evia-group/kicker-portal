@@ -28,15 +28,47 @@ stages:
     variables:
       - group: Development
     jobs:
-      - job:
-        steps:
-          - script: echo Hello, world!
+      - deployment: deploy
+        environment: Development
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo Hello, development world!
+                - task: replacetokens@3
+                  inputs:
+                    targetFiles: "$(Pipeline.Workspace)/dist/**/main*.js"
+                    encoding: "auto"
+                    writeBOM: true
+                    verbosity: "detailed"
+                    actionOnMissing: "warn"
+                    keepToken: false
+                    tokenPrefix: "#{"
+                    tokenSuffix: "}#"
+                    useLegacyPattern: false
+                    enableTelemetry: true
 
   - stage: deploy_prod
     displayName: Deploy to production
     variables:
       - group: Production
     jobs:
-      - job:
-        steps:
-          - script: echo Hello, world!
+      - deployment: deploy
+        environment: Production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo Hello, production world!
+                - task: replacetokens@3
+                  inputs:
+                    targetFiles: "$(Pipeline.Workspace)/dist/**/main*.js"
+                    encoding: "auto"
+                    writeBOM: true
+                    verbosity: "detailed"
+                    actionOnMissing: "warn"
+                    keepToken: false
+                    tokenPrefix: "#{"
+                    tokenSuffix: "}#"
+                    useLegacyPattern: false
+                    enableTelemetry: true
