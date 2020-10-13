@@ -11,6 +11,7 @@ pool:
 
 stages:
   - stage: build
+    displayName: Build Angular application
     jobs:
       - job:
         steps:
@@ -24,6 +25,8 @@ stages:
 
   - stage: deploy_dev
     displayName: Deploy to development
+    variables:
+      - group: Development
     jobs:
       - job:
         steps:
@@ -31,6 +34,8 @@ stages:
 
   - stage: deploy_prod
     displayName: Deploy to production
+    variables:
+      - group: Production
     jobs:
       - job:
         steps:
