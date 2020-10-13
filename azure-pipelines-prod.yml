@@ -1,35 +1,49 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
 
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+stages:
+  - stage: build
+    displayName: Build Angular application
+    jobs:
+      - job:
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "10.x"
+          - script: npm install
+          - script: npm run build 
+          - publish: dist
+            artifact: dist
 
-- task: CmdLine@2
-  inputs:
-    script: 'npm install -g firebase-tools'
-    workingDirectory: '$(Agent.ToolsDirectory)'
-  displayName: 'install firebase tools'
-
-- task: CmdLine@2
-  inputs:
-    script: |
-      npm install -g @angular/cli
-      npm install
-      npm run build
-  displayName: 'npm install and build'
-
-- task: CmdLine@2
-  inputs:
-    script: 'firebase deploy --project="$(Firebase Project)" --token "$(Firebase Token)" -m "$(Build.BuildNumber)"'
-  displayName: 'firebase publish -m "$(Build.BuildNumber)"'
+  - stage: deploy_prod
+    displayName: Deploy to production
+    variables:
+      - group: Production
+    jobs:
+      - deployment: deploy
+        environment: Production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo Hello, production world!
+                - task: replacetokens@3
+                  inputs:
+                    targetFiles: "$(Pipeline.Workspace)/dist/**/main*.js"
+                    encoding: "auto"
+                    writeBOM: true
+                    verbosity: "detailed"
+                    actionOnMissing: "warn"
+                    keepToken: false
+                    tokenPrefix: "#{"
+                    tokenSuffix: "}#"
+                    useLegacyPattern: false
+                    enableTelemetry: true
