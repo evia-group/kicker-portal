@@ -34,7 +34,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: echo Hello, production world!
+                - script: 'firebase deploy --project="$(Firebase Project)" --token "$(Firebase Token)" -m "$(Build.BuildNumber)"'
                 - task: replacetokens@3
                   inputs:
                     targetFiles: "$(Pipeline.Workspace)/dist/**/main*.js"
