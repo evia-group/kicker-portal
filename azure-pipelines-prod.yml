@@ -20,7 +20,7 @@ stages:
               versionSpec: "10.x"
           - script: npm install
           - script: npm run build 
-          - publish: dist
+          - publish: 
             artifact: dist
 
   - stage: deploy_prod
