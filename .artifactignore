@@ -1,0 +1,4 @@
+**/*
+!/dist/**.*
+!.firebaserc
+!.firebase.json
