@@ -20,5 +20,5 @@ stages:
               versionSpec: "10.x"
           - script: npm install
           - script: npm run build 
-          - publish: current
-            artifact: desk
+          - publish: $(System.DefaultWorkingDirectory)/bin/WebApp
+            artifact: WebApp
