@@ -49,7 +49,9 @@ stages:
                 - task: NodeTool@0
                   inputs:
                     versionSpec: "10.x"
-                - script: | 
+                - script: |
+                    ls -a 
                     cd $(Pipeline.Workspace)
+                    ls -a
                     npm install -g firebase-tools
                     firebase deploy --project="$(Firebase Project)" --token "$(Firebase Token)" -m "$(Build.BuildNumber)"
