@@ -1,0 +1,99 @@
+<svg class="map-container" width="937" height="736" viewBox="0 0 937 736" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect id="1" x="529" y="597" width="93" height="95" class="map"/>
+  <rect id="2" x="622" y="597" width="74" height="95" class="map"/>
+  <rect id="3" x="696" y="597" width="111" height="138" class="map"/>
+  <rect id="4" x="807" y="597" width="129" height="138" class="map"/>
+  <rect id="5" x="838" y="444" width="98" height="153" class="map"/>
+  <rect id="6" x="838" y="373" width="98" height="71" class="map"/>
+  <rect id="7" x="838" y="302" width="98" height="71" class="map"/>
+  <rect id="8" x="838" y="225" width="98" height="77" class="map"/>
+  <rect id="9" x="838" y="184" width="98" height="41" class="map"/>
+  <path id="10" d="M838 116H936V150V184H838V116Z" class="map"/>
+  <rect id="11" x="838" y="22" width="98" height="94" class="map"/>
+  <rect id="12" x="695" y="22" width="98" height="94" class="map"/>
+  <rect id="13" x="695" y="116" width="108" height="70" class="map"/>
+  <rect id="14" x="695" y="186" width="108" height="116" class="map"/>
+  <rect id="15" x="695" y="302" width="108" height="73" class="map"/>
+  <rect id="16" x="695" y="375" width="108" height="52" class="map"/>
+  <rect id="17" x="649" y="451" width="46" height="107" class="map"/>
+  <path id="18" d="M649 451H528.5V527.357H599.5V558H649V451Z" class="map"/>
+  <path id="19" d="M437 416L409 448.5V557H528.5V448.5L501.5 416H437Z" class="map"/>
+  <rect id="20" x="337" y="451" width="72" height="76" class="map"/>
+  <rect id="21" x="239" y="451" width="98" height="108" class="map"/>
+  <rect id="22" x="135" y="357" width="104" height="72" class="map"/>
+  <rect id="23" x="135" y="260" width="104" height="97" class="map"/>
+  <rect id="24" x="135" y="188" width="104" height="72" class="map"/>
+  <rect id="25" x="135" y="116" width="104" height="72" class="map"/>
+  <path id="26" d="M239 22L146 22V52.9946H135V76.3676V116H239V22Z" class="map"/>
+  <rect id="27" x="1" y="22" width="98" height="94" class="map"/>
+  <rect id="28" x="1" y="116" width="98" height="74" class="map"/>
+  <rect id="29" x="1" y="190" width="98" height="72" class="map"/>
+  <rect id="30" x="1" y="262" width="98" height="94" class="map"/>
+  <rect id="31" x="1" y="356" width="98" height="97" class="map"/>
+  <rect id="32" x="1" y="453" width="98" height="71" class="map"/>
+  <rect id="33" x="1" y="524" width="98" height="71" class="map"/>
+  <path id="34" d="M129 595H1V691H100V642.5L129 618V595Z" class="map"/>
+  <path id="35" d="M129.288 595H169V691H100V642.754L129.288 618.138V595Z" class="map"/>
+  <rect id="36" x="169" y="595" width="72" height="96" class="map"/>
+  <rect id="37" x="241" y="595" width="50" height="96" class="map"/>
+  <rect id="38" x="291" y="595" width="117" height="96" class="map"/>
+
+  <path id="39" d="M803 427V448H763V499H695V427H803Z" class="map"/>
+  <path id="40" d="M174 449H135V429H239V504H174V449Z" class="map"/>
+  <path id="41" d="M146 22V10.2927L137.5 2H107.103L99 10.2927V22" class="map"/>
+  <path id="42" d="M793 22V10.5L802 1.5H829.5L838 10.5V22" class="map"/>
+  <rect id="43" x="135" y="504" width="39" height="55" class="map"/>
+  <rect id="44" x="174" y="504" width="65" height="55" class="map"/>
+  <rect id="45" x="135" y="449" width="39" height="55" class="map"/>
+  <rect id="46" x="695" y="499" width="68" height="59" class="map"/>
+  <rect id="47" x="763" y="504" width="40" height="54" class="map"/>
+  <rect id="48" x="763" y="448" width="40" height="56" class="map"/>
+  <path id="49" d="M408 691V716H529V692" class="map"/>
+
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[0].id" [ngClass]="{active: test[0].hover || test[0].selected}" [matTooltip]="test[0].information.name" x="529" y="597" width="93" height="95" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[1].id" [ngClass]="{active: test[1].hover || test[1].selected}" [matTooltip]="test[1].information.name" x="622" y="597" width="74" height="95" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[2].id" [ngClass]="{active: test[2].hover || test[2].selected}" [matTooltip]="test[2].information.name" x="696" y="597" width="111" height="138" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[3].id" [ngClass]="{active: test[3].hover || test[3].selected}" [matTooltip]="test[3].information.name" x="807" y="597" width="129" height="138" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[4].id" [ngClass]="{active: test[4].hover || test[4].selected}" [matTooltip]="test[4].information.name" x="838" y="444" width="98" height="153" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[5].id" [ngClass]="{active: test[5].hover || test[5].selected}" [matTooltip]="test[5].information.name" x="838" y="373" width="98" height="71" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[6].id" [ngClass]="{active: test[6].hover || test[6].selected}" [matTooltip]="test[6].information.name" x="838" y="302" width="98" height="71" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[7].id" [ngClass]="{active: test[7].hover || test[7].selected}" [matTooltip]="test[7].information.name" x="838" y="225" width="98" height="77" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[8].id" [ngClass]="{active: test[8].hover || test[8].selected}" [matTooltip]="test[8].information.name" x="838" y="184" width="98" height="41" class="interactive-map"/>
+  <path (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[9].id" [ngClass]="{active: test[9].hover || test[9].selected}" [matTooltip]="test[9].information.name" d="M838 116H936V150V184H838V116Z" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[10].id" [ngClass]="{active: test[10].hover || test[10].selected}" [matTooltip]="test[10].information.name" x="838" y="22" width="98" height="94" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[11].id" [ngClass]="{active: test[11].hover || test[11].selected}" [matTooltip]="test[11].information.name" x="695" y="22" width="98" height="94" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[12].id" [ngClass]="{active: test[12].hover || test[12].selected}" [matTooltip]="test[12].information.name" x="695" y="116" width="108" height="70" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[13].id" [ngClass]="{active: test[13].hover || test[13].selected}" [matTooltip]="test[13].information.name" x="695" y="186" width="108" height="116" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[14].id" [ngClass]="{active: test[14].hover || test[14].selected}" [matTooltip]="test[14].information.name" x="695" y="302" width="108" height="73" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[15].id" [ngClass]="{active: test[15].hover || test[15].selected}" [matTooltip]="test[15].information.name" x="695" y="375" width="108" height="52" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[16].id" [ngClass]="{active: test[16].hover || test[16].selected}" [matTooltip]="test[16].information.name" x="649" y="451" width="46" height="107" class="interactive-map"/>
+  <path (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[17].id" [ngClass]="{active: test[17].hover || test[17].selected}" [matTooltip]="test[17].information.name" d="M649 451H528.5V527.357H599.5V558H649V451Z" class="interactive-map"/>
+  <path (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[18].id" [ngClass]="{active: test[18].hover || test[18].selected}" [matTooltip]="test[18].information.name" d="M437 416L409 448.5V557H528.5V448.5L501.5 416H437Z" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[19].id" [ngClass]="{active: test[19].hover || test[19].selected}" [matTooltip]="test[19].information.name" x="337" y="451" width="72" height="76" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[20].id" [ngClass]="{active: test[20].hover || test[20].selected}" [matTooltip]="test[20].information.name" x="239" y="451" width="98" height="108" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[21].id" [ngClass]="{active: test[21].hover || test[21].selected}" [matTooltip]="test[21].information.name" x="135" y="357" width="104" height="72" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[22].id" [ngClass]="{active: test[22].hover || test[22].selected}" [matTooltip]="test[22].information.name" x="135" y="260" width="104" height="97" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[23].id" [ngClass]="{active: test[23].hover || test[23].selected}" [matTooltip]="test[23].information.name" x="135" y="188" width="104" height="72" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[24].id" [ngClass]="{active: test[24].hover || test[24].selected}" [matTooltip]="test[24].information.name" x="135" y="116" width="104" height="72" class="interactive-map"/>
+  <path (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[25].id" [ngClass]="{active: test[25].hover || test[25].selected}" [matTooltip]="test[25].information.name" d="M239 22L146 22V52.9946H135V76.3676V116H239V22Z" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[26].id" [ngClass]="{active: test[26].hover || test[26].selected}" [matTooltip]="test[26].information.name" x="1" y="22" width="98" height="94" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[27].id" [ngClass]="{active: test[27].hover || test[27].selected}" [matTooltip]="test[27].information.name" x="1" y="116" width="98" height="74" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[28].id" [ngClass]="{active: test[28].hover || test[28].selected}" [matTooltip]="test[28].information.name" x="1" y="190" width="98" height="72" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[29].id" [ngClass]="{active: test[29].hover || test[29].selected}" [matTooltip]="test[29].information.name" x="1" y="262" width="98" height="94" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[30].id" [ngClass]="{active: test[30].hover || test[30].selected}" [matTooltip]="test[30].information.name" x="1" y="356" width="98" height="97" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[31].id" [ngClass]="{active: test[31].hover || test[31].selected}" [matTooltip]="test[31].information.name" x="1" y="453" width="98" height="71" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[32].id" [ngClass]="{active: test[32].hover || test[32].selected}" [matTooltip]="test[32].information.name" x="1" y="524" width="98" height="71" class="interactive-map"/>
+  <path (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[33].id" [ngClass]="{active: test[33].hover || test[33].selected}" [matTooltip]="test[33].information.name" d="M129 595H1V691H100V642.5L129 618V595Z" class="interactive-map"/>
+  <path (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[34].id" [ngClass]="{active: test[34].hover || test[34].selected}" [matTooltip]="test[34].information.name" d="M129.288 595H169V691H100V642.754L129.288 618.138V595Z" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[35].id" [ngClass]="{active: test[35].hover || test[35].selected}" [matTooltip]="test[35].information.name" x="169" y="595" width="72" height="96" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[36].id" [ngClass]="{active: test[36].hover || test[36].selected}" [matTooltip]="test[36].information.name" x="241" y="595" width="50" height="96" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[37].id" [ngClass]="{active: test[37].hover || test[37].selected}" [matTooltip]="test[37].information.name" x="291" y="595" width="117" height="96" class="interactive-map"/>
+  <path (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[38].id" [ngClass]="{active: test[38].hover || test[38].selected}" [matTooltip]="test[38].information.name" d="M803 427V448H763V499H695V427H803Z" class="interactive-map"/>
+  <path (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[39].id" [ngClass]="{active: test[39].hover || test[39].selected}" [matTooltip]="test[39].information.name" d="M174 449H135V429H239V504H174V449Z" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[40].id" [ngClass]="{active: test[40].hover || test[40].selected}" [matTooltip]="test[40].information.name" x="135" y="504" width="39" height="55" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[41].id" [ngClass]="{active: test[41].hover || test[41].selected}" [matTooltip]="test[41].information.name" x="174" y="504" width="65" height="55" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[42].id" [ngClass]="{active: test[42].hover || test[42].selected}" [matTooltip]="test[42].information.name" x="135" y="449" width="39" height="55" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[43].id" [ngClass]="{active: test[43].hover || test[43].selected}" [matTooltip]="test[43].information.name" x="695" y="499" width="68" height="59" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[44].id" [ngClass]="{active: test[44].hover || test[44].selected}" [matTooltip]="test[44].information.name" x="763" y="504" width="40" height="54" class="interactive-map"/>
+  <rect (mouseenter)="hightlight($event)" (mouseleave)="hightlight($event)" (click)="selectRoom($event)" [id]="test[45].id" [ngClass]="{active: test[45].hover || test[45].selected}" [matTooltip]="test[45].information.name" x="763" y="448" width="40" height="56" class="interactive-map"/>
+</svg>

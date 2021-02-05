@@ -26,6 +26,9 @@ import { KickerComponent } from './components/kicker/kicker.component';
 import { MatchFinderComponent } from './components/kicker/match-finder/match-finder.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NotVerifiedComponent } from './components/not-verified/not-verified.component';
+import { InteractiveMapComponent } from './components/interactive-map/interactive-map.component';
+import { RoomMapComponent } from './shared/components/room-map/room-map.component';
+import { RoomInformationComponent } from './shared/components/room-information/room-information.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -48,6 +51,9 @@ export function createTranslateLoader(http: HttpClient) {
     MatchFinderComponent,
     RegisterComponent,
     NotVerifiedComponent,
+    InteractiveMapComponent,
+    RoomMapComponent,
+    RoomInformationComponent,
   ],
   imports: [
     BrowserModule,

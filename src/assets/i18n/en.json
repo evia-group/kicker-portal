@@ -11,7 +11,8 @@
     },
     "navigation": {
       "dashboard": "Dashboard",
-      "kicker": "Kicker"
+      "kicker": "Kicker",
+      "map": "Building plan"
     },
     "settings": "Settings",
     "logout": "Login",

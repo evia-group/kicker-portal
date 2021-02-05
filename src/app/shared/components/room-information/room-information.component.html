@@ -1,0 +1,18 @@
+<mat-card class="information-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="icon">{{ roomInformation.information.icon }}</mat-icon>
+    <mat-card-title>{{roomInformation.information.number}}</mat-card-title>
+    <mat-card-subtitle>{{ getSubtitle() }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="employee">
+      <mat-list role="list" *ngIf="roomInformation.information.employee">
+        <div mat-subheader>Mitarbeiter</div>
+        <mat-list-item role="listitem">Oliver Kempf</mat-list-item>
+        <mat-list-item role="listitem">Rubens Henning</mat-list-item>
+        <mat-list-item role="listitem">Julian Nagelsmann</mat-list-item>
+        <mat-list-item role="listitem">Li Endo</mat-list-item>
+      </mat-list>
+    </div>
+  </mat-card-content>
+</mat-card>

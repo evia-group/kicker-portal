@@ -1,0 +1,22 @@
+.map-container {
+  padding: 50px;
+  .map {
+    stroke: white;
+    stroke-width: 2;
+
+  }
+
+  .interactive-map {
+    fill: none;
+    pointer-events: all;
+    cursor: pointer;
+
+  }
+
+  .active {
+    //fill: #629c2842;
+    stroke: #d9f357;
+    stroke-width: 5;
+  }
+}
+

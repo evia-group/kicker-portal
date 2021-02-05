@@ -10,7 +10,6 @@ import {LoginComponent} from './components/login/login.component';
 import {RegisterComponent} from './components/register/register.component';
 import {
   AngularFireAuthGuard,
-  redirectUnauthorizedTo,
   redirectLoggedInTo,
   emailVerified,
   canActivate,
@@ -18,6 +17,7 @@ import {
 import {pipe} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NotVerifiedComponent} from './components/not-verified/not-verified.component';
+import {InteractiveMapComponent} from './components/interactive-map/interactive-map.component';
 
 const redirectUnauthorized = () => {
   return pipe(
@@ -56,6 +56,11 @@ const routes: Routes = [
       },
       {path: '', pathMatch: 'full', redirectTo: 'matches',}
     ]
+  },
+  {
+    path: 'map',
+    component: InteractiveMapComponent,
+    ...canActivate(redirectUnauthorized),
   },
   {
     path: 'dashboard',
