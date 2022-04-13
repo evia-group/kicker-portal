@@ -1,10 +1,10 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 .information-card {
   min-width: 200px;
   margin: 20px;
-  @include mat-elevation-transition;
-  @include mat-elevation(10);
+  @include mat.elevation-transition;
+  @include mat.elevation(10);
 
   .icon {
     font-size: 28px;
