@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection, DocumentReference} from '@angular/fire/firestore';
+import { DocumentReference } from '@angular/fire/compat/firestore';
+import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
 import {Observable} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
 import {IMatch} from '../interfaces/match.interface';

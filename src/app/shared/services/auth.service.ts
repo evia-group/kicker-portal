@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {auth, User} from 'firebase';
-import {AngularFireAuth} from '@angular/fire/auth';
+import firebase from 'firebase/compat/app';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UsersService} from './users.service';
@@ -10,7 +10,7 @@ import {IUser} from '../interfaces/user.interface';
   providedIn: 'root'
 })
 export class AuthService {
-  private user: User;
+  private user: firebase.User;
   private loggedIn = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -82,7 +82,7 @@ export class AuthService {
   }
 
   async loginWithGoogle() {
-    await this.afAuth.signInWithPopup(new auth.GoogleAuthProvider());
+    await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     this.loggedIn.next(true);
     await this.router.navigate(['/dashboard']);
   }

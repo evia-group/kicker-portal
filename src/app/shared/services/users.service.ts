@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
+import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {IUser} from '../interfaces/user.interface';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
 import { environment } from '../../../environments/environment';
 
 const increment = firebase.firestore.FieldValue.increment(1);

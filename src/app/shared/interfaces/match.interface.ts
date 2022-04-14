@@ -1,4 +1,5 @@
-import {DocumentReference} from '@angular/fire/firestore';
+//import {DocumentReference} from '@angular/fire/firestore';
+import { DocumentReference } from '@angular/fire/compat/firestore';
 
 export interface IRounds {
   win: boolean;

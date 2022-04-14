@@ -13,7 +13,7 @@ import {
   redirectLoggedInTo,
   emailVerified,
   canActivate,
-} from '@angular/fire/auth-guard';
+} from '@angular/fire/compat/auth-guard';
 import {pipe} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NotVerifiedComponent} from './components/not-verified/not-verified.component';
