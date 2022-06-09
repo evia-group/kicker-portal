@@ -24,7 +24,6 @@ export class MatchesService {
 
     this.collection = collection(db, `${environment.prefix}Matches`) as CollectionReference<IMatch>;
     this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
-    console.log(this.matches$);
   }
 
   public matches$: Observable<any>;
