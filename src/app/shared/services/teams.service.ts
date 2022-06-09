@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection, Reference} from '@angular/fire/compat/firestore';
-import { DocumentReference } from '@angular/fire/compat/firestore';
+import { Firestore, collection, CollectionReference, doc, 
+  DocumentReference, updateDoc, setDoc, deleteDoc, writeBatch, 
+  collectionSnapshots } from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {ITeam} from '../interfaces/user.interface';
-import firebase from 'firebase/compat/app';
 import {environment} from '../../../environments/environment';
+import { increment } from "firebase/firestore";
 
-const increment = firebase.firestore.FieldValue.increment(1);
+const increment_value = increment(1);
 
 @Injectable({
   providedIn: 'root',
@@ -16,16 +17,16 @@ export class TeamsService {
 
   public teams$: Observable<any>;
 
-  protected collection: AngularFirestoreCollection;
+  protected collection: CollectionReference;
 
-  constructor(protected db: AngularFirestore) {
+  constructor(protected db: Firestore) {
 
-    this.collection = this.db.collection<ITeam>(`${environment.prefix}Teams`);
-    this.teams$ = this.collection.snapshotChanges().pipe(
+    this.collection = collection(this.db, `${environment.prefix}Teams`) as CollectionReference<ITeam>;
+    this.teams$ = collectionSnapshots(this.collection).pipe(
       map(actions => {
         return actions.map(a => {
-          const data = a.payload.doc.data() as ITeam;
-          const id = a.payload.doc.id;
+          const data = a.data() as ITeam;
+          const id = a.id;
           return {id, ...data};
         });
       }),
@@ -33,9 +34,9 @@ export class TeamsService {
     );
   }
 
-  public add(id: string, players: string[], name: string) {
+  public async add(id: string, players: string[], name: string) {
     const referencePlayer: DocumentReference[] = [
-        this.db.doc(`Users/${players[0]}`).ref, this.db.doc(`Users/${players[1]}`).ref
+        doc(this.db, `Users/${players[0]}`), doc(this.db, `Users/${players[1]}`)
       ]
     ;
     const team: ITeam = {
@@ -53,35 +54,34 @@ export class TeamsService {
       defeats: 0
     };
 
-    this.collection.doc(id).update({})
-      .catch(() => {
-        this.collection.doc(id)
-          .set(team);
+    await updateDoc(doc(this.db, this.collection.path, id), {})
+      .catch(async () => {
+        await setDoc(doc(this.db, this.collection.path, id), team);
       });
   }
 
-  public delete(teamId) {
-
-    this.collection.doc(teamId).delete();
+  public async delete(teamId) {
+    await deleteDoc(doc(this.db, this.collection.path, teamId));
+    // this.collection.doc(teamId).delete();
   }
 
-  incrementTeamStates(teamId: string, wins: boolean, losses: boolean, defeats: boolean, dominations: boolean, type: string) {
-    const teamRef = this.db.firestore.collection('Teams').doc(teamId);
+  async incrementTeamStates(teamId: string, wins: boolean, losses: boolean, defeats: boolean, dominations: boolean, type: string) {
+    const teamRef = doc(this.db, environment.prefix + 'Teams', teamId);
 
-    const batch = this.db.firestore.batch();
-    batch.update(teamRef, {[`stats.${type}`]: increment});
+    const batch = writeBatch(this.db);
+    batch.update(teamRef, {[`stats.${type}`]: increment_value});
 
-    if(wins) batch.update(teamRef, {['wins']: increment});
-    if(losses) batch.update(teamRef, {['losses']: increment});
-    if(defeats) batch.update(teamRef, {['defeats']: increment});
-    if(dominations) batch.update(teamRef, {['dominations']: increment});
+    if(wins) batch.update(teamRef, {['wins']: increment_value});
+    if(losses) batch.update(teamRef, {['losses']: increment_value});
+    if(defeats) batch.update(teamRef, {['defeats']: increment_value});
+    if(dominations) batch.update(teamRef, {['dominations']: increment_value});
 
-    batch.commit();
+    await batch.commit();
   }
 
-  public update(teamId: string, updateObject: any) {
+  public async update(teamId: string, updateObject: any) {
     console.log('TeamUpdate', teamId, updateObject);
-    this.collection.doc(teamId).update(updateObject)
+    await updateDoc(doc(this.db, this.collection.path, teamId), updateObject)
       .then(() => console.log('success'))
       .catch((err) => console.log('err', err));
   }

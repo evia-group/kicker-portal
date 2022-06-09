@@ -1,5 +1,3 @@
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { environment } from '../environments/environment';
@@ -16,7 +14,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AddMatchComponent } from './shared/components/add-match/add-match.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RoundResultComponent } from './shared/components/add-match/round-result/round-result.component';
 import { SelectPlayersComponent } from './shared/components/add-match/select-players/select-players.component';
 import { InfoBarComponent } from './shared/components/info-bar/info-bar.component';
@@ -29,6 +27,10 @@ import { NotVerifiedComponent } from './components/not-verified/not-verified.com
 import { InteractiveMapComponent } from './components/interactive-map/interactive-map.component';
 import { RoomMapComponent } from './shared/components/room-map/room-map.component';
 import { RoomInformationComponent } from './shared/components/room-information/room-information.component';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -68,8 +70,9 @@ export function createTranslateLoader(http: HttpClient) {
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
     FormsModule,
     ReactiveFormsModule,
   ],
