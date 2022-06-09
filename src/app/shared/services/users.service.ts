@@ -1,30 +1,34 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
+import { Firestore, collection, CollectionReference, doc, updateDoc, 
+  setDoc, deleteDoc, writeBatch, collectionSnapshots } from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {IUser} from '../interfaces/user.interface';
-import firebase from 'firebase/compat/app';
+// import firebase from 'firebase/compat/app';
 import { environment } from '../../../environments/environment';
+import { increment } from "firebase/firestore";
 
-const increment = firebase.firestore.FieldValue.increment(1);
+const increment_value = increment(1);
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
 
+
   public users$: Observable<any>;
 
-  protected collection: AngularFirestoreCollection;
+  protected collection: CollectionReference;
 
-  constructor(protected db: AngularFirestore) {
+  constructor(protected db: Firestore) {
 
-    this.collection = this.db.collection<IUser>(`${environment.prefix}Users`);
-    this.users$ = this.collection.snapshotChanges().pipe(
+    this.collection = collection(this.db, `${environment.prefix}Users`) as CollectionReference<IUser>;
+
+    this.users$ = collectionSnapshots(this.collection).pipe(
       map(actions => {
         return actions.map(a => {
-          const data = a.payload.doc.data() as IUser;
-          const id = a.payload.doc.id;
+          const data = a.data() as IUser;
+          const id = a.id;
           return {id, ...data};
         });
       }),
@@ -32,33 +36,31 @@ export class UsersService {
     );
   }
 
-  add(user: IUser) {
-
-    this.collection.doc(user.id).set(user);
+  async add(user: IUser) {
+    await setDoc(doc(this.db, this.collection.path, user.id), user);
   }
 
-  delete(userId) {
-
-    this.collection.doc(userId).delete();
+  async delete(userId) {
+    await deleteDoc(doc(this.db, this.collection.path, userId));
   }
 
-  incrementUserStates(userId: string, wins: boolean, losses: boolean, defeats: boolean, dominations: boolean, type: string) {
-    const userReff = this.db.firestore.collection('Users').doc(userId);
+  async incrementUserStates(userId: string, wins: boolean, losses: boolean, defeats: boolean, dominations: boolean, type: string) {
+    const userReff = doc(this.db, environment.prefix + 'Users', userId);
 
-    const batch = this.db.firestore.batch();
-    batch.update(userReff, {[`stats.${type}`]: increment});
+    const batch = writeBatch(this.db);
+    batch.update(userReff, {[`stats.${type}`]: increment_value});
 
-    if(wins) batch.update(userReff, {['wins']: increment});
-    if(losses) batch.update(userReff, {['losses']: increment});
-    if(defeats) batch.update(userReff, {['defeats']: increment});
-    if(dominations) batch.update(userReff, {['dominations']: increment});
+    if(wins) batch.update(userReff, {['wins']: increment_value});
+    if(losses) batch.update(userReff, {['losses']: increment_value});
+    if(defeats) batch.update(userReff, {['defeats']: increment_value});
+    if(dominations) batch.update(userReff, {['dominations']: increment_value});
 
-    batch.commit();
+    await batch.commit();
   }
 
-  public update(userId: string, updateObject: any) {
+  public async update(userId: string, updateObject: any) {
     console.log('Userupdate', userId, updateObject);
-    this.collection.doc(userId).update(updateObject)
+    await updateDoc(doc(this.db, this.collection.path), updateObject)
       .then(() => console.log('success'))
       .catch((err) => console.log('err', err));
   }

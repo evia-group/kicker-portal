@@ -8,16 +8,11 @@ import {KickerComponent} from './components/kicker/kicker.component';
 import {MatchFinderComponent} from './components/kicker/match-finder/match-finder.component';
 import {LoginComponent} from './components/login/login.component';
 import {RegisterComponent} from './components/register/register.component';
-import {
-  AngularFireAuthGuard,
-  redirectLoggedInTo,
-  emailVerified,
-  canActivate,
-} from '@angular/fire/compat/auth-guard';
 import {pipe} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NotVerifiedComponent} from './components/not-verified/not-verified.component';
 import {InteractiveMapComponent} from './components/interactive-map/interactive-map.component';
+import {AuthGuard, canActivate, redirectLoggedInTo, emailVerified} from '@angular/fire/auth-guard'
 
 const redirectUnauthorized = () => {
   return pipe(
@@ -65,7 +60,7 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AngularFireAuthGuard],
+    canActivate: [AuthGuard],
     data: { authGuardPipe: redirectUnauthorized }
   },
   {

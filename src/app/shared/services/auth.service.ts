@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import firebase from 'firebase/compat/app';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {User, GoogleAuthProvider, Auth, authState, signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, 
+  sendEmailVerification, signOut, signInWithPopup} from '@angular/fire/auth';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UsersService} from './users.service';
@@ -10,15 +11,15 @@ import {IUser} from '../interfaces/user.interface';
   providedIn: 'root'
 })
 export class AuthService {
-  private user: firebase.User;
+  private user: User;
   private loggedIn = new BehaviorSubject<boolean>(false);
 
   constructor(
-    public afAuth: AngularFireAuth,
+    private afAuth: Auth,
     public userSerice: UsersService,
     public router: Router,
   ) {
-    this.afAuth.authState.subscribe(user => {
+    authState(afAuth).subscribe(user => {
       if (user) {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(this.user));
@@ -37,13 +38,13 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    await this.afAuth.signInWithEmailAndPassword(email, password);
+    await signInWithEmailAndPassword(this.afAuth, email, password);
     this.loggedIn.next(true);
     await this.router.navigate(['/dashboard']);
   }
 
   async register(email: string, password: string, name: string) {
-    await this.afAuth.createUserWithEmailAndPassword(email, password).then((user) => {
+    await createUserWithEmailAndPassword(this.afAuth, email, password).then((user) => {
       const newUser: IUser = {
         id: user.user.uid,
         name,
@@ -59,30 +60,29 @@ export class AuthService {
         },
       };
       this.userSerice.add(newUser);
-    }).then(() => this.afAuth.onAuthStateChanged((user) => {
+    }).then(() => onAuthStateChanged(this.afAuth, (user) => {
       if(!user.emailVerified) {
-        user.sendEmailVerification();
+        sendEmailVerification(user);
         console.log('Email send to:', user.email);
       } else {
         console.log('Email is verified', user);
       }
     }));
-
   }
 
   async sendPasswordResetEmail(passwordResetEmail: string) {
-    return await this.afAuth.sendPasswordResetEmail(passwordResetEmail);
+    return await sendPasswordResetEmail(this.afAuth, passwordResetEmail);
   }
 
   async logout() {
-    await this.afAuth.signOut();
+    await signOut(this.afAuth);
     localStorage.removeItem('user');
     this.loggedIn.next(false);
     await this.router.navigate(['/login']);
   }
 
   async loginWithGoogle() {
-    await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    await signInWithPopup(this.afAuth, new GoogleAuthProvider());
     this.loggedIn.next(true);
     await this.router.navigate(['/dashboard']);
   }
