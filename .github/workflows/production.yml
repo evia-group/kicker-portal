@@ -27,11 +27,12 @@ jobs:
           node-version: '14.x'
       - run: npm install
       - run: npm run build
-      - uses: w9jds/firebase-action@v2.2.2
+      - uses: FirebaseExtended/action-hosting-deploy@v0.6-alpha
         with:
           args: deploy --only hosting
         env:
-         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+         repoToken: ${{ secrets.FIREBASE_TOKEN }}
+         projectId: 'evia-desk'
         
       
       
