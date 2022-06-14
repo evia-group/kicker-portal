@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: node env.ci.js
-          env:
-            FIREBASE_DETAILS: '${{ secrets.FIREBASE_DETAILS}}'
+        env:
+          FIREBASE_DETAILS: '${{ secrets.FIREBASE_DETAILS}}'
       - name: Install Dependencies
         run: npm ci
       - name: Build
