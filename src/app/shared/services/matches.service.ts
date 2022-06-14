@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import { DocumentReference } from '@angular/fire/compat/firestore';
-import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
+import {Firestore, collection, CollectionReference, doc, collectionData, 
+  addDoc, deleteDoc, DocumentReference} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
 import {IMatch} from '../interfaces/match.interface';
@@ -17,18 +17,19 @@ import {environment} from '../../../environments/environment';
 })
 export class MatchesService {
 
-  constructor(protected db: AngularFirestore,
+  constructor(protected db: Firestore,
               protected userService: UsersService,
               protected teamService: TeamsService,
               protected infoBar: InfoBarService) {
 
-    this.collection = this.db.collection<IMatch>(`${environment.prefix}Matches`);
-    this.matches$ = this.collection.valueChanges().pipe(shareReplay(1));
+    this.collection = collection(db, `${environment.prefix}Matches`) as CollectionReference<IMatch>;
+    this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
   }
 
   public matches$: Observable<any>;
 
-  protected collection: AngularFirestoreCollection;
+  protected collection: CollectionReference;
+
 
   private static getRoundInfos(team: string, form: FormGroup, type: 'win' | 'dominationTeamOne' | 'dominationTeamTwo'): number {
     const rounds = [
@@ -62,15 +63,15 @@ export class MatchesService {
 
 
     const teams = [
-      this.db.doc(`Teams/${team1})}`).ref,
-      this.db.doc(`Teams/${team2})}`).ref,
+      doc(this.db, `Teams/${team1})}`),
+      doc(this.db, `Teams/${team2})}`),
     ];
 
     const players = [
-      this.db.doc(`Teams/${match.get('players.team1.one').value.id}`).ref,
-      this.db.doc(`Teams/${match.get('players.team1.two').value.id}`).ref,
-      this.db.doc(`Teams/${match.get('players.team2.one').value.id}`).ref,
-      this.db.doc(`Teams/${match.get('players.team2.two').value.id}`).ref,
+      doc(this.db, `Teams/${match.get('players.team1.one').value.id}`),
+      doc(this.db, `Teams/${match.get('players.team1.two').value.id}`),
+      doc(this.db, `Teams/${match.get('players.team2.one').value.id}`),
+      doc(this.db, `Teams/${match.get('players.team2.two').value.id}`),
     ];
 
     const result = {
@@ -79,13 +80,13 @@ export class MatchesService {
     };
 
     for (let i = 0; i < dominationsTeam1; i++) {
-      dominations.push(this.db.doc(`Teams/${team1}`).ref);
-      defeats.push(this.db.doc(`Teams/${team2}`).ref);
+      dominations.push(doc(this.db, `Teams/${team1}`));
+      defeats.push(doc(this.db, `Teams/${team2}`));
     }
 
     for (let j = 0; j < dominationsTeam2; j++) {
-      dominations.push(this.db.doc(`Teams/${team2}`).ref);
-      defeats.push(this.db.doc(`Teams/${team1}`).ref);
+      dominations.push(doc(this.db, `Teams/${team2}`));
+      defeats.push(doc(this.db, `Teams/${team1}`));
     }
 
     const resultMatch: IMatch = {
@@ -97,7 +98,7 @@ export class MatchesService {
       type: `${winTeam1}:${winTeam2}`
     };
 
-    return this.collection.add(resultMatch)
+    return await addDoc(this.collection, resultMatch)
       .then(() => this.updateTeamAndUserStats(match))
       .then(() => {
         this.infoBar.openCustomSnackBar('Dein Spiel wurde erfolgreich gespeichert!', 'close', 5);
@@ -201,7 +202,7 @@ export class MatchesService {
     };
   }
 
-  delete(matchId) {
-    this.collection.doc(matchId).delete();
+  async delete(matchId) {
+    await deleteDoc(doc(this.db, this.collection.path, matchId));
   }
 }

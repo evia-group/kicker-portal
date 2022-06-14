@@ -1,5 +1,4 @@
-//import {DocumentReference} from '@angular/fire/firestore';
-import { DocumentReference } from '@angular/fire/compat/firestore';
+import {DocumentReference} from '@angular/fire/firestore';
 
 export interface IUser {
   name: string;
