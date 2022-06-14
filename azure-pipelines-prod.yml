@@ -18,7 +18,10 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSpec: "16.x"
+          - run: node env.ci.js
+              env:
+                FIREBASE_DETAILS: '${{ secrets.FIREBASE_DETAILS}}'
           - script: npm install
-          - script: npm run build 
+          - script: npm run build
           - publish: $(System.DefaultWorkingDirectory)
             artifact: App

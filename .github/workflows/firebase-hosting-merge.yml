@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: node env.ci.js
+        env:
+          FIREBASE_DETAILS: '${{ secrets.FIREBASE_DETAILS}}'
       - run: npm install
       - run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
