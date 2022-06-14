@@ -10,6 +10,7 @@ admin.initializeApp();
 const db = admin.firestore();
 const increment_value = admin.firestore.FieldValue.increment(1);
 const prefix = 'T-';
+const batch = admin.firestore.WriteBatch;
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -91,10 +92,10 @@ export const updateUser = functions.firestore.document(`${prefix}Matches/{docume
 });
 
 export const newUser = functions.auth.user().onCreate((user) => {
-    console.log(user.email, user.uid);
+    console.log(user);
     const newUser: IUser = {
         id: user.uid,
-        name: '',
+        name: user.displayName!,
         wins: 0,
         losses: 0,
         defeats: 0,
@@ -107,23 +108,4 @@ export const newUser = functions.auth.user().onCreate((user) => {
         },
     };
     db.doc(prefix + 'Users/' + user.uid).set(newUser);
-    // db.doc(prefix + 'Users/' + user.uid).get().then(snap => {
-    //     const newUser: IUser = {
-    //             id: user.uid,
-    //             name: '',
-    //             wins: 0,
-    //             losses: 0,
-    //             defeats: 0,
-    //             dominations: 0,
-    //             stats: {
-    //               '0:2': 0,
-    //               '2:0': 0,
-    //               '1:2': 0,
-    //               '2:1': 0,
-    //             },
-    //           };
-    //     // let data = snap.get('name');
-    //     // console.log(data);
-    //     db.doc(prefix + 'Users/' + user.uid).set(newUser);
-    // });
 });

@@ -35,48 +35,6 @@ export class AuthService {
     return this.loggedIn.asObservable();
   }
 
-<<<<<<< HEAD
-  async login(email: string, password: string) {
-    await signInWithEmailAndPassword(this.afAuth, email, password);
-    this.loggedIn.next(true);
-    await this.router.navigate(['/dashboard']);
-  }
-
-  async register(email: string, password: string, name: string) {
-    await createUserWithEmailAndPassword(this.afAuth, email, password)
-    // .then((user) => {
-    //   const newUser: IUser = {
-    //     id: user.user.uid,
-    //     name,
-    //     wins: 0,
-    //     losses: 0,
-    //     defeats: 0,
-    //     dominations: 0,
-    //     stats: {
-    //       '0:2': 0,
-    //       '2:0': 0,
-    //       '1:2': 0,
-    //       '2:1': 0,
-    //     },
-    //   };
-    //   this.userSerice.add(newUser);
-    // })
-    .then(() => onAuthStateChanged(this.afAuth, (user) => {
-      if(!user.emailVerified) {
-        sendEmailVerification(user);
-        console.log('Email send to:', user.email);
-      } else {
-        console.log('Email is verified', user);
-      }
-    }));
-  }
-
-  async sendPasswordResetEmail(passwordResetEmail: string) {
-    return await sendPasswordResetEmail(this.afAuth, passwordResetEmail);
-  }
-
-=======
->>>>>>> origin/development
   async logout() {
     await signOut(this.afAuth);
     localStorage.removeItem('user');
