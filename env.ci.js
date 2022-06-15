@@ -10,7 +10,7 @@ const content = `{
   production: true,
   versionNumber: 'v${version}',
   prefix: 'T-',
-  firebase: ${process.env.FIREBASE_DETAILS},
+  ${process.env.FIREBASE_DETAILS},
   globals: {
     team1: 0,
     team2: 1,
