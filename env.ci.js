@@ -1,11 +1,27 @@
 const fs = require('fs');
 const path = require('path');
+const {version} = require('./package.json');
 
 const dir = "src/environments";
 const file = "environment.ts";
 const prodFile = "environment.prod.ts";
 
-const content = `${process.env.FIREBASE_DETAILS}`;
+const content = `{
+  production: true,
+  versionNumber: 'v${version}',
+  prefix: 'T-',
+  firebase: ${process.env.FIREBASE_DETAILS},
+  globals: {
+    team1: 0,
+    team2: 1,
+    round1: 0,
+    round2: 1,
+    round3: 2,
+  },
+  ms: {
+    tenant: '${process.env.MS_TENANT}',
+  }
+}`
 
 fs.access(dir, fs.constants.F_OK, (err) => {
   if(err) {

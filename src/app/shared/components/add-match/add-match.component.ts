@@ -1,4 +1,4 @@
-import {AfterContentChecked, AfterViewChecked, AfterViewInit, Component, DoCheck, Input, OnDestroy} from '@angular/core';
+import {AfterContentChecked, Component, Input} from '@angular/core';
 import {IPlayers} from '../../interfaces/match.interface';
 import {ITeam, IUser} from '../../interfaces/user.interface';
 import {BehaviorSubject, Observable} from 'rxjs';

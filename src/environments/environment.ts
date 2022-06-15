@@ -6,13 +6,25 @@ export const environment = {
   production: false,
   versionNumber: 'v0.0.1',
   prefix: 'T-',
-  firebase: {},
+  firebase: {
+    apiKey: 'AIzaSyBbBYhVMNcLUm3PRatlB2IPACxO_VamlkA',
+    authDomain: 'evia-desk.firebaseapp.com',
+    databaseURL: 'https://evia-desk.firebaseio.com',
+    projectId: 'evia-desk',
+    storageBucket: 'evia-desk.appspot.com',
+    messagingSenderId: '124473984293',
+    appId: '1:124473984293:web:578828e4a4140cad2fc6cc',
+    measurementId: 'G-1XL0KJGE7C'
+  },
   globals: {
     team1: 0,
     team2: 1,
     round1: 0,
     round2: 1,
     round3: 2,
+  },
+  ms: {
+    tenant: 'd532e0e6-fdff-4abd-ac1a-3dac03807405',
   }
 };
 
