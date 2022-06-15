@@ -38,11 +38,9 @@
 /* tslint:disable */
 // @ts-nocheck
 const { writeFile, existsSync, mkdirSync } = require('fs');
-const { argv } = require('yargs');
 const {version} = require('./package.json');
 
 require('dotenv').config();
-const environment = argv.environment;
 
 
 function writeFileUsingFS(targetPath, environmentFileContent) {
@@ -69,14 +67,8 @@ if (!existsSync(envDirectory)) {
 writeFileUsingFS('./src/environments/environment.prod.ts', '');
 writeFileUsingFS('./src/environments/environment.ts', '');
 
-
-// Checks whether command line argument of `prod` was provided signifying production mode
-const isProduction = environment === 'prod';
-
 // choose the correct targetPath based on the environment chosen
-const targetPath = isProduction
-  ? './src/environments/environment.prod.ts'
-  : './src/environments/environment.ts';
+const targetPath = './src/environments/environment.prod.ts';
 
 //actual content to be compiled dynamically and pasted into respective environment files
 const environmentFileContent = `
