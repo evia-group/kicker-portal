@@ -21,7 +21,6 @@
   "auth": {
     "email": "e-mail",
     "password": "password",
-    "canActivate: [AngularFireAuthGuard],": "register",
     "login": "login",
     "forgotPassword": "forgot password",
     "firstname": "firstname",
