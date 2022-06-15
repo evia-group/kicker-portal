@@ -6,9 +6,11 @@ const dir = "src/environments";
 const file = "environment.ts";
 const prodFile = "environment.prod.ts";
 
-const content = `{
+const firebase = process.env.FIREBASE_DETAILS;
+
+const content = {
   production: true,
-  versionNumber: 'v${version}',
+  versionNumber: `v${version}`,
   prefix: '',
   globals: {
     team1: 0,
@@ -18,10 +20,10 @@ const content = `{
     round3: 2,
   },
   ms: {
-    tenant: '${process.env.MS_TENANT}',
+    tenant: process.env.MS_TENANT,
   },
-  ${process.env.FIREBASE_DETAILS},
-}`
+  firebase
+}.toString();
 
 fs.access(dir, fs.constants.F_OK, (err) => {
   if(err) {
