@@ -9,8 +9,7 @@ const prodFile = "environment.prod.ts";
 const content = `{
   production: true,
   versionNumber: 'v${version}',
-  prefix: 'T-',
-  ${process.env.FIREBASE_DETAILS},
+  prefix: '',
   globals: {
     team1: 0,
     team2: 1,
@@ -20,7 +19,8 @@ const content = `{
   },
   ms: {
     tenant: '${process.env.MS_TENANT}',
-  }
+  },
+  ${process.env.FIREBASE_DETAILS},
 }`
 
 fs.access(dir, fs.constants.F_OK, (err) => {
