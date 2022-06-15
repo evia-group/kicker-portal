@@ -16,7 +16,6 @@ jobs:
       - run: node env.ci.js
         env:
           FIREBASE_DETAILS: '${{ secrets.FIREBASE_DETAILS}}'
-          MS_TENANT: '${{ secrets.MS_TENANT}}'
       - name: Install Dependencies
         run: npm ci
       - name: Build
