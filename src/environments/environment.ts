@@ -3,11 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  useEmulators: true,
   production: false,
   versionNumber: 'v0.0.1',
   prefix: 'T-',
   firebase: {
-    apiKey: 'AIzaSyBbBYhVMNcLUm3PRatlB2IPACxO_VamlkA',
+    apiKey: 'AIzaSyD_8vnf0mzHh9LT51Ej8HJkOCmBUQlKa4M',
     authDomain: 'evia-desk.firebaseapp.com',
     databaseURL: 'https://evia-desk.firebaseio.com',
     projectId: 'evia-desk',

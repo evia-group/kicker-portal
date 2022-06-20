@@ -36,7 +36,7 @@ export class TeamsService {
 
   public async add(id: string, players: string[], name: string) {
     const referencePlayer: DocumentReference[] = [
-        doc(this.db, `Users/${players[0]}`), doc(this.db, `Users/${players[1]}`)
+        doc(this.db, `${environment.prefix}Users/${players[0]}`), doc(this.db, `${environment.prefix}Users/${players[1]}`)
       ]
     ;
     const team: ITeam = {

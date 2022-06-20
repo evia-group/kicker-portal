@@ -63,15 +63,15 @@ export class MatchesService {
 
 
     const teams = [
-      doc(this.db, `Teams/${team1})}`),
-      doc(this.db, `Teams/${team2})}`),
+      doc(this.db, `${environment.prefix}Teams/${team1})}`),
+      doc(this.db, `${environment.prefix}Teams/${team2})}`),
     ];
 
     const players = [
-      doc(this.db, `Teams/${match.get('players.team1.one').value.id}`),
-      doc(this.db, `Teams/${match.get('players.team1.two').value.id}`),
-      doc(this.db, `Teams/${match.get('players.team2.one').value.id}`),
-      doc(this.db, `Teams/${match.get('players.team2.two').value.id}`),
+      doc(this.db, `${environment.prefix}Users/${match.get('players.team1.one').value.id}`),
+      doc(this.db, `${environment.prefix}Users/${match.get('players.team1.two').value.id}`),
+      doc(this.db, `${environment.prefix}Users/${match.get('players.team2.one').value.id}`),
+      doc(this.db, `${environment.prefix}Users/${match.get('players.team2.two').value.id}`),
     ];
 
     const result = {
@@ -80,13 +80,13 @@ export class MatchesService {
     };
 
     for (let i = 0; i < dominationsTeam1; i++) {
-      dominations.push(doc(this.db, `Teams/${team1}`));
-      defeats.push(doc(this.db, `Teams/${team2}`));
+      dominations.push(doc(this.db, `${environment.prefix}Teams/${team1}`));
+      defeats.push(doc(this.db, `${environment.prefix}Teams/${team2}`));
     }
 
     for (let j = 0; j < dominationsTeam2; j++) {
-      dominations.push(doc(this.db, `Teams/${team2}`));
-      defeats.push(doc(this.db, `Teams/${team1}`));
+      dominations.push(doc(this.db, `${environment.prefix}Teams/${team2}`));
+      defeats.push(doc(this.db, `${environment.prefix}Teams/${team1}`));
     }
 
     const resultMatch: IMatch = {
@@ -99,7 +99,7 @@ export class MatchesService {
     };
 
     return await addDoc(this.collection, resultMatch)
-      .then(() => this.updateTeamAndUserStats(match))
+      //.then(() => this.updateTeamAndUserStats(match))
       .then(() => {
         this.infoBar.openCustomSnackBar('Dein Spiel wurde erfolgreich gespeichert!', 'close', 5);
       })

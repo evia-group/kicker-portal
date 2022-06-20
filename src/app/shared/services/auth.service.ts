@@ -44,23 +44,25 @@ export class AuthService {
   }
 
   async register(email: string, password: string, name: string) {
-    await createUserWithEmailAndPassword(this.afAuth, email, password).then((user) => {
-      const newUser: IUser = {
-        id: user.user.uid,
-        name,
-        wins: 0,
-        losses: 0,
-        defeats: 0,
-        dominations: 0,
-        stats: {
-          '0:2': 0,
-          '2:0': 0,
-          '1:2': 0,
-          '2:1': 0,
-        },
-      };
-      this.userSerice.add(newUser);
-    }).then(() => onAuthStateChanged(this.afAuth, (user) => {
+    await createUserWithEmailAndPassword(this.afAuth, email, password)
+    // .then((user) => {
+    //   const newUser: IUser = {
+    //     id: user.user.uid,
+    //     name,
+    //     wins: 0,
+    //     losses: 0,
+    //     defeats: 0,
+    //     dominations: 0,
+    //     stats: {
+    //       '0:2': 0,
+    //       '2:0': 0,
+    //       '1:2': 0,
+    //       '2:1': 0,
+    //     },
+    //   };
+    //   this.userSerice.add(newUser);
+    // })
+    .then(() => onAuthStateChanged(this.afAuth, (user) => {
       if(!user.emailVerified) {
         sendEmailVerification(user);
         console.log('Email send to:', user.email);
