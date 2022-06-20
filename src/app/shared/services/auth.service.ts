@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
-import {User, GoogleAuthProvider, Auth, authState, signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, 
-  sendEmailVerification, signOut, signInWithPopup} from '@angular/fire/auth';
+import {User, Auth, authState, signOut, signInWithPopup, OAuthProvider} from '@angular/fire/auth';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UsersService} from './users.service';
-import {IUser} from '../interfaces/user.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +35,7 @@ export class AuthService {
     return this.loggedIn.asObservable();
   }
 
+<<<<<<< HEAD
   async login(email: string, password: string) {
     await signInWithEmailAndPassword(this.afAuth, email, password);
     this.loggedIn.next(true);
@@ -76,6 +75,8 @@ export class AuthService {
     return await sendPasswordResetEmail(this.afAuth, passwordResetEmail);
   }
 
+=======
+>>>>>>> origin/development
   async logout() {
     await signOut(this.afAuth);
     localStorage.removeItem('user');
@@ -83,8 +84,12 @@ export class AuthService {
     await this.router.navigate(['/login']);
   }
 
-  async loginWithGoogle() {
-    await signInWithPopup(this.afAuth, new GoogleAuthProvider());
+  async loginWithMicrosoft() {
+    const provider = new OAuthProvider('microsoft.com');
+    provider.setCustomParameters({
+      tenant: environment.ms.tenant,
+    });
+    await signInWithPopup(this.afAuth, provider);
     this.loggedIn.next(true);
     await this.router.navigate(['/dashboard']);
   }
