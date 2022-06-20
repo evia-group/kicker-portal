@@ -1,0 +1,28 @@
+[debug] [2022-06-20T10:03:10.541Z] ----------------------------------------------------------------------
+[debug] [2022-06-20T10:03:10.547Z] Command:       /Users/k.mohammadi/.nvm/versions/node/v16.13.2/bin/node /Users/k.mohammadi/.nvm/versions/node/v16.13.2/bin/firebase emulators:start --import ./evia-desk-firestore-copy
+[debug] [2022-06-20T10:03:10.549Z] CLI Version:   11.1.0
+[debug] [2022-06-20T10:03:10.550Z] Platform:      darwin
+[debug] [2022-06-20T10:03:10.550Z] Node Version:  v16.13.2
+[debug] [2022-06-20T10:03:10.553Z] Time:          Mon Jun 20 2022 12:03:10 GMT+0200 (Central European Summer Time)
+[debug] [2022-06-20T10:03:10.554Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-06-20T10:03:10.695Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-06-20T10:03:10.696Z] > authorizing via signed-in user (komail.mohammadi@evia.de)
+[debug] [2022-06-20T10:03:11.185Z] java version "17.0.1" 2021-10-19 LTS
+
+[debug] [2022-06-20T10:03:11.187Z] Java(TM) SE Runtime Environment (build 17.0.1+12-LTS-39)
+Java HotSpot(TM) 64-Bit Server VM (build 17.0.1+12-LTS-39, mixed mode, sharing)
+
+[debug] [2022-06-20T10:03:11.193Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, functions, firestore, hosting, storage {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, hosting, storage"}}
+[debug] [2022-06-20T10:03:11.227Z] [hub] writing locator at /var/folders/22/myv4x4y9485bhtyc1v13vy5w8_lvcl/T/hub-evia-desk.json
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2022-06-20T10:03:11.259Z] Error: ENOENT: no such file or directory, lstat '/Users/k.mohammadi/Desktop/evia-Code/kicker-portal/evia-desk-firestore-copy'
+    at Object.lstatSync (node:fs:1514:3)
+    at findExportMetadata (/Users/k.mohammadi/.nvm/versions/node/v16.13.2/lib/node_modules/firebase-tools/lib/emulator/controller.js:177:32)
+    at Object.startAll (/Users/k.mohammadi/.nvm/versions/node/v16.13.2/lib/node_modules/firebase-tools/lib/emulator/controller.js:265:31)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async Command.actionFn (/Users/k.mohammadi/.nvm/versions/node/v16.13.2/lib/node_modules/firebase-tools/lib/commands/emulators-start.js:29:35)
+[error] 
+[error] Error: An unexpected error has occurred.
