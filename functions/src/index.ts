@@ -10,89 +10,119 @@ admin.initializeApp();
 const db = admin.firestore();
 const increment_value = admin.firestore.FieldValue.increment(1);
 const prefix = 'T-';
-const batch = admin.firestore.WriteBatch;
+// const batch = admin.firestore().batch();
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
 
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+function incrementDoc(path: string, field: string) {
+    db.doc(path).update({[field]: increment_value});
+    // batch.update(db.doc(path), {[field]: increment_value});
+}
 
-export const updateUser = functions.firestore.document(`${prefix}Matches/{documentId}`).onCreate((snap, context) => {
-    const original = snap.data().players[0];
-    console.log('path: ' + original.path);
-    // const tmap = new Map(Object.entries(snap.data().result));
+function updateDocs(id1: string, id2: string, stats: string) {
+    incrementDoc(prefix + 'Teams/' + id1, 'wins');
+
+
+    // db.doc(prefix + 'Teams' + id1).update({['stats']})
+    // db.doc(prefix + 'Teams/' + id1).get().then(data => {
+    //     console.log(data.get('stats'));
+    // });
+    db.doc(prefix + 'Teams/' + id1).update({['stats.'+ stats]: increment_value});
+
+    // db.doc(prefix + 'Teams/' + team1_id).update({['wins']: increment_value});
+    db.doc(prefix + 'Teams/' + id1).get().then(data => {
+        data.get('players').forEach((player: any) => {
+            incrementDoc(player.path, 'wins');
+            db.doc(player.path).update({['stats.'+ stats]: increment_value});
+            // batch.update(db.doc(player.path), {['wins']: increment_value});
+            // db.doc(player.path).update({['wins']: increment_value});
+        });
+    });
+    incrementDoc(prefix + 'Teams/' + id2, 'losses');
+    db.doc(prefix + 'Teams/' + id2).update({['stats.'+ reverseString(stats)]: increment_value});
+    // db.doc(prefix + 'Teams/' + team2_id).update({['losses']: increment_value});
+    db.doc(prefix + 'Teams/' + id2).get().then(data => {
+        data.get('players').forEach((player: any) => {
+            incrementDoc(player.path, 'losses');
+            db.doc(player.path).update({['stats.'+ reverseString(stats)]: increment_value});
+            // db.doc(player.path).update({['losses']: increment_value});
+        });
+    });
+}
+
+function reverseString(str: string) {
+    return str.split('').reverse().join('');
+}
+
+function updateDominationsAndDefeats(snap: any) {
+    let preTeams: string[] = [];
+    snap.data().dominations.forEach((dTeam: any) => {
+        if (!preTeams.includes(dTeam.path)) { 
+            incrementDoc(dTeam.path, 'dominations');
+            preTeams.push(dTeam.path);
+            db.doc(dTeam.path).get().then(data => {
+                data.get('players').forEach((player: any) => {
+                    incrementDoc(player.path, 'dominations');
+                    // db.doc(player.path).update({['losses']: increment_value});
+                });
+            });
+        }
+    });
+
+    preTeams = [];
+    snap.data().defeats.forEach((dTeam: any) => {
+        if (!preTeams.includes(dTeam.path)) { 
+            incrementDoc(dTeam.path, 'defeats');
+            preTeams.push(dTeam.path);
+            db.doc(dTeam.path).get().then(data => {
+                data.get('players').forEach((player: any) => {
+                    incrementDoc(player.path, 'defeats');
+                    // db.doc(player.path).update({['losses']: increment_value});
+                });
+            });
+        }
+    });
+}
+
+export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matches/{documentId}`).onCreate((snap, context) => {
     const result = snap.data().result;
     const keys = Object.keys(result);
     const team1_id = keys[0];
     const res_team1 =  result[keys[0]];
     const team2_id = keys[1];
-    // const res_team2 =  result[keys[1]];
+    const res_team2 =  result[keys[1]];
 
     if (res_team1 === 2) {
-        db.doc(prefix + 'Teams/' + team1_id).update({['wins']: increment_value});
-        db.doc(prefix + 'Teams/' + team1_id).get().then(data => {
-            // console.log(data.get('players')[0].path);
-            data.get('players').forEach((player: any) => {
-                db.doc(player.path).update({['wins']: increment_value});
-            });
-        });
-        db.doc(prefix + 'Teams/' + team2_id).update({['losses']: increment_value});
-        db.doc(prefix + 'Teams/' + team2_id).get().then(data => {
-            data.get('players').forEach((player: any) => {
-                db.doc(player.path).update({['losses']: increment_value});
-            });
-        });
+        updateDocs(team1_id, team2_id, res_team1 + ':' + res_team2);
+        
     }
     else {
-        db.doc(prefix + 'Teams/' + team2_id).update({['wins']: increment_value});
-        db.doc(prefix + 'Teams/' + team2_id).get().then(data => {
-            // console.log(data.get('players')[0].path);
-            data.get('players').forEach((player: any) => {
-                db.doc(player.path).update({['wins']: increment_value});
-            });
-        });
-        db.doc(prefix + 'Teams/' + team1_id).update({['losses']: increment_value});
-        db.doc(prefix + 'Teams/' + team1_id).get().then(data => {
-            data.get('players').forEach((player: any) => {
-                db.doc(player.path).update({['losses']: increment_value});
-            });
-        });
+        updateDocs(team2_id, team1_id, res_team2 + ':' + res_team1);
     }
 
-    // keys.forEach(team => {
-    //     console.log('result: ' + result[team]);
+    updateDominationsAndDefeats(snap);
 
-    //     if (result[team] === 2) {
-    //         db.doc(prefix + 'Teams/' + team).update({['wins']: increment_value});
-    //         db.doc(prefix + 'Teams/' + team).get().then(data => {
-    //             console.log(data.get('players')[0].path);
-    //             data.get('players').forEach((player: any) => {
-    //                 db.doc(player.path).update({['wins']: increment_value});
-    //             });
-    //         });
-    //     }
-    //     else {
-    //         db.doc(prefix + 'Teams/' + team).update({['losses']: increment_value});
-    //         db.doc(prefix + 'Teams/' + team).get().then(data => {
-    //             data.get('players').forEach((player: any) => {
-    //                 db.doc(player.path).update({['losses']: increment_value});
-    //             });
-    //         });
+    // let preTeams: string[] = [];
+    // snap.data().dominations.forEach((dTeam: any) => {
+    //     if (!preTeams.includes(dTeam.path)) { 
+    //         incrementDoc(dTeam.path, 'dominations');
+    //         preTeams.push(dTeam.path);
     //     }
     // });
-    // db.doc(original.path).get().then(async data => {
-    //     const test = await data.get('id');
-    //     console.log('id: ' + test);
+
+    // preTeams = [];
+    // snap.data().defeats.forEach((dTeam: any) => {
+    //     if (!preTeams.includes(dTeam.path)) { 
+    //         incrementDoc(dTeam.path, 'defeats');
+    //         preTeams.push(dTeam.path);
+    //     }
     // });
-    //   const test = db.doc(prefix + 'Users/9LrS2TeIzyfwb5onK65ALFSz3YQ2');
-    //   console.log(context.params.documentId + ": " + test);
+
+    return null;
 });
 
+/* When a new user is added to firebase, this function gets triggered.
+   It adds a new user to firestore. */
 export const newUser = functions.auth.user().onCreate((user) => {
-    console.log(user);
     const newUser: IUser = {
         id: user.uid,
         name: user.displayName!,
@@ -108,4 +138,6 @@ export const newUser = functions.auth.user().onCreate((user) => {
         },
     };
     db.doc(prefix + 'Users/' + user.uid).set(newUser);
+
+    return null;
 });
