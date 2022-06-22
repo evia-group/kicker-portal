@@ -14,6 +14,9 @@ export const environment = {
     round2: 1,
     round3: 2,
   },
+  ms: {
+    tenant: '',
+  },
 };
 
 /*

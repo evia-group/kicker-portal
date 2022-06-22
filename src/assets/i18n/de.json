@@ -28,6 +28,7 @@
     "lastname": "Nachname",
     "backToLogin": "zum Anmelden",
     "verified": "Du hast deine E-Mail-Adresse noch nicht bestätigt. Schau bitte in deinen E-Mails nach der Bestätigungs E-Mail. <br /><br />Solltest du keine bekommen habe wende dich bitte an dirk.mueller@evia.de",
+    "loginWithMS": "Mit Microsoft anmelden",
     "error": {
       "recognised": "Der Benutzername und das Passwort sind falsch",
       "email": "Bitte geben sie eine gültige E-Mail Adresse an",
