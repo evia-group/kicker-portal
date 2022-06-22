@@ -10,8 +10,10 @@
     "e2e": "ng e2e",
     "prepare": "husky install",
     "p:check": "prettier --check .",
-    "p:write": "prettier --write .",
-    "lint-staged": "prettier --write --ignore-unknown"
+    "p:write": "prettier --write ."
+  },
+  "lint-staged": {
+    "src/*": "prettier --write ."
   },
   "private": true,
   "dependencies": {

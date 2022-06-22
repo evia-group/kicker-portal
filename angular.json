@@ -155,7 +155,6 @@
   },
   "defaultProject": "kicker-portal",
   "cli": {
-    "analytics": "200e6ae5-f0b4-47f9-8380-87bd4317dce4",
     "defaultCollection": "@angular-eslint/schematics"
   }
 }
