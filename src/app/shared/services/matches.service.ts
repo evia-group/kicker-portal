@@ -1,23 +1,29 @@
 import { Injectable } from '@angular/core';
-import {
+import type {
   Firestore,
-  collection,
   CollectionReference,
+  DocumentReference,
+} from '@angular/fire/firestore';
+import {
+  collection,
   doc,
   collectionData,
   addDoc,
   deleteDoc,
-  DocumentReference,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
-import { IMatch } from '../interfaces/match.interface';
-import { InfoBarService } from './info-bar.service';
-import { FormGroup } from '@angular/forms';
-import { ITeamIncrement, IUserIncrement } from '../interfaces/user.interface';
-import { UsersService } from './users.service';
-import { TeamsService } from './teams.service';
+import type { IMatch } from '../interfaces/match.interface';
+import type { InfoBarService } from './info-bar.service';
+import type { FormGroup } from '@angular/forms';
+import type {
+  ITeamIncrement,
+  IUserIncrement,
+} from '../interfaces/user.interface';
+import type { UsersService } from './users.service';
+import type { TeamsService } from './teams.service';
 import { environment } from '../../../environments/environment';
+import type { DocumentData } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -27,23 +33,23 @@ export class MatchesService {
     protected db: Firestore,
     protected userService: UsersService,
     protected teamService: TeamsService,
-    protected infoBar: InfoBarService,
+    protected infoBar: InfoBarService
   ) {
     this.collection = collection(
       db,
-      `${environment.prefix}Matches`,
+      `${environment.prefix}Matches`
     ) as CollectionReference<IMatch>;
     this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
   }
 
-  public matches$: Observable<any>;
+  public matches$: Observable<DocumentData[]>;
 
   protected collection: CollectionReference;
 
   private static getRoundInfos(
     team: string,
     form: FormGroup,
-    type: 'win' | 'dominationTeamOne' | 'dominationTeamTwo',
+    type: 'win' | 'dominationTeamOne' | 'dominationTeamTwo'
   ): number {
     const rounds = [
       form.get(`rounds.one.${type}`).value,
@@ -70,12 +76,12 @@ export class MatchesService {
     const dominationsTeam1 = MatchesService.getRoundInfos(
       'team1',
       match,
-      'dominationTeamOne',
+      'dominationTeamOne'
     );
     const dominationsTeam2 = MatchesService.getRoundInfos(
       'team2',
       match,
-      'dominationTeamTwo',
+      'dominationTeamTwo'
     );
 
     const defeats: DocumentReference[] = [];
@@ -123,7 +129,7 @@ export class MatchesService {
         this.infoBar.openCustomSnackBar(
           'Dein Spiel wurde erfolgreich gespeichert!',
           'close',
-          5,
+          5
         );
       })
       .catch((err) => {
@@ -138,12 +144,12 @@ export class MatchesService {
     const dominationsTeam1 = MatchesService.getRoundInfos(
       'team1',
       match,
-      'dominationTeamOne',
+      'dominationTeamOne'
     );
     const dominationsTeam2 = MatchesService.getRoundInfos(
       'team1',
       match,
-      'dominationTeamTwo',
+      'dominationTeamTwo'
     );
     const userIdTeam1One = match.get('players.team1.one').value.id;
     const userIdTeam1Two = match.get('players.team1.two').value.id;
@@ -158,15 +164,15 @@ export class MatchesService {
         dominationsTeam2,
         dominationsTeam1,
         winTeam1,
-        type,
+        type
       ),
       this.generatUserUpdateObject(
         userIdTeam2One,
         dominationsTeam1,
         dominationsTeam2,
         winTeam2,
-        type,
-      ),
+        type
+      )
     );
 
     if (userIdTeam1One !== userIdTeam1Two) {
@@ -176,8 +182,8 @@ export class MatchesService {
           dominationsTeam2,
           dominationsTeam1,
           winTeam1,
-          type,
-        ),
+          type
+        )
       );
     }
     if (userIdTeam2One !== userIdTeam2Two) {
@@ -187,8 +193,8 @@ export class MatchesService {
           dominationsTeam1,
           dominationsTeam2,
           winTeam2,
-          type,
-        ),
+          type
+        )
       );
     }
 
@@ -199,14 +205,14 @@ export class MatchesService {
         dominationsTeam2,
         dominationsTeam1,
         winTeam1,
-        type,
+        type
       ),
       this.generatTeamUpdateObject(
         match.get('players.team2.teamId').value,
         dominationsTeam1,
         dominationsTeam2,
         winTeam2,
-        type,
+        type
       ),
     ];
 
@@ -226,7 +232,7 @@ export class MatchesService {
         user.loss,
         user.defeat,
         user.domination,
-        user.statsType,
+        user.statsType
       );
     });
   }
@@ -239,7 +245,7 @@ export class MatchesService {
         team.loss,
         team.defeat,
         team.domination,
-        team.statsType,
+        team.statsType
       );
     });
   }
@@ -270,7 +276,7 @@ export class MatchesService {
     defeat,
     domination,
     team,
-    type,
+    type
   ): IUserIncrement {
     return {
       defeat: defeat >= 1,
@@ -287,7 +293,7 @@ export class MatchesService {
     defeat,
     domination,
     team,
-    type,
+    type
   ): ITeamIncrement {
     return {
       defeat: defeat >= 1,

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import type { BreakpointObserver } from '@angular/cdk/layout';
+import { Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-statistic',
@@ -26,7 +27,7 @@ export class StatisticComponent {
         { title: 'Card 3', cols: 1, rows: 2 },
         { title: 'Card 4', cols: 1, rows: 1 },
       ];
-    }),
+    })
   );
 
   constructor(private breakpointObserver: BreakpointObserver) {}

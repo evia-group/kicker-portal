@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import type { Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { StatisticComponent } from './components/kicker/statistic/statistic.component';
 import { TournamentsComponent } from './components/kicker/tournaments/tournaments.component';
 import { MatchesComponent } from './components/kicker/matches/matches.component';
@@ -24,7 +25,7 @@ const redirectUnauthorized = () => {
     emailVerified,
     map((user) => {
       return user ? user : ['verified'];
-    }),
+    })
   );
 };
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);

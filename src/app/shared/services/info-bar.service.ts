@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InfoBarComponent } from '../components/info-bar/info-bar.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import type { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class InfoBarService {
   public openCustomSnackBar(
     message?: string,
     action?: string,
-    durationInSeconds?: number,
+    durationInSeconds?: number
   ) {
     this.snackBar.open(message ? message : '', action ? action : '', {
       duration: durationInSeconds * 1000,

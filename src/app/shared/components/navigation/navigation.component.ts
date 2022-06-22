@@ -1,8 +1,9 @@
-import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
+import type { MediaMatcher } from '@angular/cdk/layout';
+import type { ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
+import type { TranslateService } from '@ngx-translate/core';
+import type { Observable } from 'rxjs';
+import type { AuthService } from '../../services/auth.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -14,13 +15,13 @@ export class NavigationComponent implements OnDestroy {
   versionNumber: string = environment.versionNumber;
   isLoggedIn$: Observable<boolean>;
   mobileQuery: MediaQueryList;
-  private mobileQueryListener: () => void;
+  private readonly mobileQueryListener: () => void;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private authService: AuthService,
-    private translate: TranslateService,
+    private translate: TranslateService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();

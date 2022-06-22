@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { IRoom } from '../../interfaces/room.interface';
+import type { IRoom } from '../../interfaces/room.interface';
 import { DefaultRoomData } from '../../models/default.model';
-import { RoomsService } from '../../services/rooms.service';
+import type { RoomsService } from '../../services/rooms.service';
 
 @Component({
   selector: 'app-room-information',

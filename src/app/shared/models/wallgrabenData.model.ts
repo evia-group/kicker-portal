@@ -1,4 +1,4 @@
-import { IRoom } from '../interfaces/room.interface';
+import type { IRoom } from '../interfaces/room.interface';
 
 export const wallgrabenData: IRoom[] = [
   {

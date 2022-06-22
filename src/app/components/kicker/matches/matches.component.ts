@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { UsersService } from '../../../shared/services/users.service';
-import { TeamsService } from '../../../shared/services/teams.service';
-import { ITeam, IUser } from '../../../shared/interfaces/user.interface';
+import type { Observable } from 'rxjs';
+import type { UsersService } from '../../../shared/services/users.service';
+import type { TeamsService } from '../../../shared/services/teams.service';
+import type { ITeam, IUser } from '../../../shared/interfaces/user.interface';
 
 @Component({
   selector: 'app-matches',
@@ -15,7 +15,7 @@ export class MatchesComponent {
 
   constructor(
     protected userService: UsersService,
-    protected teamService: TeamsService,
+    protected teamService: TeamsService
   ) {
     this.users$ = this.userService.users$;
     this.teams$ = this.teamService.teams$;

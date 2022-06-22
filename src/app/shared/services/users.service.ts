@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
+import type { Firestore, CollectionReference } from '@angular/fire/firestore';
 import {
-  Firestore,
   collection,
-  CollectionReference,
   doc,
   updateDoc,
   setDoc,
@@ -10,9 +9,9 @@ import {
   writeBatch,
   collectionSnapshots,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { IUser } from '../interfaces/user.interface';
+import type { IUser } from '../interfaces/user.interface';
 // import firebase from 'firebase/compat/app';
 import { environment } from '../../../environments/environment';
 import { increment } from 'firebase/firestore';
@@ -23,14 +22,14 @@ const increment_value = increment(1);
   providedIn: 'root',
 })
 export class UsersService {
-  public users$: Observable<any>;
+  public users$: Observable<unknown>;
 
   protected collection: CollectionReference;
 
   constructor(protected db: Firestore) {
     this.collection = collection(
       this.db,
-      `${environment.prefix}Users`,
+      `${environment.prefix}Users`
     ) as CollectionReference<IUser>;
 
     this.users$ = collectionSnapshots(this.collection).pipe(
@@ -41,7 +40,7 @@ export class UsersService {
           return { id, ...data };
         });
       }),
-      shareReplay(1),
+      shareReplay(1)
     );
   }
 
@@ -59,7 +58,7 @@ export class UsersService {
     losses: boolean,
     defeats: boolean,
     dominations: boolean,
-    type: string,
+    type: string
   ) {
     const userReff = doc(this.db, environment.prefix + 'Users', userId);
 
@@ -75,7 +74,7 @@ export class UsersService {
     await batch.commit();
   }
 
-  public async update(userId: string, updateObject: any) {
+  public async update(userId: string, updateObject: unknown) {
     console.log('Userupdate', userId, updateObject);
     await updateDoc(doc(this.db, this.collection.path), updateObject)
       .then(() => console.log('success'))

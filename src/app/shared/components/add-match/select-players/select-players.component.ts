@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ITeam, IUser } from '../../../interfaces/user.interface';
-import { Observable } from 'rxjs';
-import { FormGroup } from '@angular/forms';
+import type { ITeam, IUser } from '../../../interfaces/user.interface';
+import type { Observable } from 'rxjs';
+import type { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-select-players',

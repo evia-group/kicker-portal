@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
+import type { User, Auth } from '@angular/fire/auth';
 import {
-  User,
   GoogleAuthProvider,
-  Auth,
   authState,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -12,10 +11,11 @@ import {
   signOut,
   signInWithPopup,
 } from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { UsersService } from './users.service';
-import { IUser } from '../interfaces/user.interface';
+import type { Router } from '@angular/router';
+import type { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import type { UsersService } from './users.service';
+import type { IUser } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +27,7 @@ export class AuthService {
   constructor(
     private afAuth: Auth,
     public userSerice: UsersService,
-    public router: Router,
+    public router: Router
   ) {
     authState(afAuth).subscribe((user) => {
       if (user) {
@@ -80,7 +80,7 @@ export class AuthService {
           } else {
             console.log('Email is verified', user);
           }
-        }),
+        })
       );
   }
 

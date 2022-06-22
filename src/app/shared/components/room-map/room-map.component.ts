@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import * as room from '../../models/wallgrabenData.model';
-import { RoomsService } from '../../services/rooms.service';
-import { IRoom } from '../../interfaces/room.interface';
+import type { RoomsService } from '../../services/rooms.service';
+import type { IRoom } from '../../interfaces/room.interface';
 
 @Component({
   selector: 'app-room-map',
@@ -18,8 +18,7 @@ export class RoomMapComponent {
   constructor(private roomService: RoomsService) {}
 
   private static getIdFromTarget(target: EventTarget | null): number {
-    // @ts-ignore
-    return Number(target.id) - 1 || 0;
+    return Number(target['id']) - 1 || 0;
   }
 
   public hightlight(event: MouseEvent): void {
