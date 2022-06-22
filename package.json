@@ -11,6 +11,7 @@
     "prepare": "husky install",
     "p:check": "prettier --check .",
     "p:write": "prettier --write ."
+
   },
   "lint-staged": {
     "src/*": "prettier --write ."
