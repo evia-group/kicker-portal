@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AuthService} from '../../shared/services/auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-
   form: FormGroup;
   public loginInvalid: boolean;
   private formSubmitAttempt: boolean;
@@ -19,9 +18,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
-  ) {
-  }
+    private authService: AuthService,
+  ) {}
 
   async ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
@@ -29,8 +27,11 @@ export class RegisterComponent implements OnInit {
     this.form = this.fb.group({
       firstname: ['', Validators.maxLength(25)],
       lastname: ['', Validators.maxLength(25)],
-      username: ['', [Validators.email, Validators.pattern('^[a-zA-Z0-9_-_._@]*evia\.de$')]],
-      password: ['', Validators.required]
+      username: [
+        '',
+        [Validators.email, Validators.pattern('^[a-zA-Z0-9_-_._@]*evia.de$')],
+      ],
+      password: ['', Validators.required],
     });
   }
 
@@ -39,7 +40,9 @@ export class RegisterComponent implements OnInit {
     this.formSubmitAttempt = false;
     if (this.form.valid) {
       try {
-        const name = `${this.form.get('firstname').value} ${this.form.get('lastname').value}`;
+        const name = `${this.form.get('firstname').value} ${
+          this.form.get('lastname').value
+        }`;
         const username = this.form.get('username').value;
         const password = this.form.get('password').value;
         await this.authService.register(username, password, name);
@@ -51,5 +54,4 @@ export class RegisterComponent implements OnInit {
       this.formSubmitAttempt = true;
     }
   }
-
 }

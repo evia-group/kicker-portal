@@ -1,14 +1,14 @@
-import {MediaMatcher} from '@angular/cdk/layout';
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {Observable} from 'rxjs';
-import {AuthService} from '../../services/auth.service';
-import {environment} from '../../../../environments/environment';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.scss']
+  styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent implements OnDestroy {
   versionNumber: string = environment.versionNumber;
@@ -20,15 +20,16 @@ export class NavigationComponent implements OnDestroy {
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private authService: AuthService,
-    private translate: TranslateService) {
+    private translate: TranslateService,
+  ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addEventListener('change',this.mobileQueryListener);
+    this.mobileQuery.addEventListener('change', this.mobileQueryListener);
     this.isLoggedIn$ = this.authService.isLoggedIn;
   }
 
   ngOnDestroy(): void {
-    this.mobileQuery.removeEventListener('change',this.mobileQueryListener);
+    this.mobileQuery.removeEventListener('change', this.mobileQueryListener);
   }
 
   public changeLanguage(language: string): void {
@@ -38,5 +39,4 @@ export class NavigationComponent implements OnDestroy {
   public logout() {
     this.authService.logout();
   }
-
 }

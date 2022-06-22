@@ -2,23 +2,27 @@
   <ng-container formGroupName="rounds">
     <ng-container [formGroupName]="round">
       <mat-slide-toggle
-        style="justify-self: start;"
+        style="justify-self: start"
         formControlName="dominationTeamOne"
         (change)="dominationChange(dominationTeamOne, dominationTeamTwo)"
         [labelPosition]="'after'"
-        >{{ 'common.domination' | translate }}</mat-slide-toggle>
-      <mat-radio-group aria-label="Select an option"
-                       (change)="enableDominationSlider($event)"
-                       formControlName="win">
+        >{{ 'common.domination' | translate }}</mat-slide-toggle
+      >
+      <mat-radio-group
+        aria-label="Select an option"
+        (change)="enableDominationSlider($event)"
+        formControlName="win"
+      >
         <mat-radio-button value="team1"></mat-radio-button>
         <mat-radio-button value="team2"></mat-radio-button>
       </mat-radio-group>
       <mat-slide-toggle
-        style="justify-self: end;"
+        style="justify-self: end"
         formControlName="dominationTeamTwo"
         (change)="dominationChange(dominationTeamTwo, dominationTeamOne)"
         [labelPosition]="'before'"
-        >{{ 'common.domination' | translate }}</mat-slide-toggle>
+        >{{ 'common.domination' | translate }}</mat-slide-toggle
+      >
     </ng-container>
   </ng-container>
 </div>

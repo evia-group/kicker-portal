@@ -1,14 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {AuthService} from './shared/services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit{
-
+export class AppComponent implements OnInit {
   constructor(translate: TranslateService) {
     // this language will be used as a fallback when a translation isn't found in the current language
     translate.setDefaultLang('de');
@@ -17,6 +15,5 @@ export class AppComponent implements OnInit{
     translate.use('de');
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }

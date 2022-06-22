@@ -9,20 +9,17 @@ import { IRoom } from '../../interfaces/room.interface';
   styleUrls: ['./room-map.component.scss'],
 })
 export class RoomMapComponent {
-
   @Input() locations = '';
 
   public test: IRoom[] = room.wallgrabenData;
 
   private selectedRoomId: number | undefined;
 
-  constructor(private roomService: RoomsService) {
-  }
-
+  constructor(private roomService: RoomsService) {}
 
   private static getIdFromTarget(target: EventTarget | null): number {
     // @ts-ignore
-    return (Number(target.id) - 1) || 0;
+    return Number(target.id) - 1 || 0;
   }
 
   public hightlight(event: MouseEvent): void {
@@ -50,4 +47,3 @@ export class RoomMapComponent {
     }
   }
 }
-

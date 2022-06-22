@@ -1,23 +1,30 @@
 <div class="select-container" [formGroup]="matchForm">
   <ng-container *ngIf="!showingTeams" formGroupName="players">
     <ng-container *ngFor="let team of teams">
-      <div class="select-player-team-container" [formGroupName]="team === 0 ? 'team1' : 'team2'">
+      <div
+        class="select-player-team-container"
+        [formGroupName]="team === 0 ? 'team1' : 'team2'"
+      >
         <mat-form-field>
-          <mat-label>{{'common.player' | translate}}</mat-label>
+          <mat-label>{{ 'common.player' | translate }}</mat-label>
           <mat-select id="0" formControlName="one">
-            <mat-option *ngFor="let player of players | async"
-                        [value]="{id: player.id, name: player.name}">
-              {{player.name}}
+            <mat-option
+              *ngFor="let player of players | async"
+              [value]="{ id: player.id, name: player.name }"
+            >
+              {{ player.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field>
-          <mat-label>{{'common.player' | translate}}</mat-label>
+          <mat-label>{{ 'common.player' | translate }}</mat-label>
           <mat-select id="1" formControlName="two">
-            <mat-option *ngFor="let player of players | async"
-                        [value]="{id: player.id, name: player.name}">
-              {{player.name}}
+            <mat-option
+              *ngFor="let player of players | async"
+              [value]="{ id: player.id, name: player.name }"
+            >
+              {{ player.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -25,7 +32,7 @@
     </ng-container>
   </ng-container>
 
-<!--  <ng-container *ngIf="showingTeams" [formGroupName]="'players'">
+  <!--  <ng-container *ngIf="showingTeams" [formGroupName]="'players'">
     <ng-container *ngFor="let team of teams" [formGroupName]="team === 0 ? 'team1' : 'team2'">
       <div class="select-team-container">
         <mat-form-field>
