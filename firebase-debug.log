@@ -1,0 +1,284 @@
+[debug] [2022-06-14T11:28:33.844Z] ----------------------------------------------------------------------
+[debug] [2022-06-14T11:28:33.846Z] Command:       /Users/d.mueller/.nvm/versions/node/v16.13.1/bin/node /Users/d.mueller/.nvm/versions/node/v16.13.1/bin/firebase emulators:start
+[debug] [2022-06-14T11:28:33.846Z] CLI Version:   11.0.1
+[debug] [2022-06-14T11:28:33.846Z] Platform:      darwin
+[debug] [2022-06-14T11:28:33.847Z] Node Version:  v16.13.1
+[debug] [2022-06-14T11:28:33.856Z] Time:          Tue Jun 14 2022 13:28:33 GMT+0200 (Mitteleuropäische Sommerzeit)
+[debug] [2022-06-14T11:28:33.856Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-06-14T11:28:33.863Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2022-06-14T11:28:33.954Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-06-14T11:28:33.954Z] > authorizing via signed-in user (geninone@gmail.com)
+[debug] [2022-06-14T11:28:34.328Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2022-06-14T11:28:34.328Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2022-06-14T11:28:34.913Z] openjdk version "15.0.1" 2020-10-20
+OpenJDK Runtime Environment (build 15.0.1+9-18)
+
+[debug] [2022-06-14T11:28:34.913Z] OpenJDK 64-Bit Server VM (build 15.0.1+9-18, mixed mode, sharing)
+
+[debug] [2022-06-14T11:28:34.917Z] Parsed Java major version: 15
+[info] i  emulators: Starting emulators: auth, functions, firestore, database, hosting {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, database, hosting"}}
+[debug] [2022-06-14T11:28:34.928Z] [hub] writing locator at /var/folders/gx/j2xxc2g55fs2l39kx_f988tszp4bqn/T/hub-evia-desk.json
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: pubsub, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mpubsub, storage\u001b[22m"}}
+[info] ✔  functions: Using node@16 from host. {"metadata":{"emulator":{"name":"functions"},"message":"Using node@16 from host."}}
+[debug] [2022-06-14T11:28:34.957Z] defaultcredentials: writing to file /Users/d.mueller/.config/firebase/geninone_gmail_com_application_default_credentials.json
+[debug] [2022-06-14T11:28:34.965Z] Setting GAC to /Users/d.mueller/.config/firebase/geninone_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /Users/d.mueller/.config/firebase/geninone_gmail_com_application_default_credentials.json"}}
+[debug] [2022-06-14T11:28:34.966Z] > refreshing access token with scopes: []
+[debug] [2022-06-14T11:28:34.967Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2022-06-14T11:28:35.062Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","date":"Tue, 14 Jun 2022 11:28:35 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2022-06-14T11:28:35.113Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk/adminSdkConfig [none]
+[debug] [2022-06-14T11:28:35.569Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk/adminSdkConfig 200
+[debug] [2022-06-14T11:28:35.569Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk/adminSdkConfig {"projectId":"evia-desk","databaseURL":"https://evia-desk.firebaseio.com","storageBucket":"evia-desk.appspot.com","locationId":"europe-west"}
+[warn] ⚠  firestore: Did not find a Cloud Firestore rules file specified in a firebase.json config file. {"metadata":{"emulator":{"name":"firestore"},"message":"Did not find a Cloud Firestore rules file specified in a firebase.json config file."}}
+[warn] ⚠  firestore: The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration. {"metadata":{"emulator":{"name":"firestore"},"message":"The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration."}}
+[debug] [2022-06-14T11:28:35.600Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2022-06-14T11:28:35.601Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2022-06-14T11:28:35.601Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","/Users/d.mueller/.cache/firebase/emulators/cloud-firestore-emulator-v1.14.3.jar","--host","localhost","--port",8081,"--functions_emulator","localhost:5002"],"optionalArgs":["port","webchannel_port","host","rules","functions_emulator","seed_from_export"],"joinArgs":false} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"/Users/d.mueller/.cache/firebase/emulators/cloud-firestore-emulator-v1.14.3.jar\",\"--host\",\"localhost\",\"--port\",8081,\"--functions_emulator\",\"localhost:5002\"],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"functions_emulator\",\"seed_from_export\"],\"joinArgs\":false}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[debug] [2022-06-14T11:28:36.956Z] Jun 14, 2022 1:28:36 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start
+INFO: Started WebSocket server on ws://localhost:56438
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:28:36 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start\nINFO: Started WebSocket server on ws://localhost:56438\n"}}
+[debug] [2022-06-14T11:28:36.979Z] API endpoint: http://localhost:8081
+ {"metadata":{"emulator":{"name":"firestore"},"message":"API endpoint: http://localhost:8081\n"}}
+[debug] [2022-06-14T11:28:36.979Z] If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
+
+   export FIRESTORE_EMULATOR_HOST=localhost:8081
+
+Dev App Server is now running.
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:\n\n   export FIRESTORE_EMULATOR_HOST=localhost:8081\n\nDev App Server is now running.\n\n"}}
+[debug] [2022-06-14T11:28:37.123Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk [none]
+[debug] [2022-06-14T11:28:37.326Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk 200
+[debug] [2022-06-14T11:28:37.326Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk {"projectId":"evia-desk","projectNumber":"124473984293","displayName":"Evia-Desk","name":"projects/evia-desk","resources":{"hostingSite":"evia-desk","realtimeDatabaseInstance":"evia-desk","storageBucket":"evia-desk.appspot.com","locationId":"europe-west"},"state":"ACTIVE"}
+[debug] [2022-06-14T11:28:37.326Z] database rules config:  []
+[warn] ⚠  database: Did not find a Realtime Database rules file specified in a firebase.json config file. The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration. {"metadata":{"emulator":{"name":"database"},"message":"Did not find a Realtime Database rules file specified in a firebase.json config file. The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration."}}
+[debug] [2022-06-14T11:28:37.329Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2022-06-14T11:28:37.329Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2022-06-14T11:28:37.329Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2022-06-14T11:28:37.329Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","/Users/d.mueller/.cache/firebase/emulators/firebase-database-emulator-v4.8.0.jar","--host","localhost","--port",9001,"--functions_emulator_host","localhost","--functions_emulator_port",5002],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"/Users/d.mueller/.cache/firebase/emulators/firebase-database-emulator-v4.8.0.jar\",\"--host\",\"localhost\",\"--port\",9001,\"--functions_emulator_host\",\"localhost\",\"--functions_emulator_port\",5002],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[debug] [2022-06-14T11:28:37.917Z] WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.ReflectionUtil (file:/Users/d.mueller/.cache/firebase/emulators/firebase-database-emulator-v4.8.0.jar) to field sun.nio.ch.SelectorImpl.selectedKeys
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.ReflectionUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+ {"metadata":{"emulator":{"name":"database"},"message":"WARNING: An illegal reflective access operation has occurred\nWARNING: Illegal reflective access by io.netty.util.internal.ReflectionUtil (file:/Users/d.mueller/.cache/firebase/emulators/firebase-database-emulator-v4.8.0.jar) to field sun.nio.ch.SelectorImpl.selectedKeys\nWARNING: Please consider reporting this to the maintainers of io.netty.util.internal.ReflectionUtil\nWARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations\nWARNING: All illegal access operations will be denied in a future release\n"}}
+[debug] [2022-06-14T11:28:38.464Z] 13:28:38.463 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+ {"metadata":{"emulator":{"name":"database"},"message":"13:28:38.463 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started\n"}}
+[debug] [2022-06-14T11:28:38.647Z] 13:28:38.647 [main] INFO com.firebase.server.forge.App$ - Listening at localhost:9001
+ {"metadata":{"emulator":{"name":"database"},"message":"13:28:38.647 [main] INFO com.firebase.server.forge.App$ - Listening at localhost:9001\n"}}
+[debug] [2022-06-14T11:28:44.474Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/evia-desk/sites 
+[debug] [2022-06-14T11:28:45.418Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/evia-desk/sites 200
+[debug] [2022-06-14T11:28:45.418Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/evia-desk/sites {"sites":[{"name":"projects/evia-desk/sites/evia-desk","defaultUrl":"https://evia-desk.web.app","appId":"1:124473984293:web:578828e4a4140cad2fc6cc","type":"DEFAULT_SITE"}]}
+[debug] [2022-06-14T11:28:45.419Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk/webApps/1:124473984293:web:578828e4a4140cad2fc6cc/config [none]
+[debug] [2022-06-14T11:28:46.199Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk/webApps/1:124473984293:web:578828e4a4140cad2fc6cc/config 200
+[debug] [2022-06-14T11:28:46.200Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/evia-desk/webApps/1:124473984293:web:578828e4a4140cad2fc6cc/config {"projectId":"evia-desk","appId":"1:124473984293:web:578828e4a4140cad2fc6cc","databaseURL":"https://evia-desk.firebaseio.com","storageBucket":"evia-desk.appspot.com","locationId":"europe-west","apiKey":"AIzaSyBbBYhVMNcLUm3PRatlB2IPACxO_VamlkA","authDomain":"evia-desk.firebaseapp.com","messagingSenderId":"124473984293","measurementId":"G-1XL0KJGE7C"}
+[info] i  hosting: Serving hosting files from: dist/kicker-portal {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mdist/kicker-portal\u001b[22m"}}
+[info] ✔  hosting: Local server: http://localhost:5001 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://localhost:5001\u001b[22m\u001b[24m"}}
+[debug] [2022-06-14T11:28:46.443Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2022-06-14T11:28:46.443Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2022-06-14T11:28:46.444Z] Starting Emulator UI with command {"binary":"node","args":["--dns-result-order=ipv4first","/Users/d.mueller/.cache/firebase/emulators/ui-v1.7.0/server.bundle.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"--dns-result-order=ipv4first\",\"/Users/d.mueller/.cache/firebase/emulators/ui-v1.7.0/server.bundle.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2022-06-14T11:28:46.596Z] Web / API server started at localhost:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at localhost:4000\n"}}
+[info] i  functions: Watching "/Users/d.mueller/Projekte/evia/Projekte/evia-desk/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/Users/d.mueller/Projekte/evia/Projekte/evia-desk/functions\" for Cloud Functions..."}}
+[debug] [2022-06-14T11:28:46.714Z] Validating nodejs source
+[debug] [2022-06-14T11:28:48.266Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^0.2.0",
+    "typescript": "^4.5.4"
+  },
+  "private": true
+}
+[debug] [2022-06-14T11:28:48.267Z] Building nodejs source
+[debug] [2022-06-14T11:28:48.267Z] Analyzing nodejs backend spec
+[debug] [2022-06-14T11:28:48.270Z] Could not find functions.yaml. Must use http discovery
+[debug] [2022-06-14T11:28:48.715Z] Serving at port 9005
+
+[debug] [2022-06-14T11:28:48.730Z] Got response from /__/functions.yaml {"endpoints":{},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2022-06-14T11:28:48.734Z] shutdown requested via /__/quitquitquit
+
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://localhost:4000                │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ localhost:9098 │ http://localhost:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Functions      │ localhost:5002 │ http://localhost:4000/functions │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Firestore      │ localhost:8081 │ http://localhost:4000/firestore │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Database       │ localhost:9001 │ http://localhost:4000/database  │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Hosting        │ localhost:5001 │ n/a                             │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at localhost:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET / HTTP/1.1" 200 6735 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET / HTTP/1.1\" 200 6735 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /runtime.a60ad4361227f4c7.js HTTP/1.1" 200 1708 "http://localhost:5001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /runtime.a60ad4361227f4c7.js HTTP/1.1\" 200 1708 \"http://localhost:5001/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /runtime.a60ad4361227f4c7.js HTTP/1.1" 200 1708 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /runtime.a60ad4361227f4c7.js HTTP/1.1\" 200 1708 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /polyfills.f4f981a660b555bf.js HTTP/1.1" 200 46226 "http://localhost:5001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /polyfills.f4f981a660b555bf.js HTTP/1.1\" 200 46226 \"http://localhost:5001/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /main.0f696e4a8601f69e.js HTTP/1.1" 200 1815734 "http://localhost:5001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /main.0f696e4a8601f69e.js HTTP/1.1\" 200 1815734 \"http://localhost:5001/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /styles.edda286a8572d9cd.css HTTP/1.1" 200 137612 "http://localhost:5001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /styles.edda286a8572d9cd.css HTTP/1.1\" 200 137612 \"http://localhost:5001/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /polyfills.f4f981a660b555bf.js HTTP/1.1" 200 46226 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /polyfills.f4f981a660b555bf.js HTTP/1.1\" 200 46226 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /assets/i18n/de.json HTTP/1.1" 200 1572 "http://localhost:5001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /assets/i18n/de.json HTTP/1.1\" 200 1572 \"http://localhost:5001/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /main.0f696e4a8601f69e.js HTTP/1.1" 200 1815734 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /main.0f696e4a8601f69e.js HTTP/1.1\" 200 1815734 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] "GET /assets/favicon.png HTTP/1.1" 200 3310 "http://localhost:5001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:00 +0000] \"GET /assets/favicon.png HTTP/1.1\" 200 3310 \"http://localhost:5001/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:34 +0000] "GET /login HTTP/1.1" 200 6735 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:34 +0000] \"GET /login HTTP/1.1\" 200 6735 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:35 +0000] "GET /login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:35 +0000] \"GET /login HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:36 +0000] "GET /login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:36 +0000] \"GET /login HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:37 +0000] "GET /login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:37 +0000] \"GET /login HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:37 +0000] "GET /login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:37 +0000] \"GET /login HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] "GET /login HTTP/1.1" 200 6735 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] \"GET /login HTTP/1.1\" 200 6735 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] "GET /runtime.a60ad4361227f4c7.js HTTP/1.1" 200 1708 "http://localhost:5001/login" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] \"GET /runtime.a60ad4361227f4c7.js HTTP/1.1\" 200 1708 \"http://localhost:5001/login\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] "GET /polyfills.f4f981a660b555bf.js HTTP/1.1" 200 46226 "http://localhost:5001/login" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] \"GET /polyfills.f4f981a660b555bf.js HTTP/1.1\" 200 46226 \"http://localhost:5001/login\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] "GET /main.0f696e4a8601f69e.js HTTP/1.1" 200 1815734 "http://localhost:5001/login" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] \"GET /main.0f696e4a8601f69e.js HTTP/1.1\" 200 1815734 \"http://localhost:5001/login\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] "GET /styles.edda286a8572d9cd.css HTTP/1.1" 200 137612 "http://localhost:5001/login" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] \"GET /styles.edda286a8572d9cd.css HTTP/1.1\" 200 137612 \"http://localhost:5001/login\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] "GET /assets/i18n/de.json HTTP/1.1" 200 1572 "http://localhost:5001/login" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:52 +0000] \"GET /assets/i18n/de.json HTTP/1.1\" 200 1572 \"http://localhost:5001/login\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [14/Jun/2022:11:29:53 +0000] "GET /assets/favicon.png HTTP/1.1" 200 3310 "http://localhost:5001/login" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [14/Jun/2022:11:29:53 +0000] \"GET /assets/favicon.png HTTP/1.1\" 200 3310 \"http://localhost:5001/login\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36\""}}
+[debug] [2022-06-14T11:30:08.550Z] Jun 14, 2022 1:30:08 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:08 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:08.653Z] Jun 14, 2022 1:30:08 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:08 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2022-06-14T11:30:12.533Z] Jun 14, 2022 1:30:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:14.554Z] Jun 14, 2022 1:30:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:16.581Z] Jun 14, 2022 1:30:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:18.601Z] Jun 14, 2022 1:30:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:20.637Z] Jun 14, 2022 1:30:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:22.658Z] Jun 14, 2022 1:30:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:24.679Z] Jun 14, 2022 1:30:24 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:24 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:25.527Z] Jun 14, 2022 1:30:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:25.677Z] Jun 14, 2022 1:30:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:26.702Z] Jun 14, 2022 1:30:26 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:26 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:28.720Z] Jun 14, 2022 1:30:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:30.742Z] Jun 14, 2022 1:30:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:32.770Z] Jun 14, 2022 1:30:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:34.790Z] Jun 14, 2022 1:30:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:36.811Z] Jun 14, 2022 1:30:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:38.831Z] Jun 14, 2022 1:30:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:40.847Z] Jun 14, 2022 1:30:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:41.915Z] 13:30:41.914 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.NamespaceActor - evia-desk successfully activated FBKV (SurveyIdle(0)) wait: 152ms, init: 0ms
+ {"metadata":{"emulator":{"name":"database"},"message":"13:30:41.914 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.NamespaceActor - evia-desk successfully activated FBKV (SurveyIdle(0)) wait: 152ms, init: 0ms\n"}}
+[debug] [2022-06-14T11:30:42.865Z] Jun 14, 2022 1:30:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:44.880Z] Jun 14, 2022 1:30:44 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:44 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:46.903Z] Jun 14, 2022 1:30:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:48.915Z] Jun 14, 2022 1:30:48 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:48 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:50.925Z] Jun 14, 2022 1:30:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:52.936Z] Jun 14, 2022 1:30:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:54.949Z] Jun 14, 2022 1:30:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:56.960Z] Jun 14, 2022 1:30:56 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:56 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:30:58.971Z] Jun 14, 2022 1:30:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:30:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:31:00.980Z] Jun 14, 2022 1:31:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:31:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:31:02.992Z] Jun 14, 2022 1:31:02 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:31:02 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T11:33:32.573Z] Jun 14, 2022 1:33:32 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed
+INFO: Websocket client disconnected
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:33:32 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed\nINFO: Websocket client disconnected\n"}}
+[debug] [2022-06-14T11:33:33.143Z] Jun 14, 2022 1:33:33 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:33:33 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2022-06-14T11:36:13.049Z] Jun 14, 2022 1:36:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 1:36:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T12:56:11.902Z] Jun 14, 2022 2:56:11 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed
+INFO: Websocket client disconnected
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 2:56:11 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed\nINFO: Websocket client disconnected\n"}}
+[debug] [2022-06-14T12:56:25.878Z] Jun 14, 2022 2:56:25 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 2:56:25 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2022-06-14T13:56:35.358Z] Jun 14, 2022 3:56:35 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 3:56:35 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2022-06-14T13:56:36.414Z] Jun 14, 2022 3:56:36 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed
+INFO: Websocket client disconnected
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 14, 2022 3:56:36 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed\nINFO: Websocket client disconnected\n"}}

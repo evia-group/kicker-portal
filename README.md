@@ -1,27 +1,67 @@
-# KickerPortal
+<h1 align="center">Welcome to Kicker Portal ⚽</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.2-blue.svg?cacheSeconds=2592000" />
+  <a href="docu" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-no-red.svg" />
+  </a>
+  <a href="https://github.com/Evia-Academy/kicker-portal/blob/production/LICENSE" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a>
+![GitHub](https://img.shields.io/github/license/Evia-Academy/kicker-portal?style=for-the-badge)
+  <a href="https://twitter.com/geninone" target="_blank">
+    <img alt="Twitter: geninone" src="https://img.shields.io/twitter/follow/geninone.svg?style=social" />
+  </a>
+</p>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.0.
+![GitHub](https://img.shields.io/github/license/Evia-Academy/kicker-portal?style=for-the-badge)
 
-## Development server
+> Kicker Portal
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+<!-- ### 🏠 [Homepage](homepage) -->
 
-## Code scaffolding
+<!-- ### ✨ [Demo](demo) -->
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Install
 
-## Build
+```sh
+npm install
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Usage
 
-## Running unit tests
+```sh
+npm run start
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+<!--
+## Run tests
 
-## Running end-to-end tests
+```sh
+npm run test
+```
+-->
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Author
 
-## Further help
+👤 **evia solution GmbH**
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+* Website: https://www.evia.de/
+* Twitter: [@geninone](https://twitter.com/geninone)
+* Github: [@geninOne](https://github.com/geninOne)
+* LinkedIn: [@evia-stuttgart](https://www.linkedin.com/company/evia-stuttgart/mycompany/)
+
+<!-- ## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](issue page). You can also take a look at the [contributing guide](contributing guid).
+-->
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+## 📝 License
+
+Copyright © 2022 [evia solution GmbH](https://github.com/geninOne).<br />
+This project is [MIT](https://github.com/Evia-Academy/kicker-portal/blob/production/LICENSE) licensed.
+
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
