@@ -11,8 +11,7 @@
     <app-select-players
       [players]="data"
       [matchForm]="addMatchForm"
-      [showingTeams]="showingTeams"
-    ></app-select-players>
+      [showingTeams]="showingTeams"></app-select-players>
     <mat-divider></mat-divider>
 
     <app-round-result [matchForm]="addMatchForm" [round]="'one'">
@@ -28,8 +27,7 @@
     <app-round-result
       *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
       [matchForm]="addMatchForm"
-      [round]="'three'"
-    >
+      [round]="'three'">
     </app-round-result>
 
     <mat-card-actions>
@@ -37,8 +35,7 @@
         mat-raised-button
         color="primary"
         type="submit"
-        [disabled]="!addMatchForm.valid"
-      >
+        [disabled]="!addMatchForm.valid">
         {{ 'common.save.match' | translate }}
       </button>
     </mat-card-actions>

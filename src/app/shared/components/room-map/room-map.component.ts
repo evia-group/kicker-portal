@@ -18,8 +18,7 @@ export class RoomMapComponent {
   constructor(private roomService: RoomsService) {}
 
   private static getIdFromTarget(target: EventTarget | null): number {
-    // @ts-ignore
-    return Number(target.id) - 1 || 0;
+    return Number(target['id']) - 1 || 0;
   }
 
   public hightlight(event: MouseEvent): void {

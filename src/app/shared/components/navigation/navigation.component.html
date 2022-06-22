@@ -3,8 +3,7 @@
     <button
       mat-icon-button
       (click)="sidenav.toggle()"
-      *ngIf="isLoggedIn$ | async"
-    >
+      *ngIf="isLoggedIn$ | async">
       <mat-icon>menu</mat-icon>
     </button>
     <h1 class="app-name">{{ 'app.name' | translate }}</h1>
@@ -17,8 +16,7 @@
     <button
       mat-icon-button
       [matMenuTriggerFor]="menuPerson"
-      *ngIf="isLoggedIn$ | async"
-    >
+      *ngIf="isLoggedIn$ | async">
       <mat-icon class="icon" aria-hidden="false" aria-label="personal icon"
         >person</mat-icon
       >
@@ -28,15 +26,13 @@
   <mat-sidenav-container
     class="sidenav-container"
     [hasBackdrop]="true"
-    [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
-  >
+    [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav
       #sidenav
       [mode]="'over'"
       (click)="sidenav.toggle()"
       [fixedInViewport]="mobileQuery.matches"
-      fixedTopGap="56"
-    >
+      fixedTopGap="56">
       <mat-nav-list>
         <mat-list-item routerLink="/dashboard" routerLinkActive="active">
           <a matLine>{{ 'app.navigation.dashboard' | translate }}</a>

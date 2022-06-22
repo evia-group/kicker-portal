@@ -1,12 +1,4 @@
-import {
-  AfterContentChecked,
-  AfterViewChecked,
-  AfterViewInit,
-  Component,
-  DoCheck,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { AfterContentChecked, Component, Input } from '@angular/core';
 import { IPlayers } from '../../interfaces/match.interface';
 import { ITeam, IUser } from '../../interfaces/user.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -37,7 +29,7 @@ export class AddMatchComponent implements AfterContentChecked {
           two: [null, Validators.required],
           teamId: [null],
         },
-        Validators.required,
+        Validators.required
       ),
       team2: this.fb.group(
         {
@@ -45,7 +37,7 @@ export class AddMatchComponent implements AfterContentChecked {
           two: [null, Validators.required],
           teamId: [null],
         },
-        Validators.required,
+        Validators.required
       ),
     }),
     rounds: this.fb.group({
@@ -70,7 +62,7 @@ export class AddMatchComponent implements AfterContentChecked {
   constructor(
     private teamsService: TeamsService,
     private matchesService: MatchesService,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {}
 
   ngAfterContentChecked() {
@@ -86,7 +78,7 @@ export class AddMatchComponent implements AfterContentChecked {
           this.createTeamId([
             this.addMatchForm.get('players.team1.one').value,
             this.addMatchForm.get('players.team1.two').value,
-          ]),
+          ])
         );
 
       this.addMatchForm
@@ -95,7 +87,7 @@ export class AddMatchComponent implements AfterContentChecked {
           this.createTeamId([
             this.addMatchForm.get('players.team2.one').value,
             this.addMatchForm.get('players.team2.two').value,
-          ]),
+          ])
         );
     }
 
@@ -145,14 +137,14 @@ export class AddMatchComponent implements AfterContentChecked {
 
   private createTeamId(team): string {
     const sortetTeam: IPlayers[] = team.sort((a, b) =>
-      a.id.localeCompare(b.id),
+      a.id.localeCompare(b.id)
     );
     const teamId = sortetTeam.map((player) => player.id).join('');
     const teamName = sortetTeam.map((player) => player.name).join('');
     this.checkIfTeamExist(
       teamId,
       [sortetTeam[0].id, sortetTeam[1].id],
-      teamName,
+      teamName
     );
     return teamId;
   }

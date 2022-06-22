@@ -27,7 +27,7 @@ export class AuthService {
   constructor(
     private afAuth: Auth,
     public userSerice: UsersService,
-    public router: Router,
+    public router: Router
   ) {
     authState(afAuth).subscribe((user) => {
       if (user) {
@@ -80,7 +80,7 @@ export class AuthService {
           } else {
             console.log('Email is verified', user);
           }
-        }),
+        })
       );
   }
 

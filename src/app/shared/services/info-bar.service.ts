@@ -11,7 +11,7 @@ export class InfoBarService {
   public openCustomSnackBar(
     message?: string,
     action?: string,
-    durationInSeconds?: number,
+    durationInSeconds?: number
   ) {
     this.snackBar.open(message ? message : '', action ? action : '', {
       duration: durationInSeconds * 1000,

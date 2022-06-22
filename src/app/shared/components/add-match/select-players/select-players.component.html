@@ -3,15 +3,13 @@
     <ng-container *ngFor="let team of teams">
       <div
         class="select-player-team-container"
-        [formGroupName]="team === 0 ? 'team1' : 'team2'"
-      >
+        [formGroupName]="team === 0 ? 'team1' : 'team2'">
         <mat-form-field>
           <mat-label>{{ 'common.player' | translate }}</mat-label>
           <mat-select id="0" formControlName="one">
             <mat-option
               *ngFor="let player of players | async"
-              [value]="{ id: player.id, name: player.name }"
-            >
+              [value]="{ id: player.id, name: player.name }">
               {{ player.name }}
             </mat-option>
           </mat-select>
@@ -22,8 +20,7 @@
           <mat-select id="1" formControlName="two">
             <mat-option
               *ngFor="let player of players | async"
-              [value]="{ id: player.id, name: player.name }"
-            >
+              [value]="{ id: player.id, name: player.name }">
               {{ player.name }}
             </mat-option>
           </mat-select>

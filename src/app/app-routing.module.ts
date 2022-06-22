@@ -24,7 +24,7 @@ const redirectUnauthorized = () => {
     emailVerified,
     map((user) => {
       return user ? user : ['verified'];
-    }),
+    })
   );
 };
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);

@@ -120,7 +120,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "eslintConfig": ".eslintrc",
+            "eslintConfig": ".eslintrc.json",
             "lintFilePatterns": ["**/*.spec.ts", "**/*.ts"]
           }
         }
@@ -142,19 +142,13 @@
               "devServerTarget": "kicker-portal:serve:production"
             }
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     }
   },
   "defaultProject": "kicker-portal",
   "cli": {
+    "analytics": false,
     "defaultCollection": "@angular-eslint/schematics"
   }
 }

@@ -10,8 +10,7 @@
           matInput
           [placeholder]="'auth.firstname' | translate"
           formControlName="firstname"
-          required
-        />
+          required />
         <mat-error>
           {{ 'auth.error.firstname' | translate }}
         </mat-error>
@@ -21,8 +20,7 @@
           matInput
           [placeholder]="'auth.lastname' | translate"
           formControlName="lastname"
-          required
-        />
+          required />
         <mat-error>
           {{ 'auth.error.lastname' | translate }}
         </mat-error>
@@ -32,8 +30,7 @@
           matInput
           [placeholder]="'auth.email' | translate"
           formControlName="username"
-          required
-        />
+          required />
         <mat-error *ngIf="form.get('username').hasError('email')">
           {{ 'auth.error.email' | translate }}
         </mat-error>
@@ -47,8 +44,7 @@
           type="password"
           [placeholder]="'auth.password' | translate"
           formControlName="password"
-          required
-        />
+          required />
         <mat-error>
           {{ 'auth.error.password' | translate }}
         </mat-error>

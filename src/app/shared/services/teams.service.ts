@@ -30,7 +30,7 @@ export class TeamsService {
   constructor(protected db: Firestore) {
     this.collection = collection(
       this.db,
-      `${environment.prefix}Teams`,
+      `${environment.prefix}Teams`
     ) as CollectionReference<ITeam>;
     this.teams$ = collectionSnapshots(this.collection).pipe(
       map((actions) => {
@@ -40,7 +40,7 @@ export class TeamsService {
           return { id, ...data };
         });
       }),
-      shareReplay(1),
+      shareReplay(1)
     );
   }
 
@@ -67,7 +67,7 @@ export class TeamsService {
     await updateDoc(doc(this.db, this.collection.path, id), {}).catch(
       async () => {
         await setDoc(doc(this.db, this.collection.path, id), team);
-      },
+      }
     );
   }
 
@@ -82,7 +82,7 @@ export class TeamsService {
     losses: boolean,
     defeats: boolean,
     dominations: boolean,
-    type: string,
+    type: string
   ) {
     const teamRef = doc(this.db, environment.prefix + 'Teams', teamId);
 

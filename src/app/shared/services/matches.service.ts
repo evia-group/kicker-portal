@@ -27,11 +27,11 @@ export class MatchesService {
     protected db: Firestore,
     protected userService: UsersService,
     protected teamService: TeamsService,
-    protected infoBar: InfoBarService,
+    protected infoBar: InfoBarService
   ) {
     this.collection = collection(
       db,
-      `${environment.prefix}Matches`,
+      `${environment.prefix}Matches`
     ) as CollectionReference<IMatch>;
     this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
   }
@@ -43,7 +43,7 @@ export class MatchesService {
   private static getRoundInfos(
     team: string,
     form: FormGroup,
-    type: 'win' | 'dominationTeamOne' | 'dominationTeamTwo',
+    type: 'win' | 'dominationTeamOne' | 'dominationTeamTwo'
   ): number {
     const rounds = [
       form.get(`rounds.one.${type}`).value,
@@ -70,12 +70,12 @@ export class MatchesService {
     const dominationsTeam1 = MatchesService.getRoundInfos(
       'team1',
       match,
-      'dominationTeamOne',
+      'dominationTeamOne'
     );
     const dominationsTeam2 = MatchesService.getRoundInfos(
       'team2',
       match,
-      'dominationTeamTwo',
+      'dominationTeamTwo'
     );
 
     const defeats: DocumentReference[] = [];
@@ -123,7 +123,7 @@ export class MatchesService {
         this.infoBar.openCustomSnackBar(
           'Dein Spiel wurde erfolgreich gespeichert!',
           'close',
-          5,
+          5
         );
       })
       .catch((err) => {
@@ -138,12 +138,12 @@ export class MatchesService {
     const dominationsTeam1 = MatchesService.getRoundInfos(
       'team1',
       match,
-      'dominationTeamOne',
+      'dominationTeamOne'
     );
     const dominationsTeam2 = MatchesService.getRoundInfos(
       'team1',
       match,
-      'dominationTeamTwo',
+      'dominationTeamTwo'
     );
     const userIdTeam1One = match.get('players.team1.one').value.id;
     const userIdTeam1Two = match.get('players.team1.two').value.id;
@@ -158,15 +158,15 @@ export class MatchesService {
         dominationsTeam2,
         dominationsTeam1,
         winTeam1,
-        type,
+        type
       ),
       this.generatUserUpdateObject(
         userIdTeam2One,
         dominationsTeam1,
         dominationsTeam2,
         winTeam2,
-        type,
-      ),
+        type
+      )
     );
 
     if (userIdTeam1One !== userIdTeam1Two) {
@@ -176,8 +176,8 @@ export class MatchesService {
           dominationsTeam2,
           dominationsTeam1,
           winTeam1,
-          type,
-        ),
+          type
+        )
       );
     }
     if (userIdTeam2One !== userIdTeam2Two) {
@@ -187,8 +187,8 @@ export class MatchesService {
           dominationsTeam1,
           dominationsTeam2,
           winTeam2,
-          type,
-        ),
+          type
+        )
       );
     }
 
@@ -199,14 +199,14 @@ export class MatchesService {
         dominationsTeam2,
         dominationsTeam1,
         winTeam1,
-        type,
+        type
       ),
       this.generatTeamUpdateObject(
         match.get('players.team2.teamId').value,
         dominationsTeam1,
         dominationsTeam2,
         winTeam2,
-        type,
+        type
       ),
     ];
 
@@ -226,7 +226,7 @@ export class MatchesService {
         user.loss,
         user.defeat,
         user.domination,
-        user.statsType,
+        user.statsType
       );
     });
   }
@@ -239,7 +239,7 @@ export class MatchesService {
         team.loss,
         team.defeat,
         team.domination,
-        team.statsType,
+        team.statsType
       );
     });
   }
@@ -270,7 +270,7 @@ export class MatchesService {
     defeat,
     domination,
     team,
-    type,
+    type
   ): IUserIncrement {
     return {
       defeat: defeat >= 1,
@@ -287,7 +287,7 @@ export class MatchesService {
     defeat,
     domination,
     team,
-    type,
+    type
   ): ITeamIncrement {
     return {
       defeat: defeat >= 1,

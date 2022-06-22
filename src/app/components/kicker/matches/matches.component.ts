@@ -15,7 +15,7 @@ export class MatchesComponent {
 
   constructor(
     protected userService: UsersService,
-    protected teamService: TeamsService,
+    protected teamService: TeamsService
   ) {
     this.users$ = this.userService.users$;
     this.teams$ = this.teamService.teams$;

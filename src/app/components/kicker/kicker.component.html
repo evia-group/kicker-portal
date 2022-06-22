@@ -6,8 +6,7 @@
     [disabled]="!link.active"
     routerLinkActive
     #rla="routerLinkActive"
-    [active]="rla.isActive"
-  >
+    [active]="rla.isActive">
     <mat-icon>{{ link.icon }}</mat-icon>
     {{ link.label | translate }}
   </a>

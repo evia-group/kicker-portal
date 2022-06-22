@@ -30,7 +30,7 @@ export class UsersService {
   constructor(protected db: Firestore) {
     this.collection = collection(
       this.db,
-      `${environment.prefix}Users`,
+      `${environment.prefix}Users`
     ) as CollectionReference<IUser>;
 
     this.users$ = collectionSnapshots(this.collection).pipe(
@@ -41,7 +41,7 @@ export class UsersService {
           return { id, ...data };
         });
       }),
-      shareReplay(1),
+      shareReplay(1)
     );
   }
 
@@ -59,7 +59,7 @@ export class UsersService {
     losses: boolean,
     defeats: boolean,
     dominations: boolean,
-    type: string,
+    type: string
   ) {
     const userReff = doc(this.db, environment.prefix + 'Users', userId);
 
