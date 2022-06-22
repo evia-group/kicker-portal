@@ -7,7 +7,6 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { KickerComponent } from './components/kicker/kicker.component';
 import { MatchFinderComponent } from './components/kicker/match-finder/match-finder.component';
 import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
 import { pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NotVerifiedComponent } from './components/not-verified/not-verified.component';
@@ -16,12 +15,12 @@ import {
   AuthGuard,
   canActivate,
   redirectLoggedInTo,
-  emailVerified,
+  isNotAnonymous,
 } from '@angular/fire/auth-guard';
 
 const redirectUnauthorized = () => {
   return pipe(
-    emailVerified,
+    isNotAnonymous,
     map((user) => {
       return user ? user : ['verified'];
     })
@@ -73,7 +72,6 @@ const routes: Routes = [
     component: LoginComponent,
     ...canActivate(redirectLoggedInToDashboard),
   },
-  { path: 'register', component: RegisterComponent },
   { path: 'verified', component: NotVerifiedComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'login' },
 ];

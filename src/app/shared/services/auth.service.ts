@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
 import {
   User,
-  GoogleAuthProvider,
   Auth,
   authState,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  sendEmailVerification,
   signOut,
   signInWithPopup,
+  OAuthProvider,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UsersService } from './users.service';
-import { IUser } from '../interfaces/user.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -47,47 +42,6 @@ export class AuthService {
     return this.loggedIn.asObservable();
   }
 
-  async login(email: string, password: string) {
-    await signInWithEmailAndPassword(this.afAuth, email, password);
-    this.loggedIn.next(true);
-    await this.router.navigate(['/dashboard']);
-  }
-
-  async register(email: string, password: string, name: string) {
-    await createUserWithEmailAndPassword(this.afAuth, email, password)
-      .then((user) => {
-        const newUser: IUser = {
-          id: user.user.uid,
-          name,
-          wins: 0,
-          losses: 0,
-          defeats: 0,
-          dominations: 0,
-          stats: {
-            '0:2': 0,
-            '2:0': 0,
-            '1:2': 0,
-            '2:1': 0,
-          },
-        };
-        this.userSerice.add(newUser);
-      })
-      .then(() =>
-        onAuthStateChanged(this.afAuth, (user) => {
-          if (!user.emailVerified) {
-            sendEmailVerification(user);
-            console.log('Email send to:', user.email);
-          } else {
-            console.log('Email is verified', user);
-          }
-        })
-      );
-  }
-
-  async sendPasswordResetEmail(passwordResetEmail: string) {
-    return await sendPasswordResetEmail(this.afAuth, passwordResetEmail);
-  }
-
   async logout() {
     await signOut(this.afAuth);
     localStorage.removeItem('user');
@@ -95,8 +49,12 @@ export class AuthService {
     await this.router.navigate(['/login']);
   }
 
-  async loginWithGoogle() {
-    await signInWithPopup(this.afAuth, new GoogleAuthProvider());
+  async loginWithMicrosoft() {
+    const provider = new OAuthProvider('microsoft.com');
+    provider.setCustomParameters({
+      tenant: environment.ms.tenant,
+    });
+    await signInWithPopup(this.afAuth, provider);
     this.loggedIn.next(true);
     await this.router.navigate(['/dashboard']);
   }

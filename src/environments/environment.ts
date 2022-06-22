@@ -14,6 +14,9 @@ export const environment = {
     round2: 1,
     round3: 2,
   },
+  ms: {
+    tenant: 'd532e0e6-fdff-4abd-ac1a-3dac03807405',
+  },
 };
 
 /*
