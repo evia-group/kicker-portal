@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 // const admin = require('firebase-admin');
 import {IUser} from '../../src/app/shared/interfaces/user.interface';
+import { DocumentReference } from "firebase/firestore";
 
 
 admin.initializeApp();
@@ -10,112 +11,72 @@ admin.initializeApp();
 const db = admin.firestore();
 const increment_value = admin.firestore.FieldValue.increment(1);
 const prefix = 'T-';
-// const batch = admin.firestore().batch();
 
-
-function incrementDoc(path: string, field: string) {
-    db.doc(path).update({[field]: increment_value});
-    // batch.update(db.doc(path), {[field]: increment_value});
-}
-
-function updateDocs(id1: string, id2: string, stats: string) {
-    incrementDoc(prefix + 'Teams/' + id1, 'wins');
-
-
-    // db.doc(prefix + 'Teams' + id1).update({['stats']})
-    // db.doc(prefix + 'Teams/' + id1).get().then(data => {
-    //     console.log(data.get('stats'));
-    // });
-    db.doc(prefix + 'Teams/' + id1).update({['stats.'+ stats]: increment_value});
-
-    // db.doc(prefix + 'Teams/' + team1_id).update({['wins']: increment_value});
-    db.doc(prefix + 'Teams/' + id1).get().then(data => {
-        data.get('players').forEach((player: any) => {
-            incrementDoc(player.path, 'wins');
-            db.doc(player.path).update({['stats.'+ stats]: increment_value});
-            // batch.update(db.doc(player.path), {['wins']: increment_value});
-            // db.doc(player.path).update({['wins']: increment_value});
-        });
-    });
-    incrementDoc(prefix + 'Teams/' + id2, 'losses');
-    db.doc(prefix + 'Teams/' + id2).update({['stats.'+ reverseString(stats)]: increment_value});
-    // db.doc(prefix + 'Teams/' + team2_id).update({['losses']: increment_value});
-    db.doc(prefix + 'Teams/' + id2).get().then(data => {
-        data.get('players').forEach((player: any) => {
-            incrementDoc(player.path, 'losses');
-            db.doc(player.path).update({['stats.'+ reverseString(stats)]: increment_value});
-            // db.doc(player.path).update({['losses']: increment_value});
-        });
-    });
-}
-
-function reverseString(str: string) {
-    return str.split('').reverse().join('');
-}
-
-function updateDominationsAndDefeats(snap: any) {
-    let preTeams: string[] = [];
-    snap.data().dominations.forEach((dTeam: any) => {
-        if (!preTeams.includes(dTeam.path)) { 
-            incrementDoc(dTeam.path, 'dominations');
-            preTeams.push(dTeam.path);
-            db.doc(dTeam.path).get().then(data => {
-                data.get('players').forEach((player: any) => {
-                    incrementDoc(player.path, 'dominations');
-                    // db.doc(player.path).update({['losses']: increment_value});
-                });
-            });
-        }
-    });
-
-    preTeams = [];
-    snap.data().defeats.forEach((dTeam: any) => {
-        if (!preTeams.includes(dTeam.path)) { 
-            incrementDoc(dTeam.path, 'defeats');
-            preTeams.push(dTeam.path);
-            db.doc(dTeam.path).get().then(data => {
-                data.get('players').forEach((player: any) => {
-                    incrementDoc(player.path, 'defeats');
-                    // db.doc(player.path).update({['losses']: increment_value});
-                });
-            });
-        }
-    });
-}
-
-export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matches/{documentId}`).onCreate((snap, context) => {
+export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matches/{documentId}`).onCreate(async (snap, context) => {
     const result = snap.data().result;
     const keys = Object.keys(result);
     const team1_id = keys[0];
     const res_team1 =  result[keys[0]];
     const team2_id = keys[1];
     const res_team2 =  result[keys[1]];
+    const playersTeam1 = await db.doc(prefix + 'Teams/' + team1_id).get().then(data => {
+        return [data.get('players')[0].id, data.get('players')[1].id];
+    });
+    const playersTeam2 = await db.doc(prefix + 'Teams/' + team2_id).get().then(data => {
+        return [data.get('players')[0].id, data.get('players')[1].id];
+    });
+
+    let team1UpdateMap = new Map<string, admin.firestore.FieldValue>();
+    let team2UpdateMap = new Map<string, admin.firestore.FieldValue>();
 
     if (res_team1 === 2) {
-        updateDocs(team1_id, team2_id, res_team1 + ':' + res_team2);
-        
+        team1UpdateMap.set('wins', increment_value);
+        team1UpdateMap.set('stats.' + res_team1 + ':' + res_team2, increment_value);
+        team2UpdateMap.set('losses', increment_value);
+        team2UpdateMap.set('stats.' + res_team2 + ':' + res_team1, increment_value);
     }
     else {
-        updateDocs(team2_id, team1_id, res_team2 + ':' + res_team1);
+        team2UpdateMap.set('wins', increment_value);
+        team2UpdateMap.set('stats.' + res_team2 + ':' + res_team1, increment_value);
+        team1UpdateMap.set('losses', increment_value);
+        team1UpdateMap.set('stats.' + res_team1 + ':' + res_team2, increment_value);
     }
 
-    updateDominationsAndDefeats(snap);
+    let preTeams: string[] = [];
+    snap.data().dominations.forEach((dTeam: DocumentReference) => {
+        if (!preTeams.includes(dTeam.id)) { 
+            if (dTeam.id === team1_id) {
+                team1UpdateMap.set('dominations', increment_value);
+            }
+            else {
+                team2UpdateMap.set('dominations', increment_value);
+            }
+            preTeams.push(dTeam.id);
+        }
+    });
 
-    // let preTeams: string[] = [];
-    // snap.data().dominations.forEach((dTeam: any) => {
-    //     if (!preTeams.includes(dTeam.path)) { 
-    //         incrementDoc(dTeam.path, 'dominations');
-    //         preTeams.push(dTeam.path);
-    //     }
-    // });
+    preTeams = [];
+    snap.data().defeats.forEach((dTeam: DocumentReference) => {
+        if (!preTeams.includes(dTeam.id)) { 
+            if (dTeam.id === team1_id) {
+                team1UpdateMap.set('defeats', increment_value);
+            }
+            else {
+                team2UpdateMap.set('defeats', increment_value);
+            }
+            preTeams.push(dTeam.id);
+        }
+    });
 
-    // preTeams = [];
-    // snap.data().defeats.forEach((dTeam: any) => {
-    //     if (!preTeams.includes(dTeam.path)) { 
-    //         incrementDoc(dTeam.path, 'defeats');
-    //         preTeams.push(dTeam.path);
-    //     }
-    // });
+    const team1UpdateObject = Object.fromEntries(team1UpdateMap);
+    const team2UpdateObject = Object.fromEntries(team2UpdateMap);
+
+    db.doc(prefix + 'Teams/' + team1_id).update(team1UpdateObject);
+    db.doc(prefix + 'Teams/' + team2_id).update(team2UpdateObject);
+    db.doc(prefix + 'Users/' + playersTeam1[0]).update(team1UpdateObject);
+    db.doc(prefix + 'Users/' + playersTeam1[1]).update(team1UpdateObject);
+    db.doc(prefix + 'Users/' + playersTeam2[0]).update(team2UpdateObject);
+    db.doc(prefix + 'Users/' + playersTeam2[1]).update(team2UpdateObject);
 
     return null;
 });
