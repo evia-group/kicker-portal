@@ -8,7 +8,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "p:check": "prettier --check .",
+    "p:write": "prettier --write ."
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

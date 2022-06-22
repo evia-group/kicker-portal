@@ -1,6 +1,7 @@
 {
   "singleQuote": true,
-  "trailingComma": "all",
+  "trailingComma": "es5",
+  "bracketSameLine": true,
   "overrides": [
     {
       "files": ["packages/**/docs/rules/*.md"],
