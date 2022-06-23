@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 // const admin = require('firebase-admin');
 import { ITeam, IUser } from '../../src/app/shared/interfaces/user.interface';
+// import { IPlayers } from '../../src/app/shared/interfaces/match.interface';
 import { DocumentData, DocumentReference } from "firebase/firestore";
 
 
@@ -30,7 +31,7 @@ async function createTeam(teamId: string, teamPlayers: DocumentReference<Documen
     await db.doc(prefix + 'Teams/' + teamId).get().then(async teamDoc => {
         if (!teamDoc.exists) {
             const team: ITeam = {
-                name: 'Testname',
+                name: await createTeamName(teamPlayers),
                 players: teamPlayers,
                 wins: 0,
                 losses: 0,
@@ -49,6 +50,22 @@ async function createTeam(teamId: string, teamPlayers: DocumentReference<Documen
     }).catch(err => {
         console.log(err);
     });
+}
+
+/* Create and return the Team Name */
+async function createTeamName(teamPlayers: DocumentReference<DocumentData>[]) {
+    let teamPlayersRefs: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>[] = [];
+    
+    for(const player of teamPlayers) {
+        await db.doc(player.path).get().then(playerData => {
+            teamPlayersRefs.push(playerData);
+        });
+    }
+
+    const sortedTeam = teamPlayersRefs.sort((a, b) => a.id.localeCompare(b.id));
+    const teamName = sortedTeam.map(player => player.get('name')).join('');
+
+    return teamName;
 }
 
 /* Update stats for Users and Teams when match is added to firestore */
