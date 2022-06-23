@@ -121,7 +121,7 @@ export class AddMatchComponent implements AfterContentChecked{
     const sortetTeam: IPlayers[] = team.sort((a, b) => a.id.localeCompare(b.id));
     const teamId = sortetTeam.map(player => player.id).join('');
     const teamName = sortetTeam.map(player => player.name).join('');
-    this.checkIfTeamExist(teamId, [sortetTeam[0].id, sortetTeam[1].id], teamName);
+    // this.checkIfTeamExist(teamId, [sortetTeam[0].id, sortetTeam[1].id], teamName);
     return teamId;
   }
 

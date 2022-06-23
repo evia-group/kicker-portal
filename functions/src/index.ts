@@ -2,8 +2,8 @@ import * as functions from "firebase-functions";
 // const functions = require('firebase-functions');
 import * as admin from "firebase-admin";
 // const admin = require('firebase-admin');
-import {IUser} from '../../src/app/shared/interfaces/user.interface';
-import { DocumentReference } from "firebase/firestore";
+import { ITeam, IUser } from '../../src/app/shared/interfaces/user.interface';
+import { DocumentData, DocumentReference } from "firebase/firestore";
 
 
 admin.initializeApp();
@@ -12,40 +12,80 @@ const db = admin.firestore();
 const increment_value = admin.firestore.FieldValue.increment(1);
 const prefix = 'T-';
 
+/* Return players for given Team-ID */
+function getTeamPlayers(teamId: string, players: DocumentReference<DocumentData>[]): DocumentReference<DocumentData>[] {
+    let teamPlayers: DocumentReference<DocumentData>[] = [];
+
+    players.forEach((player: DocumentReference<DocumentData>) => {
+        if (teamId.includes(player.id)) {
+            teamPlayers.push(player);
+        }
+    });
+
+    return teamPlayers;
+}
+
+/* Create team if not existent */
+async function createTeam(teamId: string, teamPlayers: DocumentReference<DocumentData>[]) {
+    await db.doc(prefix + 'Teams/' + teamId).get().then(async teamDoc => {
+        if (!teamDoc.exists) {
+            const team: ITeam = {
+                name: 'Testname',
+                players: teamPlayers,
+                wins: 0,
+                losses: 0,
+                stats: {
+                  '0:2': 0,
+                  '2:0': 0,
+                  '1:2': 0,
+                  '2:1': 0,
+                },
+                dominations: 0,
+                defeats: 0
+            };
+
+            db.doc(prefix + 'Teams/' + teamId).set(team);
+        }
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+/* Update stats for Users and Teams when match is added to firestore */
 export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matches/{documentId}`).onCreate(async (snap, context) => {
     const result = snap.data().result;
     const keys = Object.keys(result);
-    const team1_id = keys[0];
-    const res_team1 =  result[keys[0]];
-    const team2_id = keys[1];
-    const res_team2 =  result[keys[1]];
-    const playersTeam1 = await db.doc(prefix + 'Teams/' + team1_id).get().then(data => {
-        return [data.get('players')[0].id, data.get('players')[1].id];
-    });
-    const playersTeam2 = await db.doc(prefix + 'Teams/' + team2_id).get().then(data => {
-        return [data.get('players')[0].id, data.get('players')[1].id];
-    });
+    const team1Id = keys[0];
+    const resTeam1 =  result[keys[0]];
+    const team2Id = keys[1];
+    const resTeam2 =  result[keys[1]];
+    const players = snap.get('players');
+    const playersTeam1 = getTeamPlayers(team1Id, players);
+    const playersTeam2 = getTeamPlayers(team2Id, players);
+
+    await createTeam(team1Id, playersTeam1);
+    await createTeam(team2Id, playersTeam2);
 
     let team1UpdateMap = new Map<string, admin.firestore.FieldValue>();
     let team2UpdateMap = new Map<string, admin.firestore.FieldValue>();
 
-    if (res_team1 === 2) {
+    if (resTeam1 === 2) {
         team1UpdateMap.set('wins', increment_value);
-        team1UpdateMap.set('stats.' + res_team1 + ':' + res_team2, increment_value);
+        team1UpdateMap.set('stats.' + resTeam1 + ':' + resTeam2, increment_value);
         team2UpdateMap.set('losses', increment_value);
-        team2UpdateMap.set('stats.' + res_team2 + ':' + res_team1, increment_value);
+        team2UpdateMap.set('stats.' + resTeam2 + ':' + resTeam1, increment_value);
     }
     else {
         team2UpdateMap.set('wins', increment_value);
-        team2UpdateMap.set('stats.' + res_team2 + ':' + res_team1, increment_value);
+        team2UpdateMap.set('stats.' + resTeam2 + ':' + resTeam1, increment_value);
         team1UpdateMap.set('losses', increment_value);
-        team1UpdateMap.set('stats.' + res_team1 + ':' + res_team2, increment_value);
+        team1UpdateMap.set('stats.' + resTeam1 + ':' + resTeam2, increment_value);
     }
 
     let preTeams: string[] = [];
-    snap.data().dominations.forEach((dTeam: DocumentReference) => {
+    snap.data().dominations.forEach((dTeam: DocumentReference<DocumentData>) => {
         if (!preTeams.includes(dTeam.id)) { 
-            if (dTeam.id === team1_id) {
+            if (dTeam.id === team1Id) {
                 team1UpdateMap.set('dominations', increment_value);
             }
             else {
@@ -56,9 +96,9 @@ export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matche
     });
 
     preTeams = [];
-    snap.data().defeats.forEach((dTeam: DocumentReference) => {
+    snap.data().defeats.forEach((dTeam: DocumentReference<DocumentData>) => {
         if (!preTeams.includes(dTeam.id)) { 
-            if (dTeam.id === team1_id) {
+            if (dTeam.id === team1Id) {
                 team1UpdateMap.set('defeats', increment_value);
             }
             else {
@@ -71,12 +111,12 @@ export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matche
     const team1UpdateObject = Object.fromEntries(team1UpdateMap);
     const team2UpdateObject = Object.fromEntries(team2UpdateMap);
 
-    db.doc(prefix + 'Teams/' + team1_id).update(team1UpdateObject);
-    db.doc(prefix + 'Teams/' + team2_id).update(team2UpdateObject);
-    db.doc(prefix + 'Users/' + playersTeam1[0]).update(team1UpdateObject);
-    db.doc(prefix + 'Users/' + playersTeam1[1]).update(team1UpdateObject);
-    db.doc(prefix + 'Users/' + playersTeam2[0]).update(team2UpdateObject);
-    db.doc(prefix + 'Users/' + playersTeam2[1]).update(team2UpdateObject);
+    db.doc(prefix + 'Teams/' + team1Id).update(team1UpdateObject);
+    db.doc(prefix + 'Teams/' + team2Id).update(team2UpdateObject);
+    db.doc(prefix + 'Users/' + playersTeam1[0].id).update(team1UpdateObject);
+    db.doc(prefix + 'Users/' + playersTeam1[1].id).update(team1UpdateObject);
+    db.doc(prefix + 'Users/' + playersTeam2[0].id).update(team2UpdateObject);
+    db.doc(prefix + 'Users/' + playersTeam2[1].id).update(team2UpdateObject);
 
     return null;
 });
