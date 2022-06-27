@@ -3,7 +3,6 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 // const admin = require('firebase-admin');
 import { ITeam, IUser } from '../../src/app/shared/interfaces/user.interface';
-// import { IPlayers } from '../../src/app/shared/interfaces/match.interface';
 import { DocumentData, DocumentReference } from "firebase/firestore";
 
 
@@ -11,7 +10,6 @@ admin.initializeApp();
 
 const db = admin.firestore();
 const increment_value = admin.firestore.FieldValue.increment(1);
-const prefix = 'T-';
 
 /* Return players for given Team-ID */
 function getTeamPlayers(teamId: string, players: DocumentReference<DocumentData>[]): DocumentReference<DocumentData>[] {
@@ -27,7 +25,7 @@ function getTeamPlayers(teamId: string, players: DocumentReference<DocumentData>
 }
 
 /* Create team if not existent */
-async function createTeam(teamId: string, teamPlayers: DocumentReference<DocumentData>[]) {
+async function createTeam(teamId: string, teamPlayers: DocumentReference<DocumentData>[], prefix: string) {
     await db.doc(prefix + 'Teams/' + teamId).get().then(async teamDoc => {
         if (!teamDoc.exists) {
             const team: ITeam = {
@@ -68,8 +66,9 @@ async function createTeamName(teamPlayers: DocumentReference<DocumentData>[]) {
     return teamName;
 }
 
-/* Update stats for Users and Teams when match is added to firestore */
-export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matches/{documentId}`).onCreate(async (snap, context) => {
+/* The procedure for updating users and teams */
+async function updateUsersAndTeamsProcedure(snap: functions.firestore.QueryDocumentSnapshot) {
+    const prefix = process.env.PREFIX;
     const result = snap.data().result;
     const keys = Object.keys(result);
     const team1Id = keys[0];
@@ -79,9 +78,9 @@ export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matche
     const players = snap.get('players');
     const playersTeam1 = getTeamPlayers(team1Id, players);
     const playersTeam2 = getTeamPlayers(team2Id, players);
-
-    await createTeam(team1Id, playersTeam1);
-    await createTeam(team2Id, playersTeam2);
+    
+    await createTeam(team1Id, playersTeam1, prefix!);
+    await createTeam(team2Id, playersTeam2, prefix!);
 
     let team1UpdateMap = new Map<string, admin.firestore.FieldValue>();
     let team2UpdateMap = new Map<string, admin.firestore.FieldValue>();
@@ -134,13 +133,25 @@ export const updateUsersAndTeams = functions.firestore.document(`${prefix}Matche
     db.doc(prefix + 'Users/' + playersTeam1[1].id).update(team1UpdateObject);
     db.doc(prefix + 'Users/' + playersTeam2[0].id).update(team2UpdateObject);
     db.doc(prefix + 'Users/' + playersTeam2[1].id).update(team2UpdateObject);
+}
 
+/* Update stats for Users and Teams when match is added to firestore in testing environment */
+export const updateUsersAndTeamsT = functions.firestore.document(`T-Matches/{documentId}`).onCreate((snap, context) => {
+    updateUsersAndTeamsProcedure(snap);
+    return null;
+});
+
+/* Update stats for Users and Teams when match is added to firestore in production environment */
+export const updateUsersAndTeams = functions.firestore.document(`Matches/{documentId}`).onCreate((snap, context) => {
+    updateUsersAndTeamsProcedure(snap);
     return null;
 });
 
 /* When a new user is added to firebase, this function gets triggered.
    It adds a new user to firestore. */
 export const newUser = functions.auth.user().onCreate((user) => {
+    const prefix = process.env.PREFIX;
+
     const newUser: IUser = {
         id: user.uid,
         name: user.displayName!,
