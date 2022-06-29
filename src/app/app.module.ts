@@ -30,7 +30,6 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 
-
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -61,9 +60,9 @@ export function createTranslateLoader(http: HttpClient) {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
     }),
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -76,6 +75,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [InfoBarComponent]
+  entryComponents: [InfoBarComponent],
 })
-export class AppModule { }
+export class AppModule {}

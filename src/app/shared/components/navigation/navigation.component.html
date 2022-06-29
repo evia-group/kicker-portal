@@ -1,34 +1,49 @@
 <div class="navigation-container" [class.is-mobile]="mobileQuery.matches">
   <mat-toolbar color="primary" class="navigation-toolbar">
-    <button mat-icon-button (click)="sidenav.toggle()" *ngIf="isLoggedIn$ | async"><mat-icon>menu</mat-icon></button>
-    <h1 class="app-name">{{'app.name' | translate}}</h1>
+    <button
+      mat-icon-button
+      (click)="sidenav.toggle()"
+      *ngIf="isLoggedIn$ | async">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1 class="app-name">{{ 'app.name' | translate }}</h1>
     <span class="toolbar-spacer"></span>
     <button mat-icon-button [matMenuTriggerFor]="menuLanguage">
-      <mat-icon class="icon" aria-hidden="false" aria-label="language icon">language</mat-icon>
+      <mat-icon class="icon" aria-hidden="false" aria-label="language icon"
+        >language</mat-icon
+      >
     </button>
-    <button mat-icon-button [matMenuTriggerFor]="menuPerson" *ngIf="isLoggedIn$ | async">
-      <mat-icon class="icon" aria-hidden="false" aria-label="personal icon">person</mat-icon>
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menuPerson"
+      *ngIf="isLoggedIn$ | async">
+      <mat-icon class="icon" aria-hidden="false" aria-label="personal icon"
+        >person</mat-icon
+      >
     </button>
   </mat-toolbar>
 
-  <mat-sidenav-container class="sidenav-container"
-                         [hasBackdrop]="true"
-                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-    <mat-sidenav #sidenav
-                 [mode]="'over'"
-                 (click)="sidenav.toggle()"
-                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+  <mat-sidenav-container
+    class="sidenav-container"
+    [hasBackdrop]="true"
+    [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav
+      #sidenav
+      [mode]="'over'"
+      (click)="sidenav.toggle()"
+      [fixedInViewport]="mobileQuery.matches"
+      fixedTopGap="56">
       <mat-nav-list>
         <mat-list-item routerLink="/dashboard" routerLinkActive="active">
-          <a matLine >{{'app.navigation.dashboard' | translate}}</a>
+          <a matLine>{{ 'app.navigation.dashboard' | translate }}</a>
           <mat-icon mat-list-icon>dashboard</mat-icon>
         </mat-list-item>
         <mat-list-item routerLink="/kicker" routerLinkActive="active">
-          <a matLine>{{'app.navigation.kicker' | translate}}</a>
+          <a matLine>{{ 'app.navigation.kicker' | translate }}</a>
           <mat-icon mat-list-icon>sports_soccer</mat-icon>
         </mat-list-item>
         <mat-list-item routerLink="/map" routerLinkActive="active">
-          <a matLine>{{'app.navigation.map' | translate}}</a>
+          <a matLine>{{ 'app.navigation.map' | translate }}</a>
           <mat-icon mat-list-icon>apartment</mat-icon>
         </mat-list-item>
       </mat-nav-list>
@@ -43,21 +58,20 @@
 
 <mat-menu #menuLanguage="matMenu">
   <button mat-menu-item (click)="changeLanguage('de')">
-    <span>{{'app.language.de' | translate}}</span>
+    <span>{{ 'app.language.de' | translate }}</span>
   </button>
   <button mat-menu-item (click)="changeLanguage('en')">
-    <span>{{'app.language.en' | translate}}</span>
+    <span>{{ 'app.language.en' | translate }}</span>
   </button>
 </mat-menu>
-
 
 <mat-menu #menuPerson="matMenu">
   <button mat-menu-item disabled>
     <mat-icon>settings_applications</mat-icon>
-    <span>{{'app.settings' | translate}}</span>
+    <span>{{ 'app.settings' | translate }}</span>
   </button>
   <button mat-menu-item (click)="logout()">
     <mat-icon>exit_to_app</mat-icon>
-    <span>{{'app.logout' | translate}}</span>
+    <span>{{ 'app.logout' | translate }}</span>
   </button>
 </mat-menu>

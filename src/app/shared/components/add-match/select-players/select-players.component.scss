@@ -1,10 +1,8 @@
 .select-container {
   display: grid;
   flex-direction: row;
-  grid-template-columns:  auto auto;
+  grid-template-columns: auto auto;
   grid-gap: 20px;
-
-
 
   .select-player-team-container {
     .mat-form-field {
