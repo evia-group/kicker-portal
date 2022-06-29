@@ -27,8 +27,17 @@ import { InteractiveMapComponent } from './components/interactive-map/interactiv
 import { RoomMapComponent } from './shared/components/room-map/room-map.component';
 import { RoomInformationComponent } from './shared/components/room-information/room-information.component';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { provideAuth, getAuth } from '@angular/fire/auth';
+import {
+  connectFirestoreEmulator,
+  getFirestore,
+  provideFirestore,
+} from '@angular/fire/firestore';
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
+import {
+  connectFunctionsEmulator,
+  getFunctions,
+  provideFunctions,
+} from '@angular/fire/functions';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -68,8 +77,29 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     MaterialModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
-    provideAuth(() => getAuth()),
+    provideFirestore(() => {
+      const firestore = getFirestore();
+      if (environment['useEmulators']) {
+        connectFirestoreEmulator(firestore, 'localhost', 8080);
+      }
+      return firestore;
+    }),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (environment['useEmulators']) {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true,
+        });
+      }
+      return auth;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions();
+      if (environment['useEmulators']) {
+        connectFunctionsEmulator(functions, 'localhost', 5022);
+      }
+      return functions;
+    }),
     FormsModule,
     ReactiveFormsModule,
   ],
