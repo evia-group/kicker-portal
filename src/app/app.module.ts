@@ -27,10 +27,17 @@ import { InteractiveMapComponent } from './components/interactive-map/interactiv
 import { RoomMapComponent } from './shared/components/room-map/room-map.component';
 import { RoomInformationComponent } from './shared/components/room-information/room-information.component';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
+import {
+  connectFirestoreEmulator,
+  getFirestore,
+  provideFirestore,
+} from '@angular/fire/firestore';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
-import { connectFunctionsEmulator, getFunctions, provideFunctions } from '@angular/fire/functions';
-
+import {
+  connectFunctionsEmulator,
+  getFunctions,
+  provideFunctions,
+} from '@angular/fire/functions';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,9 +69,9 @@ export function createTranslateLoader(http: HttpClient) {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
     }),
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -80,7 +87,9 @@ export function createTranslateLoader(http: HttpClient) {
     provideAuth(() => {
       const auth = getAuth();
       if (environment['useEmulators']) {
-        connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings:true });
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true,
+        });
       }
       return auth;
     }),
@@ -96,6 +105,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [InfoBarComponent]
+  entryComponents: [InfoBarComponent],
 })
-export class AppModule { }
+export class AppModule {}
