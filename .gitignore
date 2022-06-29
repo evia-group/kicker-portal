@@ -29,6 +29,7 @@ speed-measure-plugin.json
 !.vscode/extensions.json
 .history/*
 
+
 # misc
 /.angular/cache
 /.sass-cache
@@ -39,7 +40,6 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-.prettierignore
 
 # System Files
 .DS_Store
