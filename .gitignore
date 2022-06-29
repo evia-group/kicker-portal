@@ -43,6 +43,7 @@ firestore-debug.log
 ui-debug.log
 /typings
 .firebase
+storage.rules
 
 # System Files
 .DS_Store

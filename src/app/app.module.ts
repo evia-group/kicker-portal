@@ -72,21 +72,21 @@ export function createTranslateLoader(http: HttpClient) {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => {
       const firestore = getFirestore();
-      if (environment.useEmulators) {
+      if (environment.useEmulators || false) {
         connectFirestoreEmulator(firestore, 'localhost', 8080);
       }
       return firestore;
     }),
     provideAuth(() => {
       const auth = getAuth();
-      if (environment.useEmulators) {
+      if (environment.useEmulators || false) {
         connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings:true });
       }
       return auth;
     }),
     provideFunctions(() => {
       const functions = getFunctions();
-      if (environment.useEmulators) {
+      if (environment.useEmulators || false) {
         connectFunctionsEmulator(functions, 'localhost', 5022);
       }
       return functions;
