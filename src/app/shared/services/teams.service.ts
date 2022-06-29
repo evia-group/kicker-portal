@@ -1,14 +1,11 @@
 import {Injectable} from '@angular/core';
 import { Firestore, collection, CollectionReference, doc, 
-  DocumentReference, updateDoc, setDoc, deleteDoc, writeBatch, 
-  collectionSnapshots } from '@angular/fire/firestore';
+  deleteDoc, collectionSnapshots } from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {ITeam} from '../interfaces/user.interface';
 import {environment} from '../../../environments/environment';
-import { increment } from "firebase/firestore";
 
-const increment_value = increment(1);
 
 @Injectable({
   providedIn: 'root',
@@ -34,55 +31,8 @@ export class TeamsService {
     );
   }
 
-  public async add(id: string, players: string[], name: string) {
-    const referencePlayer: DocumentReference[] = [
-        doc(this.db, `${environment.prefix}Users/${players[0]}`), doc(this.db, `${environment.prefix}Users/${players[1]}`)
-      ]
-    ;
-    const team: ITeam = {
-      name,
-      players: referencePlayer,
-      wins: 0,
-      losses: 0,
-      stats: {
-        '0:2': 0,
-        '2:0': 0,
-        '1:2': 0,
-        '2:1': 0,
-      },
-      dominations: 0,
-      defeats: 0
-    };
-
-    await updateDoc(doc(this.db, this.collection.path, id), {})
-      .catch(async () => {
-        await setDoc(doc(this.db, this.collection.path, id), team);
-      });
-  }
-
   public async delete(teamId) {
     await deleteDoc(doc(this.db, this.collection.path, teamId));
-    // this.collection.doc(teamId).delete();
   }
 
-  async incrementTeamStates(teamId: string, wins: boolean, losses: boolean, defeats: boolean, dominations: boolean, type: string) {
-    const teamRef = doc(this.db, environment.prefix + 'Teams', teamId);
-
-    const batch = writeBatch(this.db);
-    batch.update(teamRef, {[`stats.${type}`]: increment_value});
-
-    if(wins) batch.update(teamRef, {['wins']: increment_value});
-    if(losses) batch.update(teamRef, {['losses']: increment_value});
-    if(defeats) batch.update(teamRef, {['defeats']: increment_value});
-    if(dominations) batch.update(teamRef, {['dominations']: increment_value});
-
-    await batch.commit();
-  }
-
-  public async update(teamId: string, updateObject: any) {
-    console.log('TeamUpdate', teamId, updateObject);
-    await updateDoc(doc(this.db, this.collection.path, teamId), updateObject)
-      .then(() => console.log('success'))
-      .catch((err) => console.log('err', err));
-  }
 }
