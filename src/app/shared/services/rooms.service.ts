@@ -7,15 +7,10 @@ import { DefaultRoomData } from '../models/default.model';
   providedIn: 'root',
 })
 export class RoomsService {
-
   private roomSource = new BehaviorSubject<IRoom>(DefaultRoomData);
   public roomInformation = this.roomSource.asObservable();
-
-  constructor() {
-  }
 
   public updateRoom(data: IRoom): void {
     this.roomSource.next(data);
   }
-
 }

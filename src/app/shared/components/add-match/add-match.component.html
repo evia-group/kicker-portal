@@ -1,28 +1,25 @@
 <mat-card class="match-container">
-  <hr class="spacer"/>
+  <hr class="spacer" />
   <div class="match-header">
-    <div>{{'common.team1' | translate}}</div>
+    <div>{{ 'common.team1' | translate }}</div>
     <div>{{ winsTeam1 | async }}</div>
     <div>{{ winsTeam2 | async }}</div>
-    <div>{{'common.team2' | translate}}</div>
+    <div>{{ 'common.team2' | translate }}</div>
   </div>
   <mat-divider></mat-divider>
   <form [formGroup]="addMatchForm" (ngSubmit)="saveMatch()">
-    <app-select-players [players]="data"
-                        [matchForm]="addMatchForm"
-                        [showingTeams]="showingTeams"></app-select-players>
+    <app-select-players
+      [players]="data"
+      [matchForm]="addMatchForm"
+      [showingTeams]="showingTeams"></app-select-players>
     <mat-divider></mat-divider>
 
-    <app-round-result
-      [matchForm]="addMatchForm"
-      [round]="'one'">
+    <app-round-result [matchForm]="addMatchForm" [round]="'one'">
     </app-round-result>
 
     <mat-divider></mat-divider>
 
-    <app-round-result
-      [matchForm]="addMatchForm"
-      [round]="'two'">
+    <app-round-result [matchForm]="addMatchForm" [round]="'two'">
     </app-round-result>
 
     <mat-divider></mat-divider>
@@ -34,7 +31,13 @@
     </app-round-result>
 
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!addMatchForm.valid">{{'common.save.match' | translate}}</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!addMatchForm.valid">
+        {{ 'common.save.match' | translate }}
+      </button>
     </mat-card-actions>
   </form>
 </mat-card>
