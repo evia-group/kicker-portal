@@ -6,9 +6,9 @@
         [formGroupName]="team === 0 ? 'team1' : 'team2'">
         <mat-form-field>
           <mat-label>{{ 'common.player' | translate }}</mat-label>
-          <mat-select id="0" formControlName="one">
+          <mat-select #sel0 id="{{2*team}}" formControlName="one" (selectionChange)="updatePlayers($event)">
             <mat-option
-              *ngFor="let player of players | async"
+              *ngFor="let player of createPlayersList(sel0.id)"
               [value]="{ id: player.id, name: player.name }">
               {{ player.name }}
             </mat-option>
@@ -17,9 +17,9 @@
 
         <mat-form-field>
           <mat-label>{{ 'common.player' | translate }}</mat-label>
-          <mat-select id="1" formControlName="two">
+          <mat-select #sel1 id="{{1+2*team}}" formControlName="two" (selectionChange)="updatePlayers($event)">
             <mat-option
-              *ngFor="let player of players | async"
+              *ngFor="let player of createPlayersList(sel1.id)"
               [value]="{ id: player.id, name: player.name }">
               {{ player.name }}
             </mat-option>
