@@ -93,6 +93,7 @@ export class AddMatchComponent implements AfterContentChecked {
 
     this.matchesService.add(this.addMatchForm).then(() => {
       this.addMatchForm.reset();
+      this.matchesService.resetForm$.next(true);
     });
   }
 
