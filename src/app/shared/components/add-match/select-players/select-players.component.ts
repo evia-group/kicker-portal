@@ -46,9 +46,7 @@ export class SelectPlayersComponent {
         }
       });
 
-      for (let i = 0; i < this.playerLists.length; i++) {
-        this.playerLists[i] = this.createPlayersList(i);
-      }
+      this.setPlayerLists();
 
       this.touched.forEach((isTouched, index) => {
         if (isTouched) {
@@ -59,7 +57,7 @@ export class SelectPlayersComponent {
 
     matchesService.resetForm$.subscribe((isReset) => {
       if (isReset) {
-        this.selectedPlayers = [];
+        this.selectedPlayers = ['', '', '', ''];
         this.touched = [false, false, false, false];
       }
     });
@@ -67,7 +65,10 @@ export class SelectPlayersComponent {
 
   updatePlayers(event: any) {
     this.selectedPlayers[+event.source.id] = event.value.id;
+    this.setPlayerLists();
+  }
 
+  setPlayerLists() {
     for (let i = 0; i < this.playerLists.length; i++) {
       this.playerLists[i] = this.createPlayersList(i);
     }
