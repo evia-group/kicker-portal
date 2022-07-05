@@ -6,9 +6,13 @@
         [formGroupName]="team === 0 ? 'team1' : 'team2'">
         <mat-form-field>
           <mat-label>{{ 'common.player' | translate }}</mat-label>
-          <mat-select #sel0 id="{{2*team}}" formControlName="one" (selectionChange)="updatePlayers($event)">
+          <mat-select
+            id="{{ 2 * team }}"
+            formControlName="one"
+            [compareWith]="compareValues"
+            (selectionChange)="updatePlayers($event)">
             <mat-option
-              *ngFor="let player of createPlayersList(sel0.id)"
+              *ngFor="let player of getPlayersList(2 * team)"
               [value]="{ id: player.id, name: player.name }">
               {{ player.name }}
             </mat-option>
@@ -17,9 +21,13 @@
 
         <mat-form-field>
           <mat-label>{{ 'common.player' | translate }}</mat-label>
-          <mat-select #sel1 id="{{1+2*team}}" formControlName="two" (selectionChange)="updatePlayers($event)">
+          <mat-select
+            id="{{ 2 * team + 1 }}"
+            formControlName="two"
+            [compareWith]="compareValues"
+            (selectionChange)="updatePlayers($event)">
             <mat-option
-              *ngFor="let player of createPlayersList(sel1.id)"
+              *ngFor="let player of getPlayersList(2 * team + 1)"
               [value]="{ id: player.id, name: player.name }">
               {{ player.name }}
             </mat-option>

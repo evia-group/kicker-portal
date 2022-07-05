@@ -9,7 +9,7 @@ import {
   deleteDoc,
   DocumentReference,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { IMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
@@ -36,6 +36,8 @@ export class MatchesService {
   }
 
   public matches$: Observable<any>;
+
+  public resetForm$ = new Subject<boolean>();
 
   protected collection: CollectionReference;
 
