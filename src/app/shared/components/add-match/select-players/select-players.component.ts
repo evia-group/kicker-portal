@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ITeam, IUser } from '../../../interfaces/user.interface';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { UsersService } from 'src/app/shared/services/users.service';
 import { MatchesService } from 'src/app/shared/services/matches.service';
@@ -10,7 +10,7 @@ import { MatchesService } from 'src/app/shared/services/matches.service';
   templateUrl: './select-players.component.html',
   styleUrls: ['./select-players.component.scss'],
 })
-export class SelectPlayersComponent {
+export class SelectPlayersComponent implements OnInit, OnDestroy {
   @Input()
   players: Observable<IUser[]> | Observable<ITeam[]>;
 
@@ -30,8 +30,17 @@ export class SelectPlayersComponent {
 
   touched: boolean[] = [false, false, false, false];
 
-  constructor(userService: UsersService, matchesService: MatchesService) {
-    userService.users$.subscribe((data: IUser[]) => {
+  usersSub: Subscription;
+
+  resetFormSub: Subscription;
+
+  constructor(
+    private userService: UsersService,
+    private matchesService: MatchesService
+  ) {}
+
+  ngOnInit(): void {
+    this.usersSub = this.userService.users$.subscribe((data: IUser[]) => {
       this.allPlayers = data;
 
       const allIds: string[] = [];
@@ -55,12 +64,17 @@ export class SelectPlayersComponent {
       });
     });
 
-    matchesService.resetForm$.subscribe((isReset) => {
+    this.resetFormSub = this.matchesService.resetForm$.subscribe((isReset) => {
       if (isReset) {
         this.selectedPlayers = ['', '', '', ''];
         this.touched = [false, false, false, false];
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.usersSub.unsubscribe();
+    this.resetFormSub.unsubscribe();
   }
 
   updatePlayers(event: any) {
@@ -107,8 +121,8 @@ export class SelectPlayersComponent {
     });
   }
 
-  getPlayersList(selId: string) {
-    this.addTouched(+selId);
+  getPlayersList(selId: number) {
+    this.addTouched(selId);
     return this.playerLists[+selId];
   }
 
