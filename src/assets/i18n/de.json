@@ -47,6 +47,7 @@
     "team2": "Mannschaft 2",
     "team": "Mannschaft",
     "domination": "dominiert",
-    "player": "Spieler"
+    "player": "Spieler",
+    "createTeam": "Team erstellen"
   }
 }

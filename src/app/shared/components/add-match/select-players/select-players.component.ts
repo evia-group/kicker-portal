@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { UsersService } from 'src/app/shared/services/users.service';
 import { MatchesService } from 'src/app/shared/services/matches.service';
+// import { TeamsService } from 'src/app/shared/services/teams.service';
 
 @Component({
   selector: 'app-select-players',
@@ -128,5 +129,9 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
 
   compareValues(o1: any, o2: any) {
     return o1 && o2 && o1.id === o2.id;
+  }
+
+  selectPlayer(team: any, event: any) {
+    console.log(team, event);
   }
 }

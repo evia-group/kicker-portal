@@ -46,6 +46,7 @@
     "team2": "Team 2",
     "team": "Team",
     "domination": "domination",
-    "player": "Player"
+    "player": "Player",
+    "createTeam": "create team"
   }
 }

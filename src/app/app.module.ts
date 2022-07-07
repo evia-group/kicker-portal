@@ -38,6 +38,9 @@ import {
   getFunctions,
   provideFunctions,
 } from '@angular/fire/functions';
+import { CreateTeamComponent } from './shared/components/add-match/create-team/create-team.component';
+import { CreateTeamDialogComponent } from './shared/components/add-match/create-team/create-team-dialog/create-team-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,6 +65,8 @@ export function createTranslateLoader(http: HttpClient) {
     InteractiveMapComponent,
     RoomMapComponent,
     RoomInformationComponent,
+    CreateTeamComponent,
+    CreateTeamDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,6 +107,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     FormsModule,
     ReactiveFormsModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

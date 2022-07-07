@@ -1,0 +1,9 @@
+<mat-card-actions>
+  <button
+    *ngIf="showingTeams"
+    mat-raised-button
+    color="primary"
+    (click)="openDialog()">
+    {{ 'common.createTeam' | translate }}
+  </button>
+</mat-card-actions>

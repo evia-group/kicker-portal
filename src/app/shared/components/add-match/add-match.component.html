@@ -1,4 +1,7 @@
 <mat-card class="match-container">
+  <app-create-team
+    *ngIf="showingTeams"
+    [showingTeams]="showingTeams"></app-create-team>
   <hr class="spacer" />
   <div class="match-header">
     <div>{{ 'common.team1' | translate }}</div>
