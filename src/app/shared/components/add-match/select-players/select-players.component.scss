@@ -5,16 +5,25 @@
   grid-gap: 20px;
 
   .select-player-team-container {
+    display: flex;
     .mat-form-field {
-      max-width: 150px;
-      padding: 0 20px;
+      margin: auto;
     }
   }
 
   .select-team-container {
+    display: flex;
     .mat-form-field {
-      width: calc(100% - 40px);
-      padding: 0 20px;
+      margin: 0 10px 0 10px;
+      width: 100%;
+    }
+
+    .mat-card-actions {
+      margin: 0 10px 0 10px;
+      button {
+        font-size: 30px;
+        font-weight: lighter;
+      }
     }
   }
 }

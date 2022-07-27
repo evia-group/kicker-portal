@@ -1,7 +1,4 @@
 <mat-card class="match-container">
-  <app-create-team
-    *ngIf="showingTeams"
-    [showingTeams]="showingTeams"></app-create-team>
   <hr class="spacer" />
   <div class="match-header">
     <div>{{ 'common.team1' | translate }}</div>
@@ -10,26 +7,37 @@
     <div>{{ 'common.team2' | translate }}</div>
   </div>
   <mat-divider></mat-divider>
-  <form [formGroup]="addMatchForm" (ngSubmit)="saveMatch()">
+  <form
+    [formGroup]="showingTeams ? addTeamMatchForm : addMatchForm"
+    (ngSubmit)="saveMatch()">
     <app-select-players
       [players]="data"
-      [matchForm]="addMatchForm"
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
       [showingTeams]="showingTeams"></app-select-players>
+    <mat-card id="warning" *ngIf="overlappingTeams && showingTeams">
+      <mat-card-content>
+        <div>{{ 'info.chooseTeams' | translate }}</div>
+      </mat-card-content>
+    </mat-card>
     <mat-divider></mat-divider>
 
-    <app-round-result [matchForm]="addMatchForm" [round]="'one'">
+    <app-round-result
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [round]="'one'">
     </app-round-result>
 
     <mat-divider></mat-divider>
 
-    <app-round-result [matchForm]="addMatchForm" [round]="'two'">
+    <app-round-result
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [round]="'two'">
     </app-round-result>
 
     <mat-divider></mat-divider>
 
     <app-round-result
       *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
-      [matchForm]="addMatchForm"
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
       [round]="'three'">
     </app-round-result>
 
@@ -38,7 +46,11 @@
         mat-raised-button
         color="primary"
         type="submit"
-        [disabled]="!addMatchForm.valid">
+        [disabled]="
+          showingTeams
+            ? !addTeamMatchForm.valid || overlappingTeams
+            : !addMatchForm.valid
+        ">
         {{ 'common.save.match' | translate }}
       </button>
     </mat-card-actions>

@@ -1,11 +1,7 @@
 {
   "hosting": {
     "public": "dist/kicker-portal",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
@@ -25,7 +21,7 @@
       "port": 5022
     },
     "firestore": {
-      "port": 8080
+      "port": 8082
     },
     "hosting": {
       "port": 5033
@@ -34,7 +30,7 @@
       "enabled": true
     },
     "auth": {
-      "port": 9099
+      "port": 9098
     },
     "storage": {
       "port": 9199

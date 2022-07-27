@@ -33,6 +33,18 @@
     display: flex;
     justify-content: center;
   }
+
+  .hint-text {
+    display: flex;
+    justify-content: center;
+    color: red;
+  }
+
+  #warning {
+    background-color: red;
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .add-match-container {

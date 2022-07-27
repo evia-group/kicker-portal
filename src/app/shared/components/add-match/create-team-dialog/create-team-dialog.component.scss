@@ -18,3 +18,20 @@
     }
   }
 }
+
+#warning {
+  background-color: red;
+  display: flex;
+  justify-content: center;
+}
+
+.mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.hint-text {
+  display: flex;
+  justify-content: center;
+  color: red;
+}

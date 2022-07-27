@@ -48,6 +48,15 @@
     "team": "Mannschaft",
     "domination": "dominiert",
     "player": "Spieler",
-    "createTeam": "Team erstellen"
+    "createTeam": "Team erstellen",
+    "saveTeam": "Team speichern",
+    "close": "Abbrechen",
+    "teamExists": "Das Team existiert bereits!"
+  },
+  "info": {
+    "close": "Schließen",
+    "saveMatch": "Das Spiel wurde erfolgreich gespeichert!",
+    "saveTeam": "Das Team wurde erfolgreich gespeichert!",
+    "chooseTeams": "Spieler aus den Teams überschneiden sich!"
   }
 }
