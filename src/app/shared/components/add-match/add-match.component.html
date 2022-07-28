@@ -14,23 +14,20 @@
       [players]="data"
       [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
       [showingTeams]="showingTeams"></app-select-players>
-    <mat-card id="warning" *ngIf="overlappingTeams && showingTeams">
-      <mat-card-content>
-        <div>{{ 'info.chooseTeams' | translate }}</div>
-      </mat-card-content>
-    </mat-card>
     <mat-divider></mat-divider>
 
     <app-round-result
       [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
-      [round]="'one'">
+      [round]="'one'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-divider></mat-divider>
 
     <app-round-result
       [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
-      [round]="'two'">
+      [round]="'two'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-divider></mat-divider>
@@ -38,7 +35,8 @@
     <app-round-result
       *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
       [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
-      [round]="'three'">
+      [round]="'three'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-card-actions>
@@ -47,9 +45,7 @@
         color="primary"
         type="submit"
         [disabled]="
-          showingTeams
-            ? !addTeamMatchForm.valid || overlappingTeams
-            : !addMatchForm.valid
+          showingTeams ? !addTeamMatchForm.valid : !addMatchForm.valid
         ">
         {{ 'common.save.match' | translate }}
       </button>

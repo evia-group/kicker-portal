@@ -38,10 +38,6 @@ export class MatchesService {
     this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
   }
 
-  // ngOnDestroy() {
-  //   this.translateSub.unsubscribe();
-  // }
-
   translateSub: Subscription;
 
   infoText = '';
@@ -52,11 +48,19 @@ export class MatchesService {
 
   public resetForm$ = new Subject<boolean>();
 
-  public overlapping$ = new Subject<boolean>();
-
   protected collection: CollectionReference;
 
   protected overlap = false;
+
+  private _selectedUsers: string[][] = [[], []];
+
+  public set selectedUsers(selectedUsers: string[][]) {
+    this._selectedUsers = selectedUsers;
+  }
+
+  public get selectedUsers() {
+    return this._selectedUsers;
+  }
 
   getText() {
     this.translateSub = this.translateService.get('info').subscribe((res) => {
@@ -210,6 +214,12 @@ export class MatchesService {
 
     this.setPlayerLists(playerLists, selectedPlayers, allPlayers);
 
+    this.teamService.getDialogResult().forEach((res, index) => {
+      if (res) {
+        touched[index] = true;
+      }
+    });
+
     touched.forEach((isTouched, index) => {
       if (isTouched) {
         this.markControlTouched(index, showingTeams, matchForm, inDialog);
@@ -293,7 +303,6 @@ export class MatchesService {
     selectedPlayers: string[],
     playerLists: (IUser | ITeam)[][],
     allPlayers: (IUser | ITeam)[],
-    selectedUsers?: string[][],
     allUserIds?: string[]
   ) {
     const selectData = this.getControl(
@@ -305,13 +314,12 @@ export class MatchesService {
     selectedPlayers[selId] = selectData.value.id;
     if (showingTeams) {
       const teamId: string = selectData.value.id;
-      selectedUsers[selId].length = 0;
+      this.selectedUsers[selId].length = 0;
       allUserIds.forEach((userId) => {
         if (teamId.startsWith(userId) || teamId.endsWith(userId)) {
-          selectedUsers[selId].push(userId);
+          this.selectedUsers[selId].push(userId);
         }
       });
-      this.overlapPlayers(selectedUsers);
       if (selId === 0) {
         matchForm
           .get('players.team1.one')
@@ -356,14 +364,18 @@ export class MatchesService {
     });
   }
 
-  overlapPlayers(selectedUsers: string[][]) {
+  overlapPlayers() {
     this.overlap = false;
-    selectedUsers[0].forEach((playerId) => {
-      if (selectedUsers[1].includes(playerId)) {
+    this.selectedUsers[0].forEach((playerId) => {
+      if (this.selectedUsers[1].includes(playerId)) {
         this.overlap = true;
       }
     });
-    this.overlapping$.next(this.overlap);
+    if (this.overlap) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   compareValues(o1: any, o2: any) {

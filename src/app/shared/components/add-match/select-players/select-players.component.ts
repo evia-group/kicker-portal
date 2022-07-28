@@ -43,12 +43,10 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
 
   allUserIds: string[] = [];
 
-  selectedUsers: string[][] = [[], []];
-
-  dialogResult = undefined;
+  dialogResult = [undefined, undefined];
 
   constructor(
-    private userService: UsersService,
+    private usersService: UsersService,
     private matchesService: MatchesService,
     private teamsService: TeamsService,
     public dialog: MatDialog
@@ -59,14 +57,15 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
       this.touched = [false, false];
       this.selectedPlayers = ['', ''];
       this.playerLists = [[], []];
-      this.usersSub = this.userService.users$.subscribe((users: IUser[]) => {
+      this.usersSub = this.usersService.users$.subscribe((users: IUser[]) => {
+        this.allUserIds.length = 0;
         users.forEach((user) => {
           this.allUserIds.push(user.id);
         });
       });
       this.actualOb = this.teamsService.teams$;
     } else {
-      this.actualOb = this.userService.users$;
+      this.actualOb = this.usersService.users$;
     }
 
     this.actualSub = this.actualOb.subscribe((data: (ITeam | IUser)[]) => {
@@ -86,12 +85,14 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
         const dialogResult = this.teamsService.getDialogResult();
 
         dialogResult.forEach((res, index) => {
-          if (res && allIds.includes(res.id)) {
-            this.matchesService
-              .getControl(index, this.showingTeams, this.matchForm, false)
-              .setValue(res);
-            this.updatePlayers(index);
-            this.teamsService.setDialogResult(undefined, index);
+          if (res) {
+            if (allIds.includes(res.id)) {
+              this.matchesService
+                .getControl(index, this.showingTeams, this.matchForm, false)
+                .setValue(res);
+              this.updatePlayers(index);
+              this.teamsService.setDialogResult(undefined, index);
+            }
           }
         });
       }
@@ -102,7 +103,7 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
         if (this.showingTeams && teamsWasShowing) {
           this.selectedPlayers = ['', ''];
           this.touched = [false, false];
-          this.selectedUsers = [[], []];
+          this.matchesService.selectedUsers = [[], []];
         } else if (!this.showingTeams && !teamsWasShowing) {
           this.selectedPlayers = ['', '', '', ''];
           this.touched = [false, false, false, false];
@@ -128,9 +129,24 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
       this.selectedPlayers,
       this.playerLists,
       this.allPlayers,
-      this.selectedUsers,
       this.allUserIds
     );
+    if (this.showingTeams) {
+      this.matchesService
+        .getControl(0, this.showingTeams, this.matchForm, false)
+        .updateValueAndValidity();
+      this.matchesService
+        .getControl(1, this.showingTeams, this.matchForm, false)
+        .updateValueAndValidity();
+    }
+  }
+
+  checkForError(id: number) {
+    const actualControl =
+      id === 0
+        ? this.matchForm.get('players.team1.three')
+        : this.matchForm.get('players.team2.three');
+    return actualControl.hasError('overlapping');
   }
 
   getPlayersList(selId: number) {

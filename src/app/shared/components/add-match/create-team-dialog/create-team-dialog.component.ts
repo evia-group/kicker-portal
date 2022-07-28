@@ -45,6 +45,8 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
 
   closeText = '';
 
+  warnText = '';
+
   teamExists = false;
 
   players: number[] = [0, 1];
@@ -74,10 +76,13 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
         true
       );
     });
-    this.translateSub = this.translateService.get('info').subscribe((res) => {
-      this.infoText = res.saveTeam;
-      this.closeText = res.close;
-    });
+    this.translateSub = this.translateService
+      .get(['info', 'common'])
+      .subscribe((res) => {
+        this.infoText = res.info.saveTeam;
+        this.closeText = res.info.close;
+        this.warnText = res.common.teamExists;
+      });
   }
 
   ngOnDestroy(): void {
@@ -106,7 +111,6 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
       this.playerLists,
       this.allPlayers
     );
-    this.teamExists = false;
   }
 
   async saveTeam() {
@@ -130,6 +134,7 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
   }
 
   async createTeam(teamId: string, teamPlayers: IPlayers[]) {
+    this.teamExists = false;
     const docRef = doc(this.db, environment.prefix + `Teams/${teamId}`);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
@@ -161,6 +166,12 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
           console.log('ERROR', err);
         });
     } else {
+      this.infoBar.openCustomSnackBar(
+        this.warnText,
+        this.closeText,
+        5,
+        'alert-snackbar'
+      );
       this.teamExists = true;
     }
   }

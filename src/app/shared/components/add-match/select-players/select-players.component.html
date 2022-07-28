@@ -59,6 +59,9 @@
               {{ player.name }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="checkForError(team)">{{
+            'info.chooseTeams' | translate
+          }}</mat-error>
         </mat-form-field>
         <mat-card-actions>
           <button

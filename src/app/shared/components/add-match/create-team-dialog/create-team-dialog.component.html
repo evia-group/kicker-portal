@@ -21,11 +21,6 @@
       </div>
     </ng-container>
   </div>
-  <mat-card id="warning" *ngIf="teamExists">
-    <mat-card-content>
-      <div>{{ 'common.teamExists' | translate }}</div>
-    </mat-card-content>
-  </mat-card>
   <mat-card-actions>
     <button mat-stroked-button type="button" (click)="closeDialog()">
       {{ 'common.close' | translate }}

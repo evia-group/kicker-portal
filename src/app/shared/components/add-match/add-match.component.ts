@@ -1,24 +1,22 @@
-import {
-  AfterContentChecked,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { AfterContentChecked, Component, Input, OnInit } from '@angular/core';
 import { ITeam, IUser } from '../../interfaces/user.interface';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { MatchesService } from '../../services/matches.service';
 import { TeamsService } from '../../services/teams.service';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  Validators,
+  FormBuilder,
+  FormGroup,
+  ValidatorFn,
+  ValidationErrors,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-add-match',
   templateUrl: './add-match.component.html',
   styleUrls: ['./add-match.component.scss'],
 })
-export class AddMatchComponent
-  implements AfterContentChecked, OnInit, OnDestroy
-{
+export class AddMatchComponent implements AfterContentChecked, OnInit {
   @Input()
   showingTeams = false;
 
@@ -28,7 +26,7 @@ export class AddMatchComponent
   winsTeam1 = new BehaviorSubject<number>(0);
   winsTeam2 = new BehaviorSubject<number>(0);
 
-  overlappingTeams = false;
+  actualForm: FormGroup;
 
   public addMatchForm = this.fb.group({
     players: this.fb.group({
@@ -74,7 +72,15 @@ export class AddMatchComponent
         {
           one: [null, { validators: Validators.required }],
           two: [null, { validators: Validators.required }],
-          three: [null, { validators: Validators.required }],
+          three: [
+            null,
+            {
+              validators: [
+                Validators.required,
+                this.checkOverlapping(this.matchesService),
+              ],
+            },
+          ],
           teamId: [null],
         },
         { validators: Validators.required }
@@ -83,7 +89,15 @@ export class AddMatchComponent
         {
           one: [null, { validators: Validators.required }],
           two: [null, { validators: Validators.required }],
-          three: [null, { validators: Validators.required }],
+          three: [
+            null,
+            {
+              validators: [
+                Validators.required,
+                this.checkOverlapping(this.matchesService),
+              ],
+            },
+          ],
           teamId: [null],
         },
         { validators: Validators.required }
@@ -114,23 +128,10 @@ export class AddMatchComponent
     private fb: FormBuilder
   ) {}
 
-  actualForm: FormGroup;
-
-  overlappingSubs: Subscription;
-
   ngOnInit(): void {
     this.actualForm = this.showingTeams
       ? this.addTeamMatchForm
       : this.addMatchForm;
-    this.overlappingSubs = this.matchesService.overlapping$.subscribe(
-      (isOverlapping) => {
-        this.overlappingTeams = isOverlapping;
-      }
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.overlappingSubs.unsubscribe();
   }
 
   ngAfterContentChecked() {
@@ -200,5 +201,12 @@ export class AddMatchComponent
     }
 
     return rounds;
+  }
+
+  checkOverlapping(matchesService: MatchesService): ValidatorFn {
+    return (): ValidationErrors | null => {
+      const res = matchesService.overlapPlayers();
+      return res ? { overlapping: res } : null;
+    };
   }
 }

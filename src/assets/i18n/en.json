@@ -47,7 +47,6 @@
     "team": "Team",
     "domination": "domination",
     "player": "Player",
-    "createTeam": "create team",
     "saveTeam": "save team",
     "close": "close",
     "teamExists": "This team already exists!"
