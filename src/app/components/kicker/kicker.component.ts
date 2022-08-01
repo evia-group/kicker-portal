@@ -26,7 +26,7 @@ export class KickerComponent {
       label: 'app.statistics',
       link: '/kicker/statistics',
       icon: 'bubble_chart',
-      active: false,
+      active: true,
       index: 1,
     },
     {

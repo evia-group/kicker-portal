@@ -1,13 +1,20 @@
-import { Component } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { map, take } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { UsersService } from 'src/app/shared/services/users.service';
+// import { IUser } from 'src/app/shared/interfaces/user.interface';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
+import { TeamsService } from 'src/app/shared/services/teams.service';
 
 @Component({
   selector: 'app-statistic',
   templateUrl: './statistic.component.html',
   styleUrls: ['./statistic.component.scss'],
 })
-export class StatisticComponent {
+export class StatisticComponent implements OnInit, AfterViewInit {
   /** Based on the screen size, switch from standard to one column per row */
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({ matches }) => {
@@ -29,5 +36,90 @@ export class StatisticComponent {
     })
   );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  @ViewChild('playersPaginator') playersPaginator: MatPaginator;
+  @ViewChild('teamsPaginator') teamsPaginator: MatPaginator;
+
+  @ViewChild('playersBoard') playersSort: MatSort;
+  @ViewChild('teamsBoard') teamsSort: MatSort;
+
+  players;
+
+  teams;
+
+  displayedColumns: string[] = [
+    'name',
+    'wins',
+    'losses',
+    'dominations',
+    'defeats',
+    '2:0',
+    '2:1',
+    '0:2',
+    '1:2',
+    'totalMatches',
+  ];
+
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private usersService: UsersService,
+    private teamsService: TeamsService
+  ) {}
+
+  ngOnInit(): void {
+    const playersTable = [];
+    this.usersService.users$.pipe(take(1)).subscribe((players: IUser[]) => {
+      players.map((player: IUser) => {
+        playersTable.push(this.createTableData(player));
+      });
+      this.players = new MatTableDataSource(playersTable);
+    });
+    const teamsTable = [];
+    this.teamsService.teams$.pipe(take(1)).subscribe((teams: ITeam[]) => {
+      teams.map((team) => {
+        teamsTable.push(this.createTableData(team));
+      });
+      this.teams = new MatTableDataSource(teamsTable);
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.players.paginator = this.playersPaginator;
+    this.players.sort = this.playersSort;
+    this.teams.paginator = this.teamsPaginator;
+    this.teams.sort = this.teamsSort;
+  }
+
+  createTableData(data: IUser | ITeam) {
+    const newData = (({ name, wins, losses, dominations, defeats }) => ({
+      name,
+      wins,
+      losses,
+      dominations,
+      defeats,
+    }))(data);
+    newData['2:0'] = data.stats['2:0'];
+    newData['2:1'] = data.stats['2:1'];
+    newData['0:2'] = data.stats['0:2'];
+    newData['1:2'] = data.stats['1:2'];
+    newData['totalMatches'] = data.wins + data.losses;
+
+    return newData;
+  }
+
+  applyFilter(event: Event, id: number) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    if (id === 0) {
+      this.players.filter = filterValue.trim().toLowerCase();
+
+      if (this.players.paginator) {
+        this.players.paginator.firstPage();
+      }
+    } else {
+      this.teams.filter = filterValue.trim().toLowerCase();
+
+      if (this.teams.paginator) {
+        this.teams.paginator.firstPage();
+      }
+    }
+  }
 }
