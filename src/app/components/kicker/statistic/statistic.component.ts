@@ -2,12 +2,12 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { map, take } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { UsersService } from 'src/app/shared/services/users.service';
-// import { IUser } from 'src/app/shared/interfaces/user.interface';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
 import { TeamsService } from 'src/app/shared/services/teams.service';
+import { ChartConfiguration } from 'chart.js';
 
 @Component({
   selector: 'app-statistic',
@@ -58,6 +58,21 @@ export class StatisticComponent implements OnInit, AfterViewInit {
     '1:2',
     'totalMatches',
   ];
+
+  public barChartLegend = true;
+  public barChartPlugins = [];
+
+  public barChartData: ChartConfiguration<'bar'>['data'] = {
+    labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
+    datasets: [
+      { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
+      { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
+    ],
+  };
+
+  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: false,
+  };
 
   constructor(
     private breakpointObserver: BreakpointObserver,

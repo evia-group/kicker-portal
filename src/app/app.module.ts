@@ -43,6 +43,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { NgChartsModule } from 'ng2-charts';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -112,6 +113,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    NgChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
