@@ -46,6 +46,15 @@
     "team2": "Team 2",
     "team": "Team",
     "domination": "domination",
-    "player": "Player"
+    "player": "Player",
+    "saveTeam": "save team",
+    "close": "close",
+    "teamExists": "This team already exists!"
+  },
+  "info": {
+    "close": "Close",
+    "saveMatch": "The match was saved successfully!",
+    "saveTeam": "The team was saved successfully!",
+    "chooseTeams": "Players from the teams overlap!"
   }
 }

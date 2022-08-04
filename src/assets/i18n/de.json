@@ -47,6 +47,15 @@
     "team2": "Mannschaft 2",
     "team": "Mannschaft",
     "domination": "dominiert",
-    "player": "Spieler"
+    "player": "Spieler",
+    "saveTeam": "Mannschaft speichern",
+    "close": "Abbrechen",
+    "teamExists": "Die Mannschaft existiert bereits!"
+  },
+  "info": {
+    "close": "Schließen",
+    "saveMatch": "Das Spiel wurde erfolgreich gespeichert!",
+    "saveTeam": "Die Mannschaft wurde erfolgreich gespeichert!",
+    "chooseTeams": "Spieler aus den Mannschaften überschneiden sich!"
   }
 }

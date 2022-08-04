@@ -1,0 +1,37 @@
+.select-container {
+  display: grid;
+  flex-direction: row;
+  grid-template-columns: auto auto;
+  grid-gap: 20px;
+
+  .select-player-team-container {
+    .mat-form-field {
+      max-width: 150px;
+      padding: 0 20px;
+    }
+  }
+
+  .select-team-container {
+    .mat-form-field {
+      width: calc(100% - 40px);
+      padding: 0 20px;
+    }
+  }
+}
+
+#warning {
+  background-color: red;
+  display: flex;
+  justify-content: center;
+}
+
+.mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.hint-text {
+  display: flex;
+  justify-content: center;
+  color: red;
+}
