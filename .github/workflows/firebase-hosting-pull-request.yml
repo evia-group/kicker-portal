@@ -29,8 +29,26 @@ jobs:
           FIREBASE_MEASUREMENT_ID: '${{ secrets.FIREBASE_MEASUREMENT_ID }}'
       - name: Build
         run: npm run build
+      - run: make test-coverage-${{ matrix.test_number }}
+      - name: Coveralls
+        uses: coverallsapp/github-action@v1.1.0
+        env:
+          NODE_COVERALLS_DEBUG: 1
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel: true
+          flag-name: run-${{ matrix.test_number }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_EVIA_DESK }}'
           projectId: evia-desk
+  finish:
+    needs: build_and_preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v1.1.0
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
