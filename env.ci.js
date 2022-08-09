@@ -1,8 +1,7 @@
 const { writeFile, existsSync, mkdirSync } = require('fs');
-const {version} = require('./package.json');
+const { version } = require('./package.json');
 
 require('dotenv').config();
-
 
 function writeFileUsingFS(targetPathFS, environmentFileContentFS) {
   writeFile(targetPathFS, environmentFileContentFS, function (err) {
@@ -14,7 +13,6 @@ function writeFileUsingFS(targetPathFS, environmentFileContentFS) {
     }
   });
 }
-
 
 // Providing path to the `environments` directory
 const envDirectory = './src/environments';

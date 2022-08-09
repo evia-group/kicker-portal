@@ -16,11 +16,11 @@
 
   .spacer {
     position: absolute;
-    border:none;
-    border-top:1px dotted #333333;
+    border: none;
+    border-top: 1px dotted #333333;
     margin-left: calc(50% - 17px);
-    background-color:#333333;
-    width:1px;
+    background-color: #333333;
+    width: 1px;
     height: 93%;
   }
 
@@ -33,6 +33,18 @@
     display: flex;
     justify-content: center;
   }
+
+  .hint-text {
+    display: flex;
+    justify-content: center;
+    color: red;
+  }
+
+  #warning {
+    background-color: red;
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .add-match-container {
@@ -41,7 +53,8 @@
     display: flex;
     flex-direction: row;
 
-    .team1, .team2 {
+    .team1,
+    .team2 {
       display: flex;
       flex-direction: column;
       border: 1px solid #333333;
@@ -56,6 +69,3 @@
     }
   }
 }
-
-
-

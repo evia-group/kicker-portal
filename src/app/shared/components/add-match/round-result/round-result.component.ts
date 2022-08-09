@@ -1,12 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { MatchesService } from 'src/app/shared/services/matches.service';
 
 @Component({
   selector: 'app-round-result',
   templateUrl: './round-result.component.html',
-  styleUrls: ['./round-result.component.scss']
+  styleUrls: ['./round-result.component.scss'],
 })
-export class RoundResultComponent implements OnInit{
+export class RoundResultComponent implements OnInit, OnDestroy {
   public dominationTeamOne = 'dominationTeamOne';
   public dominationTeamTwo = 'dominationTeamTwo';
 
@@ -16,9 +18,36 @@ export class RoundResultComponent implements OnInit{
   @Input()
   matchForm: FormGroup;
 
+  @Input()
+  showingTeams = false;
+
+  resetFormSub: Subscription;
+
+  constructor(private matchesService: MatchesService) {}
+
+  ngOnDestroy(): void {
+    this.resetFormSub.unsubscribe();
+  }
+
   ngOnInit() {
-    this.matchForm.get(`rounds.${this.round}.${this.dominationTeamOne}`).disable();
-    this.matchForm.get(`rounds.${this.round}.${this.dominationTeamTwo}`).disable();
+    this.matchForm
+      .get(`rounds.${this.round}.${this.dominationTeamOne}`)
+      .disable();
+    this.matchForm
+      .get(`rounds.${this.round}.${this.dominationTeamTwo}`)
+      .disable();
+    this.resetFormSub = this.matchesService.resetForm$.subscribe(
+      (teamsWasShowing) => {
+        if (this.showingTeams === teamsWasShowing) {
+          this.matchForm
+            .get(`rounds.${this.round}.${this.dominationTeamTwo}`)
+            .disable();
+          this.matchForm
+            .get(`rounds.${this.round}.${this.dominationTeamOne}`)
+            .disable();
+        }
+      }
+    );
   }
 
   dominationChange(ownTeam: string, enemyTeam: string) {
@@ -28,14 +57,26 @@ export class RoundResultComponent implements OnInit{
   }
 
   enableDominationSlider(event) {
-    if(event.value === 'team1') {
-      this.matchForm.get(`rounds.${this.round}.${this.dominationTeamTwo}`).setValue(false);
-      this.matchForm.get(`rounds.${this.round}.${this.dominationTeamOne}`).enable();
-      this.matchForm.get(`rounds.${this.round}.${this.dominationTeamTwo}`).disable();
-    } else if(event.value === 'team2') {
-      this.matchForm.get(`rounds.${this.round}.${this.dominationTeamOne}`).setValue(false);
-      this.matchForm.get(`rounds.${this.round}.${this.dominationTeamTwo}`).enable();
-      this.matchForm.get(`rounds.${this.round}.${this.dominationTeamOne}`).disable();
+    if (event.value === 'team1') {
+      this.matchForm
+        .get(`rounds.${this.round}.${this.dominationTeamTwo}`)
+        .setValue(false);
+      this.matchForm
+        .get(`rounds.${this.round}.${this.dominationTeamOne}`)
+        .enable();
+      this.matchForm
+        .get(`rounds.${this.round}.${this.dominationTeamTwo}`)
+        .disable();
+    } else if (event.value === 'team2') {
+      this.matchForm
+        .get(`rounds.${this.round}.${this.dominationTeamOne}`)
+        .setValue(false);
+      this.matchForm
+        .get(`rounds.${this.round}.${this.dominationTeamTwo}`)
+        .enable();
+      this.matchForm
+        .get(`rounds.${this.round}.${this.dominationTeamOne}`)
+        .disable();
     }
   }
 }

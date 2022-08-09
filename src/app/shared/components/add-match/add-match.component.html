@@ -1,40 +1,54 @@
 <mat-card class="match-container">
-  <hr class="spacer"/>
+  <hr class="spacer" />
   <div class="match-header">
-    <div>{{'common.team1' | translate}}</div>
+    <div>{{ 'common.team1' | translate }}</div>
     <div>{{ winsTeam1 | async }}</div>
     <div>{{ winsTeam2 | async }}</div>
-    <div>{{'common.team2' | translate}}</div>
+    <div>{{ 'common.team2' | translate }}</div>
   </div>
   <mat-divider></mat-divider>
-  <form [formGroup]="addMatchForm" (ngSubmit)="saveMatch()">
-    <app-select-players [players]="data"
-                        [matchForm]="addMatchForm"
-                        [showingTeams]="showingTeams"></app-select-players>
+  <form
+    [formGroup]="showingTeams ? addTeamMatchForm : addMatchForm"
+    (ngSubmit)="saveMatch()">
+    <app-select-players
+      [players]="data"
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [showingTeams]="showingTeams"></app-select-players>
     <mat-divider></mat-divider>
 
     <app-round-result
-      [matchForm]="addMatchForm"
-      [round]="'one'">
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [round]="'one'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-divider></mat-divider>
 
     <app-round-result
-      [matchForm]="addMatchForm"
-      [round]="'two'">
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [round]="'two'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-divider></mat-divider>
 
     <app-round-result
       *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
-      [matchForm]="addMatchForm"
-      [round]="'three'">
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [round]="'three'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!addMatchForm.valid">{{'common.save.match' | translate}}</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="
+          showingTeams ? !addTeamMatchForm.valid : !addMatchForm.valid
+        ">
+        {{ 'common.save.match' | translate }}
+      </button>
     </mat-card-actions>
   </form>
 </mat-card>

@@ -1,9 +1,19 @@
-import * as functions from 'firebase-functions';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const admin = require('firebase-admin');
+admin.initializeApp();
 
-// Start writing Firebase Functions
-// https://firebase.google.com/docs/functions/typescript
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const newUser = require('./new-user');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const updateUsersAndTeamsI = require('./update-users-teams');
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info('Hello logs!', {structuredData: true});
-  response.send('Hello from Firebase!');
-});
+/* Update stats for Users and Teams when match is added to firestore in production environment */
+exports.updateUsersAndTeams = updateUsersAndTeamsI.updateUsersAndTeams;
+
+/* Update stats for Users and Teams when match is added to firestore in testing environment */
+exports.updateUsersAndTeamsT = updateUsersAndTeamsI.updateUsersAndTeamsT;
+// exports.updateUsersAndTeams = updateUsersAndTeams.updateUsersAndTeams;
+
+/* When a new user is added to firebase, this function gets triggered.
+   It adds a new user to firestore. */
+exports.newUser = newUser.newUser;

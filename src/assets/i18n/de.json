@@ -27,7 +27,7 @@
     "firstname": "Vorname",
     "lastname": "Nachname",
     "backToLogin": "zum Anmelden",
-    "verified": "Du hast deine E-Mail-Adresse noch nicht bestätigt. Schau bitte in deinen E-Mails nach der Bestätigungs E-Mail. <br /><br />Solltest du keine bekommen habe wende dich bitte an dirk.mueller@evia.de",
+    "verified": "Du hast deine E-Mail-Adresse noch nicht bestätigt. Schau bitte in deinen E-Mails nach der Bestätigungs-E-Mail. <br /><br />Solltest du keine bekommen habe wende dich bitte an dirk.mueller@evia.de",
     "loginWithMS": "Mit Microsoft anmelden",
     "error": {
       "recognised": "Der Benutzername und das Passwort sind falsch",
@@ -43,10 +43,19 @@
       "": "Speichern",
       "match": "Spiel speichern"
     },
-    "team1": "Manschaft 1",
-    "team2": "Manschaft 2",
-    "team": "Manschaft",
+    "team1": "Mannschaft 1",
+    "team2": "Mannschaft 2",
+    "team": "Mannschaft",
     "domination": "dominiert",
-    "player": "Spieler"
+    "player": "Spieler",
+    "saveTeam": "Mannschaft speichern",
+    "close": "Abbrechen",
+    "teamExists": "Die Mannschaft existiert bereits!"
+  },
+  "info": {
+    "close": "Schließen",
+    "saveMatch": "Das Spiel wurde erfolgreich gespeichert!",
+    "saveTeam": "Die Mannschaft wurde erfolgreich gespeichert!",
+    "chooseTeams": "Spieler aus den Mannschaften überschneiden sich!"
   }
 }

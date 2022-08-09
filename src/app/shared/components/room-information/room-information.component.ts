@@ -6,10 +6,9 @@ import { RoomsService } from '../../services/rooms.service';
 @Component({
   selector: 'app-room-information',
   templateUrl: './room-information.component.html',
-  styleUrls: ['./room-information.component.scss']
+  styleUrls: ['./room-information.component.scss'],
 })
 export class RoomInformationComponent {
-
   public roomInformation: IRoom = DefaultRoomData;
 
   constructor(private roomService: RoomsService) {
@@ -27,6 +26,4 @@ export class RoomInformationComponent {
 
     return subtitle;
   }
-
 }
-

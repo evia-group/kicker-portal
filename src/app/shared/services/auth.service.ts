@@ -1,12 +1,19 @@
-import {Injectable} from '@angular/core';
-import {User, Auth, authState, signOut, signInWithPopup, OAuthProvider} from '@angular/fire/auth';
-import {Router} from '@angular/router';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {UsersService} from './users.service';
+import { Injectable } from '@angular/core';
+import {
+  User,
+  Auth,
+  authState,
+  signOut,
+  signInWithPopup,
+  OAuthProvider,
+} from '@angular/fire/auth';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { UsersService } from './users.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private user: User;
@@ -15,9 +22,9 @@ export class AuthService {
   constructor(
     private afAuth: Auth,
     public userSerice: UsersService,
-    public router: Router,
+    public router: Router
   ) {
-    authState(afAuth).subscribe(user => {
+    authState(afAuth).subscribe((user) => {
       if (user) {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(this.user));
@@ -51,5 +58,4 @@ export class AuthService {
     this.loggedIn.next(true);
     await this.router.navigate(['/dashboard']);
   }
-
 }

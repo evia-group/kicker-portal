@@ -45,15 +45,16 @@ npm run test
 
 👤 **evia solution GmbH**
 
-* Website: https://www.evia.de/
-* Twitter: [@geninone](https://twitter.com/geninone)
-* Github: [@geninOne](https://github.com/geninOne)
-* LinkedIn: [@evia-stuttgart](https://www.linkedin.com/company/evia-stuttgart/mycompany/)
+- Website: https://www.evia.de/
+- Twitter: [@geninone](https://twitter.com/geninone)
+- Github: [@geninOne](https://github.com/geninOne)
+- LinkedIn: [@evia-stuttgart](https://www.linkedin.com/company/evia-stuttgart/mycompany/)
 
 <!-- ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](issue page). You can also take a look at the [contributing guide](contributing guid).
 -->
+
 ## Show your support
 
 Give a ⭐️ if this project helped you!
@@ -63,5 +64,6 @@ Give a ⭐️ if this project helped you!
 Copyright © 2022 [evia solution GmbH](https://github.com/geninOne).<br />
 This project is [MIT](https://github.com/Evia-Academy/kicker-portal/blob/production/LICENSE) licensed.
 
-***
+---
+
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

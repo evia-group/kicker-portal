@@ -8,6 +8,6 @@ export const DefaultRoomData: IRoom = {
     location: 'Keine Auswahl',
     number: '0',
     name: 'Keine Auswahl',
-    icon: 'location_searching'
-  }
+    icon: 'location_searching',
+  },
 };

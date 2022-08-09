@@ -1,25 +1,30 @@
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
-import {StatisticComponent} from './components/kicker/statistic/statistic.component';
-import {TournamentsComponent} from './components/kicker/tournaments/tournaments.component';
-import {MatchesComponent} from './components/kicker/matches/matches.component';
-import {DashboardComponent} from './components/dashboard/dashboard.component';
-import {KickerComponent} from './components/kicker/kicker.component';
-import {MatchFinderComponent} from './components/kicker/match-finder/match-finder.component';
-import {LoginComponent} from './components/login/login.component';
-import {pipe} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {NotVerifiedComponent} from './components/not-verified/not-verified.component';
-import {InteractiveMapComponent} from './components/interactive-map/interactive-map.component';
-import {AuthGuard, canActivate, redirectLoggedInTo, isNotAnonymous} from '@angular/fire/auth-guard'
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { StatisticComponent } from './components/kicker/statistic/statistic.component';
+import { TournamentsComponent } from './components/kicker/tournaments/tournaments.component';
+import { MatchesComponent } from './components/kicker/matches/matches.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { KickerComponent } from './components/kicker/kicker.component';
+import { MatchFinderComponent } from './components/kicker/match-finder/match-finder.component';
+import { LoginComponent } from './components/login/login.component';
+import { pipe } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { NotVerifiedComponent } from './components/not-verified/not-verified.component';
+import { InteractiveMapComponent } from './components/interactive-map/interactive-map.component';
+import {
+  AuthGuard,
+  canActivate,
+  redirectLoggedInTo,
+  isNotAnonymous,
+} from '@angular/fire/auth-guard';
 
 const redirectUnauthorized = () => {
   return pipe(
     isNotAnonymous,
-    map(user => {
-        return user ? user : ['verified']
-      }
-    ));
+    map((user) => {
+      return user ? user : ['verified'];
+    })
+  );
 };
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
 
@@ -48,8 +53,8 @@ const routes: Routes = [
         component: MatchFinderComponent,
         ...canActivate(redirectUnauthorized),
       },
-      {path: '', pathMatch: 'full', redirectTo: 'matches',}
-    ]
+      { path: '', pathMatch: 'full', redirectTo: 'matches' },
+    ],
   },
   {
     path: 'map',
@@ -60,20 +65,19 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
-    data: { authGuardPipe: redirectUnauthorized }
+    data: { authGuardPipe: redirectUnauthorized },
   },
   {
     path: 'login',
     component: LoginComponent,
     ...canActivate(redirectLoggedInToDashboard),
   },
-  {path: 'verified', component: NotVerifiedComponent},
-  {path: '**', pathMatch: 'full', redirectTo: 'login'}
+  { path: 'verified', component: NotVerifiedComponent },
+  { path: '**', pathMatch: 'full', redirectTo: 'login' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}
