@@ -9,14 +9,10 @@
 
 ## Prerequistes
 
----
-
 - npm >= 8.1.2
 - node >= 16.13.1
 
 ## Install
-
----
 
 Install the dependencies
 
@@ -24,7 +20,7 @@ Install the dependencies
 npm install
 ```
 
-As a second step the dev environment must be generated:
+As a second step the dev environment must be generated
 
 ```sh
 npm run add:env
