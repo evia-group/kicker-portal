@@ -1,14 +1,40 @@
-<nav mat-tab-nav-bar mat-align-tabs="center">
+<div mat-align-tabs="center" mat-tab-nav-bar>
   <a
     mat-tab-link
     *ngFor="let link of navLinks"
     [routerLink]="link.link"
     [disabled]="!link.active"
-    routerLinkActive
+    routerLinkActive="true"
     #rla="routerLinkActive"
     [active]="rla.isActive">
     <mat-icon>{{ link.icon }}</mat-icon>
     {{ link.label | translate }}
   </a>
-</nav>
+</div>
+
+<mat-card class="state-icon available" *ngIf="kickerStatus">
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="icon" aria-hidden="false"
+      >check_circle</mat-icon
+    >
+    <mat-card-title>{{
+      'common.kickerStatus.available.title' | translate
+    }}</mat-card-title>
+    <mat-card-subtitle>{{
+      'common.kickerStatus.available.subtitle' | translate
+    }}</mat-card-subtitle>
+  </mat-card-header>
+</mat-card>
+<mat-card class="state-icon not-available" *ngIf="!kickerStatus">
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="icon" aria-hidden="false">cancel</mat-icon>
+    <mat-card-title>{{
+      'common.kickerStatus.notAvailable.title' | translate
+    }}</mat-card-title>
+    <mat-card-subtitle>{{
+      'common.kickerStatus.notAvailable.subtitle' | translate
+    }}</mat-card-subtitle>
+  </mat-card-header>
+</mat-card>
+
 <router-outlet></router-outlet>
