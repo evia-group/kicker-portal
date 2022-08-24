@@ -12,27 +12,28 @@
   </a>
 </div>
 
-<mat-card class="state-icon available" *ngIf="kickerStatus">
+<mat-card
+  class="state-icon available"
+  [ngClass]="{
+    'state-icon': true,
+    available: kickerStatus,
+    'not-available': !kickerStatus
+  }">
   <mat-card-header>
-    <mat-icon mat-card-avatar class="icon" aria-hidden="false"
-      >check_circle</mat-icon
-    >
+    <mat-icon mat-card-avatar class="icon" aria-hidden="false">
+      {{ kickerStatus ? 'check_circle' : 'cancel' }}
+    </mat-icon>
     <mat-card-title>{{
-      'common.kickerStatus.available.title' | translate
+      (kickerStatus
+        ? 'common.kickerStatus.available.title'
+        : 'common.kickerStatus.notAvailable.title'
+      ) | translate
     }}</mat-card-title>
     <mat-card-subtitle>{{
-      'common.kickerStatus.available.subtitle' | translate
-    }}</mat-card-subtitle>
-  </mat-card-header>
-</mat-card>
-<mat-card class="state-icon not-available" *ngIf="!kickerStatus">
-  <mat-card-header>
-    <mat-icon mat-card-avatar class="icon" aria-hidden="false">cancel</mat-icon>
-    <mat-card-title>{{
-      'common.kickerStatus.notAvailable.title' | translate
-    }}</mat-card-title>
-    <mat-card-subtitle>{{
-      'common.kickerStatus.notAvailable.subtitle' | translate
+      (kickerStatus
+        ? 'common.kickerStatus.available.subtitle'
+        : 'common.kickerStatus.notAvailable.subtitle'
+      ) | translate
     }}</mat-card-subtitle>
   </mat-card-header>
 </mat-card>
