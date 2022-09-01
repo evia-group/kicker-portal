@@ -49,7 +49,17 @@
     "player": "Player",
     "saveTeam": "save team",
     "close": "close",
-    "teamExists": "This team already exists!"
+    "teamExists": "This team already exists!",
+    "kickerStatus": {
+      "available": {
+        "title": "Kicker is available",
+        "subtitle": "Hurray! Time to play a game"
+      },
+      "notAvailable": {
+        "title": "Kicker is not available",
+        "subtitle": "Opps! You must wait to play a game"
+      }
+    }
   },
   "info": {
     "close": "Close",
