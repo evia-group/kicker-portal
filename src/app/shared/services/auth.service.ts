@@ -16,12 +16,19 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private user: User;
+  private _user: User;
+
+  public get user(): User {
+    return this._user;
+  }
+  public set user(value: User) {
+    this._user = value;
+  }
   private loggedIn = new BehaviorSubject<boolean>(false);
 
   constructor(
     private afAuth: Auth,
-    public userSerice: UsersService,
+    public usersService: UsersService,
     public router: Router
   ) {
     authState(afAuth).subscribe((user) => {

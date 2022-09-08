@@ -1,20 +1,19 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { map, take } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { UsersService } from 'src/app/shared/services/users.service';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
 import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
 import { TeamsService } from 'src/app/shared/services/teams.service';
-import { ChartConfiguration } from 'chart.js';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { MatchesService } from 'src/app/shared/services/matches.service';
 
 @Component({
   selector: 'app-statistic',
   templateUrl: './statistic.component.html',
   styleUrls: ['./statistic.component.scss'],
 })
-export class StatisticComponent implements OnInit, AfterViewInit {
+export class StatisticComponent implements OnInit {
   /** Based on the screen size, switch from standard to one column per row */
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({ matches }) => {
@@ -36,72 +35,49 @@ export class StatisticComponent implements OnInit, AfterViewInit {
     })
   );
 
-  @ViewChild('playersPaginator') playersPaginator: MatPaginator;
-  @ViewChild('teamsPaginator') teamsPaginator: MatPaginator;
+  players: MatTableDataSource<any>;
 
-  @ViewChild('playersBoard') playersSort: MatSort;
-  @ViewChild('teamsBoard') teamsSort: MatSort;
+  teams: MatTableDataSource<any>;
 
-  players;
+  playersTable: any[] = [];
 
-  teams;
+  playersMap = new Map();
 
-  displayedColumns: string[] = [
-    'name',
-    'wins',
-    'losses',
-    'dominations',
-    'defeats',
-    '2:0',
-    '2:1',
-    '0:2',
-    '1:2',
-    'totalMatches',
-  ];
+  teamsMap = new Map();
 
-  public barChartLegend = true;
-  public barChartPlugins = [];
-
-  public barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
-    datasets: [
-      { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-      { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
-    ],
-  };
-
-  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: false,
-  };
+  teamsTable: any[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private usersService: UsersService,
-    private teamsService: TeamsService
+    private teamsService: TeamsService,
+    private authService: AuthService,
+    private matchesService: MatchesService
   ) {}
 
   ngOnInit(): void {
-    const playersTable = [];
     this.usersService.users$.pipe(take(1)).subscribe((players: IUser[]) => {
       players.map((player: IUser) => {
-        playersTable.push(this.createTableData(player));
+        const res = this.createTableData(player);
+        this.playersTable.push(res);
+        this.playersMap.set(player.id, res);
       });
-      this.players = new MatTableDataSource(playersTable);
+      this.players = new MatTableDataSource(this.playersTable);
     });
-    const teamsTable = [];
+
     this.teamsService.teams$.pipe(take(1)).subscribe((teams: ITeam[]) => {
       teams.map((team) => {
-        teamsTable.push(this.createTableData(team));
+        const res = this.createTableData(team);
+        this.teamsTable.push(res);
+        this.teamsMap.set(team.id, res);
       });
-      this.teams = new MatTableDataSource(teamsTable);
+      this.teams = new MatTableDataSource(this.teamsTable);
     });
-  }
 
-  ngAfterViewInit(): void {
-    this.players.paginator = this.playersPaginator;
-    this.players.sort = this.playersSort;
-    this.teams.paginator = this.teamsPaginator;
-    this.teams.sort = this.teamsSort;
+    this.sortTable(this.playersTable);
+    this.sortTable(this.teamsTable);
+    this.addRanks(this.playersTable);
+    this.addRanks(this.teamsTable);
   }
 
   createTableData(data: IUser | ITeam) {
@@ -117,24 +93,38 @@ export class StatisticComponent implements OnInit, AfterViewInit {
     newData['0:2'] = data.stats['0:2'];
     newData['1:2'] = data.stats['1:2'];
     newData['totalMatches'] = data.wins + data.losses;
+    newData['diff'] = data.wins - data.losses;
+    newData['elo'] = this.calcElo(data);
+    newData['winsTimeline'] = new Map();
+    newData['lossesTimeline'] = new Map();
 
     return newData;
   }
 
-  applyFilter(event: Event, id: number) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    if (id === 0) {
-      this.players.filter = filterValue.trim().toLowerCase();
+  sortTable(table: any[]) {
+    table.sort((a, b) => {
+      if (a.elo > b.elo) return -1;
+      if (a.elo < b.elo) return 1;
+      return 0;
+    });
+  }
 
-      if (this.players.paginator) {
-        this.players.paginator.firstPage();
-      }
-    } else {
-      this.teams.filter = filterValue.trim().toLowerCase();
+  addRanks(table: any[]) {
+    table.forEach((value, index) => {
+      value.rank = index + 1;
+    });
+  }
 
-      if (this.teams.paginator) {
-        this.teams.paginator.firstPage();
-      }
-    }
+  calcElo(data: IUser | ITeam) {
+    return (
+      data.wins * 3 +
+      data.losses * -3 +
+      data.dominations * 1 +
+      data.defeats * -1 +
+      data.stats['2:0'] * 2 +
+      data.stats['2:1'] * 1 +
+      data.stats['0:2'] * -2 +
+      data.stats['1:2'] * -1
+    );
   }
 }

@@ -1,0 +1,31 @@
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label>Player</mat-label>
+    <mat-select [(value)]="selectedData" (selectionChange)="updateChart()">
+      <mat-option
+        [value]="player.id"
+        *ngFor="let player of playersOrTeamsWithMatches"
+        >{{ player.name }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Year</mat-label>
+    <mat-select
+      [(value)]="selectedYear"
+      (selectionChange)="updateChartByYear()">
+      <mat-option [value]="year" *ngFor="let year of yearsList">{{
+        year
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div id="barlinechart">
+    <canvas
+      baseChart
+      [data]="barChartData"
+      [options]="barChartOptions"
+      [plugins]="barChartPlugins"
+      [legend]="barChartLegend">
+    </canvas>
+  </div>
+</div>

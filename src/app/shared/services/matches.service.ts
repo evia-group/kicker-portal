@@ -8,6 +8,7 @@ import {
   addDoc,
   deleteDoc,
   DocumentReference,
+  Timestamp,
 } from '@angular/fire/firestore';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
@@ -174,6 +175,7 @@ export class MatchesService {
       result,
       teams,
       type: `${winTeam1}:${winTeam2}`,
+      date: Timestamp.now(),
     };
 
     return await addDoc(this.collection, resultMatch)

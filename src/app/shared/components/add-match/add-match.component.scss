@@ -19,9 +19,10 @@
     border: none;
     border-top: 1px dotted #333333;
     margin-left: calc(50% - 17px);
+    margin-bottom: 75px;
     background-color: #333333;
     width: 1px;
-    height: 93%;
+    height: calc(93% - 75px);
   }
 
   .mat-divider {
@@ -34,16 +35,8 @@
     justify-content: center;
   }
 
-  .hint-text {
-    display: flex;
-    justify-content: center;
-    color: red;
-  }
-
-  #warning {
-    background-color: red;
-    display: flex;
-    justify-content: center;
+  button {
+    margin-top: 10px;
   }
 }
 

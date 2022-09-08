@@ -2,175 +2,29 @@
   <mat-card-title>Leaderboard</mat-card-title>
   <mat-tab-group mat-align-tabs="start">
     <mat-tab label="Players">
-      <mat-form-field appearance="standard">
-        <mat-label>Filter</mat-label>
-        <input
-          matInput
-          (keyup)="applyFilter($event, 0)"
-          placeholder="Ex. Thomas or 4"
-          #input />
-      </mat-form-field>
-      <div class="mat-elevation-z8">
-        <table #playersBoard="matSort" mat-table [dataSource]="players" matSort>
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Player</th>
-            <td mat-cell *matCellDef="let player">{{ player.name }}</td>
-          </ng-container>
-          <ng-container matColumnDef="wins">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Wins</th>
-            <td mat-cell *matCellDef="let player">{{ player.wins }}</td>
-          </ng-container>
-          <ng-container matColumnDef="losses">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Losses</th>
-            <td mat-cell *matCellDef="let player">{{ player.losses }}</td>
-          </ng-container>
-          <ng-container matColumnDef="dominations">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Dominations
-            </th>
-            <td mat-cell *matCellDef="let player">
-              {{ player.dominations }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="defeats">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Defeats</th>
-            <td mat-cell *matCellDef="let player">{{ player.defeats }}</td>
-          </ng-container>
-          <ng-container matColumnDef="2:0">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>2:0</th>
-            <td mat-cell *matCellDef="let player">
-              {{ player['2:0'] }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="2:1">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>2:1</th>
-            <td mat-cell *matCellDef="let player">
-              {{ player['2:1'] }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="0:2">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>0:2</th>
-            <td mat-cell *matCellDef="let player">
-              {{ player['0:2'] }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="1:2">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>1:2</th>
-            <td mat-cell *matCellDef="let player">
-              {{ player['1:2'] }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="totalMatches">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Total Matches
-            </th>
-            <td mat-cell *matCellDef="let player">
-              {{ player.totalMatches }}
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-        <mat-paginator
-          #playersPaginator=""
-          [pageSizeOptions]="[5, 10, 20]"
-          showFirstLastButtons
-          aria-label="Select page of players">
-        </mat-paginator>
-      </div>
+      <app-leaderboard
+        [boardData]="players"
+        [secondColumn]="'Player'"></app-leaderboard>
     </mat-tab>
     <mat-tab label="Teams">
-      <mat-form-field appearance="standard">
-        <mat-label>Filter</mat-label>
-        <input
-          matInput
-          (keyup)="applyFilter($event, 1)"
-          placeholder="Ex. Thomas or 4"
-          #input />
-      </mat-form-field>
-      <div class="mat-elevation-z8">
-        <table #teamsBoard="matSort" mat-table [dataSource]="teams" matSort>
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Team</th>
-            <td mat-cell *matCellDef="let player">{{ player.name }}</td>
-          </ng-container>
-          <ng-container matColumnDef="wins">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Wins</th>
-            <td mat-cell *matCellDef="let player">{{ player.wins }}</td>
-          </ng-container>
-          <ng-container matColumnDef="losses">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Losses</th>
-            <td mat-cell *matCellDef="let player">{{ player.losses }}</td>
-          </ng-container>
-          <ng-container matColumnDef="dominations">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Dominations
-            </th>
-            <td mat-cell *matCellDef="let player">
-              {{ player.dominations }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="defeats">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Defeats</th>
-            <td mat-cell *matCellDef="let player">{{ player.defeats }}</td>
-          </ng-container>
-          <ng-container matColumnDef="2:0">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>2:0</th>
-            <td mat-cell *matCellDef="let player">
-              {{ player['2:0'] }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="2:1">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>2:1</th>
-            <td mat-cell *matCellDef="let player">
-              {{ player['2:1'] }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="0:2">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>0:2</th>
-            <td mat-cell *matCellDef="let player">
-              {{ player['0:2'] }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="1:2">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>1:2</th>
-            <td mat-cell *matCellDef="let player">
-              {{ player['1:2'] }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="totalMatches">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Total Matches
-            </th>
-            <td mat-cell *matCellDef="let player">
-              {{ player.totalMatches }}
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-        <mat-paginator
-          #teamsPaginator
-          [pageSizeOptions]="[5, 10, 20]"
-          showFirstLastButtons
-          aria-label="Select page of players">
-        </mat-paginator>
-      </div>
+      <app-leaderboard
+        [boardData]="teams"
+        [secondColumn]="'Team'"></app-leaderboard>
     </mat-tab>
   </mat-tab-group>
 </mat-card>
 <mat-card>
   <mat-card-title>Stats</mat-card-title>
-  <div>
-    <canvas
-      baseChart
-      [data]="barChartData"
-      [options]="barChartOptions"
-      [plugins]="barChartPlugins"
-      [legend]="barChartLegend"
-      [type]="'bar'">
-    </canvas>
-  </div>
+  <mat-tab-group mat-align-tabs="start">
+    <mat-tab label="Players">
+      <app-bar-line-chart [dataMap]="playersMap"></app-bar-line-chart>
+    </mat-tab>
+    <mat-tab label="Teams">
+      <app-bar-line-chart
+        [dataMap]="teamsMap"
+        [showingTeams]="true"></app-bar-line-chart
+    ></mat-tab>
+  </mat-tab-group>
 </mat-card>
 <div class="grid-container">
   <h1 class="mat-h1">Dashboard</h1>
