@@ -46,6 +46,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { NgChartsModule } from 'ng2-charts';
 import { LeaderboardComponent } from './components/kicker/statistic/leaderboard/leaderboard.component';
 import { BarLineChartComponent } from './components/kicker/statistic/bar-line-chart/bar-line-chart.component';
+import { ResultDoughnutChartComponent } from './components/kicker/statistic/result-doughnut-chart/result-doughnut-chart.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -73,6 +74,7 @@ export function createTranslateLoader(http: HttpClient) {
     CreateTeamDialogComponent,
     LeaderboardComponent,
     BarLineChartComponent,
+    ResultDoughnutChartComponent,
   ],
   imports: [
     BrowserModule,

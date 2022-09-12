@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './leaderboard.component.html',
   styleUrls: ['./leaderboard.component.scss'],
 })
-export class LeaderboardComponent implements OnInit {
+export class LeaderboardComponent implements OnInit, OnChanges {
   @Input()
   boardData: MatTableDataSource<any>;
 
@@ -37,12 +37,21 @@ export class LeaderboardComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
+  ngOnChanges(): void {
+    if (this.boardData) {
+      this.boardData.paginator = this.boardPaginator;
+      this.boardData.sort = this.boardSort;
+    }
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this.boardData.paginator = this.boardPaginator;
-    this.boardData.sort = this.boardSort;
+    if (this.boardData) {
+      this.boardData.paginator = this.boardPaginator;
+      this.boardData.sort = this.boardSort;
+    }
   }
 
   applyFilter(event: Event) {

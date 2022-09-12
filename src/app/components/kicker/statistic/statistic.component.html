@@ -17,12 +17,56 @@
   <mat-card-title>Stats</mat-card-title>
   <mat-tab-group mat-align-tabs="start">
     <mat-tab label="Players">
-      <app-bar-line-chart [dataMap]="playersMap"></app-bar-line-chart>
+      <mat-form-field appearance="fill">
+        <mat-label>Player</mat-label>
+        <mat-select
+          [(value)]="selectedPlayer"
+          (selectionChange)="updateYearsList(false)">
+          <mat-option
+            [value]="player.id"
+            *ngFor="let player of playersWithMatches"
+            >{{ player.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Year</mat-label>
+        <mat-select [(value)]="selectedYearPlayer">
+          <mat-option [value]="year" *ngFor="let year of playerYearsList">{{
+            year
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <app-bar-line-chart
+        [dataMap]="playersMap"
+        [selectedData]="selectedPlayer"
+        [selectedYear]="selectedYearPlayer"></app-bar-line-chart>
+      <app-result-doughnut-chart></app-result-doughnut-chart>
     </mat-tab>
     <mat-tab label="Teams">
+      <mat-form-field appearance="fill">
+        <mat-label>Team</mat-label>
+        <mat-select
+          [(value)]="selectedTeam"
+          (selectionChange)="updateYearsList(true)">
+          <mat-option [value]="team.id" *ngFor="let team of teamsWithMatches">{{
+            team.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Year</mat-label>
+        <mat-select [(value)]="selectedYearTeam">
+          <mat-option [value]="year" *ngFor="let year of teamYearsList">{{
+            year
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <app-bar-line-chart
         [dataMap]="teamsMap"
-        [showingTeams]="true"></app-bar-line-chart
+        [selectedData]="selectedTeam"
+        [selectedYear]="selectedYearTeam"></app-bar-line-chart
     ></mat-tab>
   </mat-tab-group>
 </mat-card>

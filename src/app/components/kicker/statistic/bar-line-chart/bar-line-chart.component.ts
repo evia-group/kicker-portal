@@ -1,26 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
-import { take } from 'rxjs/operators';
-import { IMatch } from 'src/app/shared/interfaces/match.interface';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { MatchesService } from 'src/app/shared/services/matches.service';
 
 @Component({
   selector: 'app-bar-line-chart',
   templateUrl: './bar-line-chart.component.html',
   styleUrls: ['./bar-line-chart.component.scss'],
 })
-export class BarLineChartComponent implements OnInit {
+export class BarLineChartComponent implements OnInit, OnChanges {
   @Input()
   dataMap: Map<any, any>;
 
   @Input()
-  showingTeams = false;
+  selectedData: string;
 
-  public playersOrTeamsWithMatches = [];
-
-  public selectedData: string;
-  public selectedYear: number;
+  @Input()
+  selectedYear: number;
 
   public barChartLegend = true;
   public barChartPlugins = [];
@@ -83,10 +77,6 @@ export class BarLineChartComponent implements OnInit {
     },
   };
 
-  public yearsList: number[] = [];
-
-  public dataIds;
-
   months = [
     'January',
     'February',
@@ -102,192 +92,16 @@ export class BarLineChartComponent implements OnInit {
     'December',
   ];
 
-  constructor(
-    private matchesService: MatchesService,
-    private authService: AuthService
-  ) {}
+  ngOnChanges(): void {
+    if (this.dataMap && this.selectedData && this.selectedYear) {
+      this.setBarChartData();
+    }
+  }
 
   ngOnInit(): void {
-    this.matchesService.matches$
-      .pipe(take(1))
-      .subscribe((matches: IMatch[]) => {
-        this.playersOrTeamsWithMatches = [];
-        matches.forEach((match: IMatch) => {
-          const matchTeams = Object.keys(match.result);
-          const team1 = matchTeams[0];
-          const team2 = matchTeams[1];
-          const resultTeam1 = match.result[team1];
-          let playersTeam1 = [];
-          let playersTeam2 = [];
-          const matchYear = match.date.toDate().getFullYear();
-          const matchMonth = match.date.toDate().getMonth();
-
-          if (!this.showingTeams) {
-            this.dataIds = Array.from(this.dataMap.keys());
-            playersTeam1 = this.getPlayersOfTeam(team1);
-            playersTeam2 = this.getPlayersOfTeam(team2);
-
-            playersTeam1.forEach((player) => {
-              if (!this.playersOrTeamsWithMatches.includes(player)) {
-                this.playersOrTeamsWithMatches.push(player);
-              }
-            });
-
-            playersTeam2.forEach((player) => {
-              if (!this.playersOrTeamsWithMatches.includes(player)) {
-                this.playersOrTeamsWithMatches.push(player);
-              }
-            });
-
-            let winningTeam;
-            let loosingTeam;
-
-            resultTeam1 === 2
-              ? ((winningTeam = playersTeam1), (loosingTeam = playersTeam2))
-              : ((winningTeam = playersTeam2), (loosingTeam = playersTeam1));
-
-            winningTeam.forEach((player) => {
-              this.updateTimeline(
-                player,
-                matchYear,
-                matchMonth,
-                'winsTimeline',
-                'lossesTimeline'
-              );
-            });
-
-            loosingTeam.forEach((player) => {
-              this.updateTimeline(
-                player,
-                matchYear,
-                matchMonth,
-                'lossesTimeline',
-                'winsTimeline'
-              );
-            });
-          } else {
-            if (!this.playersOrTeamsWithMatches.includes(team1)) {
-              this.playersOrTeamsWithMatches.push(team1);
-            }
-
-            if (!this.playersOrTeamsWithMatches.includes(team2)) {
-              this.playersOrTeamsWithMatches.push(team2);
-            }
-
-            if (resultTeam1 === 2) {
-              this.updateTimeline(
-                team1,
-                matchYear,
-                matchMonth,
-                'winsTimeline',
-                'lossesTimeline'
-              );
-              this.updateTimeline(
-                team2,
-                matchYear,
-                matchMonth,
-                'lossesTimeline',
-                'winsTimeline'
-              );
-            } else {
-              this.updateTimeline(
-                team2,
-                matchYear,
-                matchMonth,
-                'winsTimeline',
-                'lossesTimeline'
-              );
-              this.updateTimeline(
-                team1,
-                matchYear,
-                matchMonth,
-                'lossesTimeline',
-                'winsTimeline'
-              );
-            }
-          }
-        });
-
-        const loggedInUser = this.authService.user.uid;
-        if (this.playersOrTeamsWithMatches.includes(loggedInUser)) {
-          this.selectedData = loggedInUser;
-        } else {
-          this.selectedData = this.playersOrTeamsWithMatches[0];
-        }
-
-        for (let i = 0; i < this.playersOrTeamsWithMatches.length; i++) {
-          const playerId = this.playersOrTeamsWithMatches[i];
-          this.playersOrTeamsWithMatches[i] = {
-            id: playerId,
-            name: this.dataMap.get(playerId)['name'],
-          };
-        }
-        this.setYearsList();
-        this.setBarChartData();
-      });
-  }
-
-  getPlayersOfTeam(teamId: string) {
-    let counter = 0;
-    const teamPlayers = [];
-
-    for (const playerId of this.dataIds) {
-      if (teamId.startsWith(playerId) || teamId.endsWith(playerId)) {
-        teamPlayers.push(playerId);
-        counter++;
-      }
-      if (counter === 2) {
-        break;
-      }
-    }
-    return teamPlayers;
-  }
-
-  updateTimeline(
-    playerOrTeam: any,
-    matchYear: number,
-    matchMonth: number,
-    mapId: string,
-    otherId: string
-  ) {
-    let actualTimeline = this.dataMap.get(playerOrTeam)[mapId].get(matchYear);
-    if (actualTimeline) {
-      actualTimeline[matchMonth]++;
-    } else {
-      actualTimeline = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      actualTimeline[matchMonth] = 1;
-      const otherTimeline = this.dataMap
-        .get(playerOrTeam)
-        [otherId].get(matchYear);
-      if (!otherTimeline) {
-        this.dataMap
-          .get(playerOrTeam)
-          [otherId].set(matchYear, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-      }
-    }
-    this.dataMap.get(playerOrTeam)[mapId].set(matchYear, actualTimeline);
-  }
-
-  updateChart() {
-    this.setYearsList();
-    this.setBarChartData();
-  }
-
-  setYearsList() {
-    this.yearsList = [
-      ...this.dataMap.get(this.selectedData)['winsTimeline'].keys(),
-    ];
-    const lossesYearsList = [
-      ...this.dataMap.get(this.selectedData)['lossesTimeline'].keys(),
-    ];
-    lossesYearsList.forEach((year) => {
-      if (!this.yearsList.includes(year)) {
-        this.yearsList.push(year);
-      }
-    });
-    this.yearsList.sort((a, b) => a - b);
-
-    this.selectedYear = this.yearsList[this.yearsList.length - 1];
+    // if (this.dataMap && this.selectedData && this.selectedYear) {
+    //   this.setBarChartData();
+    // }
   }
 
   setBarChartData() {
@@ -363,9 +177,5 @@ export class BarLineChartComponent implements OnInit {
       }
     }
     return quotes;
-  }
-
-  updateChartByYear() {
-    this.setBarChartData();
   }
 }
