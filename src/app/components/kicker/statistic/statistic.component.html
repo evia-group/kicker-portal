@@ -1,76 +1,138 @@
 <mat-card>
-  <mat-card-title>Leaderboard</mat-card-title>
+  <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
   <mat-tab-group mat-align-tabs="start">
-    <mat-tab label="Players">
-      <app-leaderboard
-        [boardData]="players"
-        [secondColumn]="'Player'"></app-leaderboard>
+    <mat-tab label="{{ 'stats.players' | translate }}">
+      <app-leaderboard [secondColumn]="'Player'"></app-leaderboard>
     </mat-tab>
-    <mat-tab label="Teams">
+    <mat-tab label="{{ 'stats.teams' | translate }}">
       <app-leaderboard
-        [boardData]="teams"
-        [secondColumn]="'Team'"></app-leaderboard>
+        [secondColumn]="'Team'"
+        [showingTeams]="true"></app-leaderboard>
     </mat-tab>
   </mat-tab-group>
 </mat-card>
 <mat-card>
-  <mat-card-title>Stats</mat-card-title>
+  <mat-card-title>{{ 'stats.playerAndTeamStats' | translate }}</mat-card-title>
+  <!-- <h3 *ngIf="!matchesDataAvailable">{{ 'info.noData' | translate }}</h3> -->
   <mat-tab-group mat-align-tabs="start">
-    <mat-tab label="Players">
-      <mat-form-field appearance="fill">
-        <mat-label>Player</mat-label>
-        <mat-select
-          [(value)]="selectedPlayer"
-          (selectionChange)="updateYearsList(false)">
-          <mat-option
-            [value]="player.id"
-            *ngFor="let player of playersWithMatches"
-            >{{ player.name }}</mat-option
-          >
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Year</mat-label>
-        <mat-select [(value)]="selectedYearPlayer">
-          <mat-option [value]="year" *ngFor="let year of playerYearsList">{{
-            year
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <app-bar-line-chart
-        [dataMap]="playersMap"
-        [selectedData]="selectedPlayer"
-        [selectedYear]="selectedYearPlayer"></app-bar-line-chart>
-      <app-result-doughnut-chart></app-result-doughnut-chart>
+    <mat-tab label="{{ 'stats.players' | translate }}">
+      <mat-spinner *ngIf="!allChartsReadyP"></mat-spinner>
+      <div>
+        <div *ngIf="allChartsReadyP">
+          <mat-form-field appearance="fill">
+            <mat-label>{{ 'common.player' | translate }}</mat-label>
+            <mat-select
+              [(value)]="selectedPlayer"
+              (selectionChange)="updateYearsList(false)">
+              <mat-option
+                [value]="player.id"
+                *ngFor="let player of playersWithMatches"
+                >{{ player.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>{{ 'stats.year' | translate }}</mat-label>
+            <mat-select
+              [(value)]="selectedYearPlayer"
+              (selectionChange)="updateMatchesData(false)">
+              <mat-option [value]="year" *ngFor="let year of playerYearsList">{{
+                year
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div [style.display]="allChartsReadyP ? 'block' : 'none'">
+          <div class="flex-container">
+            <div class="bar-line-chart">
+              <app-bar-line-chart
+                (barLineChartIsReadyEvent)="checkIfChartsReady(0, $event)"
+                [dataMap]="playersMap"
+                [selectedData]="selectedPlayer"
+                [selectedYear]="selectedYearPlayer"
+                [months]="months"
+                [legendLabels]="legendLabels"></app-bar-line-chart>
+            </div>
+            <div class="matches-chart">
+              <app-matches-chart
+                (matchesChartIsReadyEvent)="checkIfChartsReady(2, $event)"
+                [chartData]="matchesChartDataPlayer"
+                [legendLabels]="legendLabels"
+                [months]="months"></app-matches-chart>
+            </div>
+            <div class="doughnut-chart">
+              <app-result-doughnut-chart
+                (doughnutChartIsReadyEvent)="checkIfChartsReady(1, $event)"
+                [chartData]="doughnutDataPlayer"
+                [legendLabels]="legendLabels"></app-result-doughnut-chart>
+            </div>
+          </div>
+        </div>
+      </div>
     </mat-tab>
-    <mat-tab label="Teams">
-      <mat-form-field appearance="fill">
-        <mat-label>Team</mat-label>
-        <mat-select
-          [(value)]="selectedTeam"
-          (selectionChange)="updateYearsList(true)">
-          <mat-option [value]="team.id" *ngFor="let team of teamsWithMatches">{{
-            team.name
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Year</mat-label>
-        <mat-select [(value)]="selectedYearTeam">
-          <mat-option [value]="year" *ngFor="let year of teamYearsList">{{
-            year
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <app-bar-line-chart
-        [dataMap]="teamsMap"
-        [selectedData]="selectedTeam"
-        [selectedYear]="selectedYearTeam"></app-bar-line-chart
-    ></mat-tab>
+    <mat-tab label="{{ 'stats.teams' | translate }}">
+      <mat-spinner *ngIf="!allChartsReadyT"></mat-spinner>
+      <div *ngIf="allChartsReadyT">
+        <mat-form-field appearance="fill">
+          <mat-label>{{ 'common.team' | translate }}</mat-label>
+          <mat-select
+            [(value)]="selectedTeam"
+            (selectionChange)="updateYearsList(true)">
+            <mat-option
+              [value]="team.id"
+              *ngFor="let team of teamsWithMatches"
+              >{{ team.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>{{ 'stats.year' | translate }}</mat-label>
+          <mat-select
+            [(value)]="selectedYearTeam"
+            (selectionChange)="updateMatchesData(true)">
+            <mat-option [value]="year" *ngFor="let year of teamYearsList">{{
+              year
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div [style.display]="allChartsReadyT ? 'block' : 'none'">
+        <div class="flex-container">
+          <div class="bar-line-chart">
+            <app-bar-line-chart
+              (barLineChartIsReadyEvent)="checkIfChartsReady(3, $event)"
+              [dataMap]="teamsMap"
+              [selectedData]="selectedTeam"
+              [selectedYear]="selectedYearTeam"
+              [months]="months"
+              [legendLabels]="legendLabels"></app-bar-line-chart>
+          </div>
+          <div class="matches-chart">
+            <app-matches-chart
+              (matchesChartIsReadyEvent)="checkIfChartsReady(5, $event)"
+              [chartData]="matchesChartDataTeam"
+              [legendLabels]="legendLabels"
+              [months]="months"></app-matches-chart>
+          </div>
+          <div class="doughnut-chart">
+            <app-result-doughnut-chart
+              (doughnutChartIsReadyEvent)="checkIfChartsReady(4, $event)"
+              [chartData]="doughnutDataTeam"
+              [legendLabels]="legendLabels"></app-result-doughnut-chart>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
   </mat-tab-group>
 </mat-card>
-<div class="grid-container">
+<mat-card>
+  <mat-card-title>{{ 'stats.playtime' | translate }}</mat-card-title>
+  <app-playtime-chart
+    [months]="months"
+    [legendLabels]="legendLabels"
+    [localeId]="localeId"></app-playtime-chart>
+</mat-card>
+<!-- <div class="grid-container">
   <h1 class="mat-h1">Dashboard</h1>
   <mat-grid-list cols="2" rowHeight="350px">
     <mat-grid-tile
@@ -100,4 +162,4 @@
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
-</div>
+</div> -->

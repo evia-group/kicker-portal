@@ -11,6 +11,7 @@ import { InfoBarService } from 'src/app/shared/services/info-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TeamsService } from 'src/app/shared/services/teams.service';
 import { MatchesService } from 'src/app/shared/services/matches.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-create-team-dialog',
@@ -38,8 +39,6 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
   touched: boolean[] = [false, false];
 
   usersSub: Subscription;
-
-  translateSub: Subscription;
 
   infoText = '';
 
@@ -76,8 +75,9 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
         true
       );
     });
-    this.translateSub = this.translateService
+    this.translateService
       .get(['info', 'common'])
+      .pipe(take(1))
       .subscribe((res) => {
         this.infoText = res.info.saveTeam;
         this.closeText = res.info.close;
@@ -87,7 +87,6 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.usersSub.unsubscribe();
-    this.translateSub.unsubscribe();
   }
 
   getPlayersList(selId: number) {
@@ -169,7 +168,7 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
       this.infoBar.openCustomSnackBar(
         this.warnText,
         this.closeText,
-        5,
+        50,
         'alert-snackbar'
       );
       this.teamExists = true;

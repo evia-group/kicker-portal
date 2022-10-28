@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 interface INavigationItem {
   label: string;
@@ -14,6 +15,7 @@ interface INavigationItem {
   styleUrls: ['./kicker.component.scss'],
 })
 export class KickerComponent {
+  versionNumber: string = environment.versionNumber;
   navLinks: INavigationItem[] = [
     {
       label: 'app.matches',

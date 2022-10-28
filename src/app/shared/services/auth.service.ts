@@ -36,7 +36,7 @@ export class AuthService {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(this.user));
         this.loggedIn.next(true);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/kicker']);
       } else {
         localStorage.setItem('user', null);
         this.loggedIn.next(false);
@@ -63,6 +63,6 @@ export class AuthService {
     });
     await signInWithPopup(this.afAuth, provider);
     this.loggedIn.next(true);
-    await this.router.navigate(['/dashboard']);
+    await this.router.navigate(['/kicker']);
   }
 }

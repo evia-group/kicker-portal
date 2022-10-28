@@ -1,13 +1,14 @@
 {
   "app": {
-    "name": "Evia Desk",
+    "name": "Kicker-Portal",
     "tournaments": "Turniere",
     "matches": "Spiele",
     "statistics": "Statistiken",
     "matchmaking": "Spiel suchen",
     "language": {
       "de": "Deutsch",
-      "en": "Englisch"
+      "en": "Englisch",
+      "id": "de-DE"
     },
     "navigation": {
       "dashboard": "Dashboard",
@@ -27,7 +28,7 @@
     "firstname": "Vorname",
     "lastname": "Nachname",
     "backToLogin": "zum Anmelden",
-    "verified": "Du hast deine E-Mail-Adresse noch nicht bestätigt. Schau bitte in deinen E-Mails nach der Bestätigungs-E-Mail. <br /><br />Solltest du keine bekommen habe wende dich bitte an dirk.mueller@evia.de",
+    "verified": "Du hast deine E-Mail-Adresse noch nicht bestätigt. Schau bitte in deinen E-Mails nach der Bestätigungs-E-Mail. <br /><br />Solltest du keine E-Mail bekommen haben, wende dich bitte an dirk.mueller@evia.de",
     "loginWithMS": "Mit Microsoft anmelden",
     "error": {
       "recognised": "Der Benutzername und das Passwort sind falsch",
@@ -56,6 +57,56 @@
     "close": "Schließen",
     "saveMatch": "Das Spiel wurde erfolgreich gespeichert!",
     "saveTeam": "Die Mannschaft wurde erfolgreich gespeichert!",
-    "chooseTeams": "Spieler aus den Mannschaften überschneiden sich!"
+    "chooseTeams": "Spieler aus den Mannschaften überschneiden sich!",
+    "noData": "Keine Daten verfügbar!"
+  },
+  "months": {
+    "jan": "Januar",
+    "feb": "Februar",
+    "mar": "März",
+    "apr": "April",
+    "may": "Mai",
+    "jun": "Juni",
+    "jul": "Juli",
+    "aug": "August",
+    "sep": "September",
+    "oct": "Oktober",
+    "nov": "November",
+    "dec": "Dezember"
+  },
+  "stats": {
+    "leaderboard": "Bestenliste",
+    "players": "Spieler",
+    "teams": "Mannschaften",
+    "filter": "Filtern",
+    "filterHint": "z.B. Thomas oder 42",
+    "rank": "Rang",
+    "wins": "Siege",
+    "losses": "Niederlagen",
+    "difference": "Differenz",
+    "dominations": "Dominanzen",
+    "defeats": "Pleiten",
+    "elo": "ELO",
+    "playerAndTeamStats": "Spieler- und Teamstatistiken",
+    "year": "Jahr",
+    "month": "Monat",
+    "day": "Tag",
+    "winRate": "Siegrate",
+    "playtime": "Kicker - Gespielte Zeit",
+    "playtimeLegend": "Gespielte Zeit",
+    "yearFormat": "JJJJ",
+    "monthYear": "Monat und Jahr",
+    "monthFormat": "MM/JJJJ",
+    "dayMonthYear": "Tag, Monat und Jahr",
+    "dayFormat": "TT/MM/JJJJ",
+    "minutes": "Minuten"
+  },
+  "MAT_PAGINATOR": {
+    "FIRST_PAGE": "Erste Seite",
+    "ITEMS_PER_PAGE": "Einträge pro Seite:",
+    "LAST_PAGE": "Letzte Seite",
+    "NEXT_PAGE": "Nächste Seite",
+    "PREVIOUS_PAGE": "Vorherige Seite",
+    "OF": "von"
   }
 }

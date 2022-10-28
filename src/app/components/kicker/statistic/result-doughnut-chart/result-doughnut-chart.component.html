@@ -1,4 +1,26 @@
-<div>
-  <canvas baseChart [data]="doughnutChartData" [type]="doughnutChartType">
-  </canvas>
+<div class="flex-container">
+  <div *ngIf="showWL">
+    <canvas
+      baseChart
+      [data]="doughnutChartDataWL"
+      [type]="doughnutChartType"
+      [options]="doughnutChartOptions">
+    </canvas>
+  </div>
+  <div *ngIf="showDD">
+    <canvas
+      baseChart
+      [data]="doughnutChartDataDD"
+      [type]="doughnutChartType"
+      [options]="doughnutChartOptions">
+    </canvas>
+  </div>
+  <div *ngIf="showStats">
+    <canvas
+      baseChart
+      [data]="doughnutChartDataStats"
+      [type]="doughnutChartType"
+      [options]="doughnutChartOptions">
+    </canvas>
+  </div>
 </div>

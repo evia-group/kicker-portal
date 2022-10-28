@@ -1,14 +1,21 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+} from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
+import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
 
 @Component({
   selector: 'app-bar-line-chart',
   templateUrl: './bar-line-chart.component.html',
   styleUrls: ['./bar-line-chart.component.scss'],
 })
-export class BarLineChartComponent implements OnInit, OnChanges {
+export class BarLineChartComponent implements OnChanges {
   @Input()
-  dataMap: Map<any, any>;
+  dataMap: Map<string, ILeaderboard>;
 
   @Input()
   selectedData: string;
@@ -16,8 +23,16 @@ export class BarLineChartComponent implements OnInit, OnChanges {
   @Input()
   selectedYear: number;
 
+  @Input()
+  months: string[];
+
+  @Input()
+  legendLabels: string[];
+
+  @Output()
+  barLineChartIsReadyEvent = new EventEmitter<boolean>();
+
   public barChartLegend = true;
-  public barChartPlugins = [];
   public barChartData: ChartConfiguration<'bar' | 'line'>['data'];
 
   public barChartOptions: ChartConfiguration<'bar' | 'line'>['options'] = {
@@ -37,6 +52,7 @@ export class BarLineChartComponent implements OnInit, OnChanges {
             return val < 0 ? -val : val;
           },
           color: 'rgb(199,199,199)',
+          precision: 0,
         },
         grid: {
           color: 'rgb(89,89,89)',
@@ -77,54 +93,39 @@ export class BarLineChartComponent implements OnInit, OnChanges {
     },
   };
 
-  months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
   ngOnChanges(): void {
-    if (this.dataMap && this.selectedData && this.selectedYear) {
+    if (
+      this.dataMap &&
+      this.selectedData &&
+      this.selectedYear &&
+      this.months &&
+      this.legendLabels
+    ) {
       this.setBarChartData();
     }
   }
 
-  ngOnInit(): void {
-    // if (this.dataMap && this.selectedData && this.selectedYear) {
-    //   this.setBarChartData();
-    // }
-  }
-
   setBarChartData() {
     this.barChartData = {
-      labels: this.getLabels(),
+      labels: this.months,
       datasets: [
         {
           type: 'bar',
           data: this.getWins(),
-          label: 'Wins',
-          backgroundColor: ['rgba(70, 203, 29, 0.7)'],
-          borderColor: ['rgba(70, 203, 29, 1)'],
-          hoverBackgroundColor: ['rgba(70, 203, 29, 1)'],
+          label: this.legendLabels[0],
+          backgroundColor: ['rgba(40, 164, 40, 0.7)'],
+          borderColor: ['rgba(40, 164, 40, 1)'],
+          hoverBackgroundColor: ['rgba(40, 164, 40, 1)'],
           stack: 'a',
           order: 2,
         },
         {
           type: 'bar',
           data: this.getLosses(),
-          label: 'Losses',
-          backgroundColor: ['rgba(239, 63, 51, 0.7)'],
-          borderColor: ['rgba(239, 63, 51, 1)'],
-          hoverBackgroundColor: ['rgba(239, 63, 51, 1)'],
+          label: this.legendLabels[1],
+          backgroundColor: ['rgba(255, 51, 51, 0.7)'],
+          borderColor: ['rgba(255, 51, 51, 1)'],
+          hoverBackgroundColor: ['rgba(255, 51, 51, 1)'],
           stack: 'a',
           order: 2,
         },
@@ -132,16 +133,16 @@ export class BarLineChartComponent implements OnInit, OnChanges {
           type: 'line',
           data: this.getWinningQuotes(),
           tension: 0.3,
-          label: 'Qoute',
+          label: this.legendLabels[4],
+          backgroundColor: ['rgba(248, 209, 99, 1)'],
+          borderColor: ['rgba(248, 209, 99, 1)'],
+          hoverBackgroundColor: ['rgba(248, 209, 99, 1)'],
           order: 1,
           yAxisID: 'qouteAxis',
         },
       ],
     };
-  }
-
-  getLabels() {
-    return this.months;
+    this.barLineChartIsReadyEvent.emit(true);
   }
 
   getWins() {
