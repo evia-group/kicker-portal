@@ -515,19 +515,23 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
   addRanks(table: ILeaderboard[]) {
     // table.map((item) => (item.elo = Math.round(item.elo)));
-    table.sort((a, b) => b.elo - a.elo);
+    // table.sort((a, b) => b.elo - a.elo);
+    table.sort((a, b) => b.diff - a.diff);
     table.forEach((value, index) => {
-      if (index > 0) {
-        const previousValue = table[index - 1];
-        if (value.elo === previousValue.elo) {
-          value.rank = previousValue.rank;
-        } else {
-          value.rank = index + 1;
-        }
-      } else {
-        value.rank = index + 1;
-      }
+      value.rank = index + 1;
     });
+    // table.forEach((value, index) => {
+    //   if (index > 0) {
+    //     const previousValue = table[index - 1];
+    //     if (value.elo === previousValue.elo) {
+    //       value.rank = previousValue.rank;
+    //     } else {
+    //       value.rank = index + 1;
+    //     }
+    //   } else {
+    //     value.rank = index + 1;
+    //   }
+    // });
   }
 
   calcElo(
