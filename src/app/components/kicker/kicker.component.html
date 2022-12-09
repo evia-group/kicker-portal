@@ -14,12 +14,31 @@
         {{ link.label | translate }}
       </a>
     </nav>
+    <mat-card
+      class="state-icon available"
+      [ngClass]="{
+        'state-icon': true,
+        available: kickerStatus,
+        'not-available': !kickerStatus
+      }">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="icon" aria-hidden="false">
+          {{ kickerStatus ? 'check_circle' : 'cancel' }}
+        </mat-icon>
+        <mat-card-title>{{
+          (kickerStatus
+            ? 'common.kickerStatus.available.title'
+            : 'common.kickerStatus.notAvailable.title'
+          ) | translate
+        }}</mat-card-title>
+        <mat-card-subtitle>{{
+          (kickerStatus
+            ? 'common.kickerStatus.available.subtitle'
+            : 'common.kickerStatus.notAvailable.subtitle'
+          ) | translate
+        }}</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
     <router-outlet></router-outlet>
   </div>
-  <!-- <div class="footer">
-    <mat-toolbar>
-      <span class="toolbar-spacer"></span>
-      <span>{{ versionNumber }}</span></mat-toolbar
-    >
-  </div> -->
 </div>
