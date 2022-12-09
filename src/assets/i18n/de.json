@@ -51,7 +51,17 @@
     "player": "Spieler",
     "saveTeam": "Mannschaft speichern",
     "close": "Abbrechen",
-    "teamExists": "Die Mannschaft existiert bereits!"
+    "teamExists": "Die Mannschaft existiert bereits!",
+    "kickerStatus": {
+      "available": {
+        "title": "Kicker ist frei",
+        "subtitle": "Hurray! Zeit für ein Spiel"
+      },
+      "notAvailable": {
+        "title": "Kicker ist belegt",
+        "subtitle": "Opps! Du musst leider noch warten"
+      }
+    }
   },
   "info": {
     "close": "Schließen",
