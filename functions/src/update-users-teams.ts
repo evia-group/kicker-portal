@@ -14,7 +14,7 @@ function getTeamPlayers(
   const teamPlayers: DocumentReference<DocumentData>[] = [];
 
   players.forEach((player: DocumentReference<DocumentData>) => {
-    if (teamId.includes(player.id)) {
+    if (teamId.startsWith(player.id) || teamId.endsWith(player.id)) {
       teamPlayers.push(player);
     }
   });
@@ -71,7 +71,7 @@ async function createTeamName(teamPlayers: DocumentReference<DocumentData>[]) {
   }
 
   const sortedTeam = teamPlayersRefs.sort((a, b) => a.id.localeCompare(b.id));
-  const teamName = sortedTeam.map((player) => player.get('name')).join('');
+  const teamName = sortedTeam.map((player) => player.get('name')).join(' - ');
 
   return teamName;
 }

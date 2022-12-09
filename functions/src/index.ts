@@ -6,6 +6,8 @@ admin.initializeApp();
 const newUser = require('./new-user');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const updateUsersAndTeamsI = require('./update-users-teams');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const kickerStatus = require('./kicker-status');
 
 /* Update stats for Users and Teams when match is added to firestore in production environment */
 exports.updateUsersAndTeams = updateUsersAndTeamsI.updateUsersAndTeams;
@@ -17,3 +19,5 @@ exports.updateUsersAndTeamsT = updateUsersAndTeamsI.updateUsersAndTeamsT;
 /* When a new user is added to firebase, this function gets triggered.
    It adds a new user to firestore. */
 exports.newUser = newUser.newUser;
+
+exports.updateTime = kickerStatus.updateTime;

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { getDatabase, onValue, ref } from '@angular/fire/database';
 
 interface INavigationItem {
   label: string;
@@ -14,6 +16,9 @@ interface INavigationItem {
   styleUrls: ['./kicker.component.scss'],
 })
 export class KickerComponent {
+  kickerStatus = false;
+  versionNumber: string = environment.versionNumber;
+
   navLinks: INavigationItem[] = [
     {
       label: 'app.matches',
@@ -26,7 +31,7 @@ export class KickerComponent {
       label: 'app.statistics',
       link: '/kicker/statistics',
       icon: 'bubble_chart',
-      active: false,
+      active: true,
       index: 1,
     },
     {
@@ -44,4 +49,10 @@ export class KickerComponent {
       index: 2,
     },
   ];
+
+  constructor() {
+    onValue(ref(getDatabase(), '/Kicker'), (snapshot) => {
+      this.kickerStatus = snapshot.val().status || false;
+    });
+  }
 }

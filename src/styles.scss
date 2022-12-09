@@ -36,3 +36,23 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+.alert-snackbar {
+  background: #ef3f33;
+  color: white;
+}
+
+.mat-snack-bar-container {
+  margin-bottom: 100px !important;
+}
+
+.year-picker,
+.year-month-picker {
+  .mat-calendar-period-button {
+    pointer-events: none;
+  }
+
+  .mat-calendar-arrow {
+    display: none;
+  }
+}

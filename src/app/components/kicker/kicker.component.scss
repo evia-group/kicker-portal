@@ -1,3 +1,58 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use 'src/styles.scss' as styles;
+
+@mixin setBackgroundColor($theme) {
+  $color-config: mat.get-color-config($theme);
+  $background-palette: map.get($color-config, 'background');
+  background-color: mat.get-color-from-palette($background-palette, background);
+}
+
 mat-icon {
   padding-right: 10px;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  nav {
+    @include setBackgroundColor(styles.$kicker-app-theme);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.state-icon {
+  width: 325px;
+  height: 50px;
+  margin: 10px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+
+  &.available {
+    border-left: 5px solid #2ecc71;
+
+    .icon {
+      font-size: 40px;
+      color: #2ecc71;
+    }
+  }
+
+  &.not-available {
+    border-left: 5px solid #cc2e2e;
+
+    .icon {
+      font-size: 40px;
+      color: #cc2e2e;
+    }
+  }
 }

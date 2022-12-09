@@ -38,6 +38,27 @@ import {
   getFunctions,
   provideFunctions,
 } from '@angular/fire/functions';
+import { CreateTeamDialogComponent } from './shared/components/add-match/create-team-dialog/create-team-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import {
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { NgChartsModule } from 'ng2-charts';
+import { LeaderboardComponent } from './components/kicker/statistic/leaderboard/leaderboard.component';
+import { BarLineChartComponent } from './components/kicker/statistic/bar-line-chart/bar-line-chart.component';
+import { ResultDoughnutChartComponent } from './components/kicker/statistic/result-doughnut-chart/result-doughnut-chart.component';
+import { MatchesChartComponent } from './components/kicker/statistic/matches-chart/matches-chart.component';
+import { PlaytimeChartComponent } from './components/kicker/statistic/playtime-chart/playtime-chart.component';
+import { MomentDateModule } from '@angular/material-moment-adapter';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { YearDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-date-format.directive';
+import { YearMonthDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-month-date-format.directive';
+import { YearMonthDayDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-month-day-date-format.directive';
+import { MatPaginatorIntlService } from './shared/services/mat-paginator-intl.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,6 +83,15 @@ export function createTranslateLoader(http: HttpClient) {
     InteractiveMapComponent,
     RoomMapComponent,
     RoomInformationComponent,
+    CreateTeamDialogComponent,
+    LeaderboardComponent,
+    BarLineChartComponent,
+    ResultDoughnutChartComponent,
+    MatchesChartComponent,
+    PlaytimeChartComponent,
+    YearDateFormatDirective,
+    YearMonthDateFormatDirective,
+    YearMonthDayDateFormatDirective,
   ],
   imports: [
     BrowserModule,
@@ -80,14 +110,14 @@ export function createTranslateLoader(http: HttpClient) {
     provideFirestore(() => {
       const firestore = getFirestore();
       if (environment['useEmulators']) {
-        connectFirestoreEmulator(firestore, 'localhost', 8080);
+        connectFirestoreEmulator(firestore, 'localhost', 8082);
       }
       return firestore;
     }),
     provideAuth(() => {
       const auth = getAuth();
       if (environment['useEmulators']) {
-        connectAuthEmulator(auth, 'http://localhost:9099', {
+        connectAuthEmulator(auth, 'http://localhost:9098', {
           disableWarnings: true,
         });
       }
@@ -102,8 +132,21 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     FormsModule,
     ReactiveFormsModule,
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    NgChartsModule,
+    MomentDateModule,
+    MatDatepickerModule,
+    MatProgressSpinnerModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useClass: MatPaginatorIntlService,
+    },
+  ],
   bootstrap: [AppComponent],
   entryComponents: [InfoBarComponent],
 })

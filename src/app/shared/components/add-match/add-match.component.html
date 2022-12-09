@@ -7,27 +7,36 @@
     <div>{{ 'common.team2' | translate }}</div>
   </div>
   <mat-divider></mat-divider>
-  <form [formGroup]="addMatchForm" (ngSubmit)="saveMatch()">
+  <form
+    [formGroup]="showingTeams ? addTeamMatchForm : addMatchForm"
+    (ngSubmit)="saveMatch()">
     <app-select-players
       [players]="data"
-      [matchForm]="addMatchForm"
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
       [showingTeams]="showingTeams"></app-select-players>
     <mat-divider></mat-divider>
 
-    <app-round-result [matchForm]="addMatchForm" [round]="'one'">
+    <app-round-result
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [round]="'one'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-divider></mat-divider>
 
-    <app-round-result [matchForm]="addMatchForm" [round]="'two'">
+    <app-round-result
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [round]="'two'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-divider></mat-divider>
 
     <app-round-result
       *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
-      [matchForm]="addMatchForm"
-      [round]="'three'">
+      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
+      [round]="'three'"
+      [showingTeams]="showingTeams">
     </app-round-result>
 
     <mat-card-actions>
@@ -35,7 +44,9 @@
         mat-raised-button
         color="primary"
         type="submit"
-        [disabled]="!addMatchForm.valid">
+        [disabled]="
+          showingTeams ? !addTeamMatchForm.valid : !addMatchForm.valid
+        ">
         {{ 'common.save.match' | translate }}
       </button>
     </mat-card-actions>

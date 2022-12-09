@@ -11,11 +11,13 @@ export class InfoBarService {
   public openCustomSnackBar(
     message?: string,
     action?: string,
-    durationInSeconds?: number
+    durationInSeconds?: number,
+    panelClassName?: string
   ) {
     this.snackBar.open(message ? message : '', action ? action : '', {
       duration: durationInSeconds * 1000,
       verticalPosition: 'bottom',
+      panelClass: panelClassName ? [panelClassName] : '',
     });
   }
 

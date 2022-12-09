@@ -16,12 +16,19 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private user: User;
+  private _user: User;
+
+  public get user(): User {
+    return this._user;
+  }
+  public set user(value: User) {
+    this._user = value;
+  }
   private loggedIn = new BehaviorSubject<boolean>(false);
 
   constructor(
     private afAuth: Auth,
-    public userSerice: UsersService,
+    public usersService: UsersService,
     public router: Router
   ) {
     authState(afAuth).subscribe((user) => {
@@ -29,7 +36,7 @@ export class AuthService {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(this.user));
         this.loggedIn.next(true);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/kicker']);
       } else {
         localStorage.setItem('user', null);
         this.loggedIn.next(false);
@@ -56,6 +63,6 @@ export class AuthService {
     });
     await signInWithPopup(this.afAuth, provider);
     this.loggedIn.next(true);
-    await this.router.navigate(['/dashboard']);
+    await this.router.navigate(['/kicker']);
   }
 }
