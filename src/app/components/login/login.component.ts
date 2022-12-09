@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/kicker';
   }
 
   loginWithMS() {

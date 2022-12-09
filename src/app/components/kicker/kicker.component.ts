@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { getDatabase, onValue, ref } from '@angular/fire/database';
 
 interface INavigationItem {
@@ -16,6 +17,7 @@ interface INavigationItem {
 })
 export class KickerComponent {
   kickerStatus = false;
+  versionNumber: string = environment.versionNumber;
 
   navLinks: INavigationItem[] = [
     {
@@ -29,7 +31,7 @@ export class KickerComponent {
       label: 'app.statistics',
       link: '/kicker/statistics',
       icon: 'bubble_chart',
-      active: false,
+      active: true,
       index: 1,
     },
     {

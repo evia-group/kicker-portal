@@ -1,4 +1,4 @@
-import { DocumentReference } from '@angular/fire/firestore';
+import { DocumentReference, Timestamp } from '@angular/fire/firestore';
 
 export interface IRounds {
   win: boolean;
@@ -31,4 +31,5 @@ export interface IMatch {
   };
   teams: DocumentReference[];
   type: string;
+  date: Timestamp;
 }

@@ -148,7 +148,7 @@
   },
   "defaultProject": "kicker-portal",
   "cli": {
-    "analytics": false,
-    "defaultCollection": "@angular-eslint/schematics"
+    "analytics": "c4117b76-d16f-4636-838c-e328cd41b047",
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }
