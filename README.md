@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to Kicker Portal ⚽</h1>
+<h1>Welcome to Kicker Portal ⚽</h1>
 
 ![GitHub](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/Evia-Academy/kicker-portal?style=for-the-badge)
@@ -20,16 +20,13 @@ Install the dependencies
 npm install
 ```
 
-As a second step the dev environment must be generated
+As a second step the dev environment must be set
 
 ```sh
-npm run add:env
-```
-
-The environemnt must be adjusted
-
-```sh
-{
+export const environment = {
+  production: false,
+  versionNumber: 'v2.0.0',
+  prefix: 'T-',
   #Firebase Config
   firebase: {
     apiKey: '',
@@ -40,6 +37,13 @@ The environemnt must be adjusted
     messagingSenderId: '',
     appId: '',
     measurementId: '',
+  },
+  globals: {
+    team1: 0,
+    team2: 1,
+    round1: 0,
+    round2: 1,
+    round3: 2,
   },
   #MS Auth
   ms: {
@@ -88,5 +92,5 @@ Contributions, issues and feature requests are welcome!<br />Feel free to check 
 
 ## 📝 License
 
-Copyright © 2022 [evia solution GmbH](https://github.com/geninOne).<br />
+Copyright © 2022 [evia innovation GmbH](https://github.com/Evia-Academy).<br />
 This project is [MIT](https://github.com/Evia-Academy/kicker-portal/blob/production/LICENSE) licensed.
