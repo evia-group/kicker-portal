@@ -26,7 +26,7 @@ const redirectUnauthorized = () => {
     })
   );
 };
-const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
+const redirectLoggedInToDashboard = () => redirectLoggedInTo(['kicker']);
 
 const routes: Routes = [
   {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -8,9 +8,10 @@ import {
   addDoc,
   deleteDoc,
   DocumentReference,
+  Timestamp,
 } from '@angular/fire/firestore';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { shareReplay, take } from 'rxjs/operators';
 import { IMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
 import { FormGroup } from '@angular/forms';
@@ -18,26 +19,12 @@ import { UsersService } from './users.service';
 import { TeamsService } from './teams.service';
 import { environment } from '../../../environments/environment';
 import { ITeam, IUser } from '../interfaces/user.interface';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MatchesService {
-  constructor(
-    protected db: Firestore,
-    protected userService: UsersService,
-    protected teamService: TeamsService,
-    protected infoBar: InfoBarService,
-    protected translateService: TranslateService
-  ) {
-    this.collection = collection(
-      db,
-      `${environment.prefix}Matches`
-    ) as CollectionReference<IMatch>;
-    this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
-  }
-
+export class MatchesService implements OnDestroy {
   translateSub: Subscription;
 
   infoText = '';
@@ -46,7 +33,11 @@ export class MatchesService {
 
   public matches$: Observable<any>;
 
+  public playtime$: Observable<any>;
+
   public resetForm$ = new Subject<boolean>();
+
+  public leaderboardData$ = new ReplaySubject<any>(2);
 
   protected collection: CollectionReference;
 
@@ -62,12 +53,46 @@ export class MatchesService {
     return this._selectedUsers;
   }
 
-  getText() {
-    this.translateSub = this.translateService.get('info').subscribe((res) => {
-      this.infoText = res.saveMatch;
-      this.closeText = res.close;
-    });
+  constructor(
+    protected db: Firestore,
+    protected userService: UsersService,
+    protected teamService: TeamsService,
+    protected infoBar: InfoBarService,
+    protected translateService: TranslateService
+  ) {
+    this.collection = collection(
+      db,
+      `${environment.prefix}Matches`
+    ) as CollectionReference<IMatch>;
+    this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
+
+    const playtimeCol = collection(
+      db,
+      `${environment.prefix}Playtime`
+    ) as CollectionReference<IMatch>;
+    this.playtime$ = collectionData(playtimeCol).pipe(shareReplay(1));
+
+    this.getText();
+
+    this.translateSub = this.translateService.onLangChange.subscribe(
+      (_event: LangChangeEvent) => {
+        this.getText();
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
     this.translateSub.unsubscribe();
+  }
+
+  getText() {
+    this.translateService
+      .get('info')
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.infoText = res.saveMatch;
+        this.closeText = res.close;
+      });
   }
 
   private static getRoundInfos(
@@ -174,12 +199,12 @@ export class MatchesService {
       result,
       teams,
       type: `${winTeam1}:${winTeam2}`,
+      date: Timestamp.now(),
     };
 
     return await addDoc(this.collection, resultMatch)
       .then(() => {
-        this.getText();
-        this.infoBar.openCustomSnackBar(this.infoText, 'close', 5);
+        this.infoBar.openCustomSnackBar(this.infoText, this.closeText, 5);
       })
       .catch((err) => {
         this.infoBar.openComponentSnackBar(5);

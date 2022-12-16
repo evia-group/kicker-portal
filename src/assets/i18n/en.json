@@ -1,13 +1,14 @@
 {
   "app": {
-    "name": "Evia Desk",
+    "name": "Kicker-Portal",
     "tournaments": "Tournaments",
     "matches": "Matches",
     "statistics": "Statistics",
     "matchmaking": "Search Match",
     "language": {
       "de": "German",
-      "en": "English"
+      "en": "English",
+      "id": "en-US"
     },
     "navigation": {
       "dashboard": "Dashboard",
@@ -49,12 +50,72 @@
     "player": "Player",
     "saveTeam": "save team",
     "close": "close",
-    "teamExists": "This team already exists!"
+    "teamExists": "This team already exists!",
+    "kickerStatus": {
+      "available": {
+        "title": "Kicker is available",
+        "subtitle": "Hurray! Time to play a game"
+      },
+      "notAvailable": {
+        "title": "Kicker is not available",
+        "subtitle": "Opps! You must wait to play a game"
+      }
+    }
   },
   "info": {
     "close": "Close",
     "saveMatch": "The match was saved successfully!",
     "saveTeam": "The team was saved successfully!",
-    "chooseTeams": "Players from the teams overlap!"
+    "chooseTeams": "Players from the teams overlap!",
+    "noData": "No Data available!"
+  },
+  "months": {
+    "jan": "January",
+    "feb": "February",
+    "mar": "March",
+    "apr": "April",
+    "may": "May",
+    "jun": "June",
+    "jul": "July",
+    "aug": "August",
+    "sep": "September",
+    "oct": "October",
+    "nov": "November",
+    "dec": "December"
+  },
+  "stats": {
+    "leaderboard": "Leaderboard",
+    "players": "Players",
+    "teams": "Teams",
+    "filter": "Filter",
+    "filterHint": "Ex. Thomas or 42",
+    "rank": "Rank",
+    "wins": "Wins",
+    "losses": "Losses",
+    "difference": "Difference",
+    "dominations": "Dominations",
+    "defeats": "Defeats",
+    "elo": "ELO",
+    "playerAndTeamStats": "Player and Team Statistics",
+    "year": "Year",
+    "month": "Month",
+    "day": "Day",
+    "winRate": "Winning percentage",
+    "playtime": "Kicker - Time played",
+    "playtimeLegend": "Time played",
+    "yearFormat": "YYYY",
+    "monthYear": "Month und Year",
+    "monthFormat": "MM/YYYY",
+    "dayMonthYear": "Day, Month and Year",
+    "dayFormat": "DD/MM/YYYY",
+    "minutes": "Minutes"
+  },
+  "MAT_PAGINATOR": {
+    "FIRST_PAGE": "First page",
+    "ITEMS_PER_PAGE": "Items per page:",
+    "LAST_PAGE": "Last page",
+    "NEXT_PAGE": "Next page",
+    "PREVIOUS_PAGE": "Previous page",
+    "OF": "of"
   }
 }

@@ -19,3 +19,39 @@
 .dashboard-card-content {
   text-align: center;
 }
+
+.mat-form-field {
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.flex-container {
+  // width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .bar-line-chart {
+    // width: 70%;
+  }
+
+  .doughnut-chart {
+    // height: 30%;
+    // margin: auto 0px;
+    // width: 30%;
+  }
+
+  .matches-chart {
+    margin-top: 20px;
+    // width: 70%;
+  }
+}
+
+.mat-card {
+  width: 80%;
+  margin: 20px auto;
+}
+
+.mat-spinner {
+  margin-top: 20px;
+  margin-left: 20px;
+}

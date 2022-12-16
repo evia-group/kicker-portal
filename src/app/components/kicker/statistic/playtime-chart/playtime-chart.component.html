@@ -1,0 +1,82 @@
+<mat-spinner *ngIf="!chartIsReady"></mat-spinner>
+<div [style.display]="chartIsReady ? 'block' : 'none'">
+  <div class="flex-box">
+    <mat-form-field
+      *ngIf="selectedOption === 'Year'"
+      appearance="fill"
+      appYearDateFormat>
+      <mat-label>{{ 'stats.year' | translate }}</mat-label>
+      <input
+        matInput
+        [matDatepicker]="dpy"
+        [formControl]="yearDate"
+        [matDatepickerFilter]="yearFilter"
+        (dateChange)="setDateOnInput($event.value)" />
+      <mat-hint>{{ 'stats.yearFormat' | translate }}</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dpy"></mat-datepicker-toggle>
+      <mat-datepicker
+        #dpy
+        startView="multi-year"
+        (yearSelected)="setDateOnInput($event, dpy)"
+        panelClass="year-picker">
+      </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field
+      *ngIf="selectedOption === 'Month'"
+      appearance="fill"
+      appYearMonthDateFormat>
+      <mat-label>{{ 'stats.monthYear' | translate }}</mat-label>
+      <input
+        matInput
+        [matDatepicker]="dpm"
+        [formControl]="monthDate"
+        [matDatepickerFilter]="monthFilter"
+        (dateChange)="setDateOnInput($event.value)" />
+      <mat-hint>{{ 'stats.monthFormat' | translate }}</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dpm"></mat-datepicker-toggle>
+      <mat-datepicker
+        #dpm
+        startView="year"
+        (monthSelected)="setDateOnInput($event, dpm)"
+        panelClass="year-month-picker">
+      </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field
+      *ngIf="selectedOption === 'Day'"
+      appearance="fill"
+      appYearMonthDayDateFormat>
+      <mat-label>{{ 'stats.dayMonthYear' | translate }}</mat-label>
+      <input
+        matInput
+        [matDatepicker]="dpd"
+        [formControl]="dayDate"
+        [matDatepickerFilter]="dayFilter"
+        (dateChange)="setDateOnInput($event.value)" />
+      <mat-hint>{{ 'stats.dayFormat' | translate }}</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dpd"></mat-datepicker-toggle>
+      <mat-datepicker #dpd panelClass="year-month-day-picker"> </mat-datepicker>
+    </mat-form-field>
+    <mat-radio-group
+      aria-label="Select an option"
+      [(ngModel)]="selectedOption"
+      (ngModelChange)="onChange()">
+      <mat-radio-button value="Year">{{
+        'stats.year' | translate
+      }}</mat-radio-button>
+      <mat-radio-button value="Month">{{
+        'stats.month' | translate
+      }}</mat-radio-button>
+      <mat-radio-button value="Day">{{
+        'stats.day' | translate
+      }}</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div>
+    <canvas
+      baseChart
+      [data]="barChartData"
+      [options]="barChartOptions"
+      [legend]="barChartLegend">
+    </canvas>
+  </div>
+</div>

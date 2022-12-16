@@ -1,0 +1,15 @@
+.flex-box {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+
+  .mat-radio-group,
+  .mat-radio-button {
+    margin-left: 20px;
+  }
+}
+
+.mat-spinner {
+  margin-top: 20px;
+  margin-left: 20px;
+}
