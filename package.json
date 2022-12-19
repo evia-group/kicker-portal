@@ -8,6 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "init": "node env.ci.js",
     "prepare": "husky install",
     "p:check": "prettier --check .",
     "p:write": "prettier --write ."
