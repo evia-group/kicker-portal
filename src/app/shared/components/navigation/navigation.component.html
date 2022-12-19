@@ -1,14 +1,28 @@
 <div class="navigation-container" [class.is-mobile]="mobileQuery.matches">
   <mat-toolbar color="primary" class="navigation-toolbar">
     <mat-icon>sports_soccer</mat-icon>
-    <!-- <button
-      mat-icon-button
-      (click)="sidenav.toggle()"
-      *ngIf="isLoggedIn$ | async">
-      <mat-icon>menu</mat-icon>
-    </button> -->
     <h1 class="app-name">{{ 'app.name' | translate }}</h1>
     <span class="toolbar-spacer"></span>
+    <span>
+      <mat-chip-list>
+        <mat-chip
+          [ngClass]="{
+            'chip-container': true,
+            success: kickerStatus,
+            error: !kickerStatus
+          }"
+          selected>
+          {{
+            (kickerStatus
+              ? 'common.kickerStatus.available.title'
+              : 'common.kickerStatus.notAvailable.title'
+            ) | translate
+          }}
+          {{ kickerStatus ? '' : (kickerBusyTime | date: 'd.M.yy H:mm') }}
+        </mat-chip>
+      </mat-chip-list>
+    </span>
+
     <button mat-icon-button [matMenuTriggerFor]="menuLanguage">
       <mat-icon class="icon" aria-hidden="false" aria-label="language icon"
         >language</mat-icon
@@ -29,38 +43,6 @@
       <ng-content></ng-content>
     </mat-drawer-content>
   </mat-drawer-container>
-
-  <!-- <mat-sidenav-container
-    class="sidenav-container"
-    [hasBackdrop]="true"
-    [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-    <mat-sidenav
-      #sidenav
-      [mode]="'over'"
-      (click)="sidenav.toggle()"
-      [fixedInViewport]="mobileQuery.matches"
-      fixedTopGap="56">
-      <mat-nav-list>
-        <mat-list-item routerLink="/dashboard" routerLinkActive="active">
-          <a matLine>{{ 'app.navigation.dashboard' | translate }}</a>
-          <mat-icon mat-list-icon>dashboard</mat-icon>
-        </mat-list-item>
-        <mat-list-item routerLink="/kicker" routerLinkActive="active">
-          <a matLine>{{ 'app.navigation.kicker' | translate }}</a>
-          <mat-icon mat-list-icon>sports_soccer</mat-icon>
-        </mat-list-item>
-        <mat-list-item routerLink="/map" routerLinkActive="active">
-          <a matLine>{{ 'app.navigation.map' | translate }}</a>
-          <mat-icon mat-list-icon>apartment</mat-icon>
-        </mat-list-item>
-      </mat-nav-list>
-      <div class="footer">{{ versionNumber }}</div>
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-      <ng-content></ng-content>
-    </mat-sidenav-content>
-  </mat-sidenav-container> -->
   <mat-toolbar>
     <span class="toolbar-spacer"></span>
     <span>{{ versionNumber }}</span></mat-toolbar

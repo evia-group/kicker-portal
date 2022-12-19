@@ -3,4 +3,5 @@ dist
 jest.config.js
 fixtures
 coverage
+functions
 __snapshots__
