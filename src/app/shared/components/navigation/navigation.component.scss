@@ -42,6 +42,20 @@ h1.app-name {
   }
 }
 
+.chip-container {
+  color: transparent;
+  border: 2px solid #000000;
+
+  &.success {
+    border-color: #11590a;
+    color: #11590a !important;
+  }
+  &.error {
+    border-color: #b3362a;
+    color: #b3362a !important;
+  }
+}
+
 .is-mobile .sidenav-container {
   /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
      `<body>` to be our scrolling element for mobile layouts. */
