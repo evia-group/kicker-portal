@@ -33,7 +33,7 @@ export class NavigationComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     onValue(ref(getDatabase(), '/Kicker'), (snapshot) => {
-      this.kickerStatus = snapshot.val().status || true;
+      this.kickerStatus = snapshot.val().status || false;
       if (this.kickerStatus === false) {
         this.kickerBusyTime = new Date(snapshot.val().startTime * 1000);
       }
