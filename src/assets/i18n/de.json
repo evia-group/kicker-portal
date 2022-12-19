@@ -47,7 +47,7 @@
     "team1": "Mannschaft 1",
     "team2": "Mannschaft 2",
     "team": "Mannschaft",
-    "domination": "dominiert",
+    "domination": "zu Null",
     "player": "Spieler",
     "saveTeam": "Mannschaft speichern",
     "close": "Abbrechen",
@@ -58,7 +58,7 @@
         "subtitle": "Hurray! Zeit für ein Spiel"
       },
       "notAvailable": {
-        "title": "Kicker ist belegt",
+        "title": "Kicker ist belegt seit",
         "subtitle": "Opps! Du musst leider noch warten"
       }
     }
@@ -94,8 +94,8 @@
     "wins": "Siege",
     "losses": "Niederlagen",
     "difference": "Differenz",
-    "dominations": "Dominanzen",
-    "defeats": "Pleiten",
+    "dominations": "Zu 0 gewonnen",
+    "defeats": "Zu 0 verloren",
     "elo": "ELO",
     "playerAndTeamStats": "Spieler- und Teamstatistiken",
     "year": "Jahr",

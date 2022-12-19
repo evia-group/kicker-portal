@@ -59,6 +59,7 @@ import { YearMonthDateFormatDirective } from './components/kicker/statistic/play
 import { YearMonthDayDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-month-day-date-format.directive';
 import { MatPaginatorIntlService } from './shared/services/mat-paginator-intl.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -140,6 +141,7 @@ export function createTranslateLoader(http: HttpClient) {
     MomentDateModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
   ],
   providers: [
     {

@@ -111,7 +111,9 @@ export class StatisticComponent implements OnInit, OnDestroy {
           const res = this.createTableData(player);
           this.playersMap.set(player.id, res);
         });
-        this.playersTable = Array.from(this.playersMap.values());
+        this.playersTable = Array.from(this.playersMap.values()).filter(
+          (user) => user.totalMatches > 0
+        );
       }
       if (teamsData.length > 0) {
         this.teamsDataAvailable = true;
@@ -119,7 +121,9 @@ export class StatisticComponent implements OnInit, OnDestroy {
           const res = this.createTableData(team);
           this.teamsMap.set(team.id, res);
         });
-        this.teamsTable = Array.from(this.teamsMap.values());
+        this.teamsTable = Array.from(this.teamsMap.values()).filter(
+          (team) => team.totalMatches > 0
+        );
       }
       if (this.playersDataAvailable && this.teamsDataAvailable) {
         this.matchesProcess();

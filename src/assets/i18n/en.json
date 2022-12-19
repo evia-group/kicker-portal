@@ -46,7 +46,7 @@
     "team1": "Team 1",
     "team2": "Team 2",
     "team": "Team",
-    "domination": "domination",
+    "domination": "to Zero",
     "player": "Player",
     "saveTeam": "save team",
     "close": "close",
@@ -57,7 +57,7 @@
         "subtitle": "Hurray! Time to play a game"
       },
       "notAvailable": {
-        "title": "Kicker is not available",
+        "title": "Kicker is not available since",
         "subtitle": "Opps! You must wait to play a game"
       }
     }
@@ -93,8 +93,8 @@
     "wins": "Wins",
     "losses": "Losses",
     "difference": "Difference",
-    "dominations": "Dominations",
-    "defeats": "Defeats",
+    "dominations": "win to 0",
+    "defeats": "loos to 0",
     "elo": "ELO",
     "playerAndTeamStats": "Player and Team Statistics",
     "year": "Year",
