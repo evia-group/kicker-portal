@@ -22,7 +22,19 @@
         </mat-chip>
       </mat-chip-list>
     </span>
-
+    <button mat-icon-button (click)="goToBuglist()">
+      <mat-icon class="icon" aria-hidden="false" aria-label="bugreport icon"
+        >bug_report</mat-icon
+      >
+    </button>
+    <button mat-icon-button (click)="goToGithub()">
+      <mat-icon
+        svgIcon="github"
+        class="icon"
+        aria-hidden="false"
+        aria-label="github icon">
+      </mat-icon>
+    </button>
     <button mat-icon-button [matMenuTriggerFor]="menuLanguage">
       <mat-icon class="icon" aria-hidden="false" aria-label="language icon"
         >language</mat-icon

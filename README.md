@@ -20,7 +20,13 @@ Install the dependencies
 npm install
 ```
 
-As a second step the dev environment must be set
+As a second step the dev environment must be set. To do the process a bit easier, you can run the command
+
+```sh
+npm start init
+```
+
+Please update the firebase and the microsoft parameters.
 
 ```sh
 export const environment = {
