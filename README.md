@@ -98,5 +98,5 @@ Contributions, issues and feature requests are welcome!<br />Feel free to check 
 
 ## 📝 License
 
-Copyright © 2022 [evia innovation GmbH](https://github.com/Evia-Academy).<br />
+Copyright © 2023 [evia innovation GmbH](https://github.com/Evia-Academy).<br />
 This project is [MIT](https://github.com/Evia-Academy/kicker-portal/blob/production/LICENSE) licensed.
