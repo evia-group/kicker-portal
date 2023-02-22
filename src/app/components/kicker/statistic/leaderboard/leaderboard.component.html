@@ -90,14 +90,6 @@
           {{ row.totalMatches }}
         </td>
       </ng-container>
-      <!-- <ng-container matColumnDef="elo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'stats.elo' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.elo }}
-        </td>
-      </ng-container> -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>

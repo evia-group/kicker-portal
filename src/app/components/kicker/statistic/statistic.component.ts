@@ -182,31 +182,31 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
               let winningTeam: string[];
               let loosingTeam: string[];
-              let winningTeamId: string;
-              let loosingTeamId: string;
+              // let winningTeamId: string;
+              // let loosingTeamId: string;
 
               if (resultTeam1 === 2) {
                 winningTeam = playersTeam1;
                 loosingTeam = playersTeam2;
-                winningTeamId = team1;
-                loosingTeamId = team2;
+                // winningTeamId = team1;
+                // loosingTeamId = team2;
               } else {
                 winningTeam = playersTeam2;
                 loosingTeam = playersTeam1;
-                winningTeamId = team2;
-                loosingTeamId = team1;
+                // winningTeamId = team2;
+                // loosingTeamId = team1;
               }
 
               // resultTeam1 === 2
               //   ? ((winningTeam = playersTeam1), (loosingTeam = playersTeam2))
               //   : ((winningTeam = playersTeam2), (loosingTeam = playersTeam1));
 
-              this.calcElo(
-                winningTeam,
-                loosingTeam,
-                winningTeamId,
-                loosingTeamId
-              );
+              // this.calcElo(
+              //   winningTeam,
+              //   loosingTeam,
+              //   winningTeamId,
+              //   loosingTeamId
+              // );
 
               winningTeam.forEach((player) => {
                 this.updateTimeline(

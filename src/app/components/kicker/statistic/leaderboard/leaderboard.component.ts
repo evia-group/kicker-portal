@@ -36,7 +36,6 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
     '0:2',
     '1:2',
     'totalMatches',
-    // 'elo',
   ];
 
   leaderboardSub: Subscription;
