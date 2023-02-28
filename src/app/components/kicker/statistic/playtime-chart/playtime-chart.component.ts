@@ -229,6 +229,10 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
           this.monthDate.markAllAsTouched();
           this.dayDate.markAllAsTouched();
           this.playtimeDataAvailable = true;
+
+          this.selectedYear = moment(this.maxTime).year();
+          this.selectedMonth = moment(this.maxTime).month();
+          this.selectedDay = moment(this.maxTime).date();
         }
       });
   }
