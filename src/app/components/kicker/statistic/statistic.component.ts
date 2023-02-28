@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, take } from 'rxjs/operators';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { take } from 'rxjs/operators';
 import { UsersService } from 'src/app/shared/services/users.service';
 import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
 import { TeamsService } from 'src/app/shared/services/teams.service';
@@ -8,8 +7,9 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { MatchesService } from 'src/app/shared/services/matches.service';
 import { IMatch } from 'src/app/shared/interfaces/match.interface';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { forkJoin, Subscription } from 'rxjs';
+import { forkJoin, ReplaySubject, Subscription } from 'rxjs';
 import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
+import { SortDirection } from '@angular/material/sort';
 
 @Component({
   selector: 'app-statistic',
@@ -17,27 +17,6 @@ import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
   styleUrls: ['./statistic.component.scss'],
 })
 export class StatisticComponent implements OnInit, OnDestroy {
-  /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { title: 'Card 1', cols: 1, rows: 1 },
-          { title: 'Card 2', cols: 1, rows: 1 },
-          { title: 'Card 3', cols: 1, rows: 1 },
-          { title: 'Card 4', cols: 1, rows: 1 },
-        ];
-      }
-
-      return [
-        { title: 'Card 1', cols: 2, rows: 1 },
-        { title: 'Card 2', cols: 1, rows: 1 },
-        { title: 'Card 3', cols: 1, rows: 2 },
-        { title: 'Card 4', cols: 1, rows: 1 },
-      ];
-    })
-  );
-
   playersMap = new Map<string, ILeaderboard>();
 
   teamsMap = new Map<string, ILeaderboard>();
@@ -72,6 +51,23 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
   months: string[] = [];
 
+  displayedColumnsTextPlayer: string[] = [];
+  displayedColumnsTextTeam: string[] = [];
+  displayedColumns: string[] = [
+    'rank',
+    'name',
+    'wins',
+    'losses',
+    'diff',
+    'dominations',
+    'defeats',
+    '2:0',
+    '2:1',
+    '0:2',
+    '1:2',
+    'totalMatches',
+  ];
+
   localeId: string;
 
   playersTable: ILeaderboard[];
@@ -86,10 +82,14 @@ export class StatisticComponent implements OnInit, OnDestroy {
   allChartsReadyP = false;
   allChartsReadyT = false;
 
-  selectedTab = 0;
+  playerData$ = new ReplaySubject(1);
+  teamsData$ = new ReplaySubject(1);
+
+  activeColumn = 'rank';
+  sortDirection: SortDirection = 'asc';
+  disableClear = true;
 
   constructor(
-    private breakpointObserver: BreakpointObserver,
     private usersService: UsersService,
     private teamsService: TeamsService,
     private authService: AuthService,
@@ -354,8 +354,10 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
           this.addRanks(this.playersTable);
           this.addRanks(this.teamsTable);
-          this.matchesService.leaderboardData$.next([false, this.playersTable]);
-          this.matchesService.leaderboardData$.next([true, this.teamsTable]);
+          // this.playersTable = [...this.playersTable];
+          // this.teamsTable = [...this.teamsTable];
+          this.playerData$.next(this.playersTable);
+          this.teamsData$.next(this.teamsTable);
         }
       });
   }
@@ -366,7 +368,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
   getText() {
     this.translateService
-      .get(['months', 'stats', 'app'])
+      .get(['months', 'stats', 'app', 'common'])
       .pipe(take(1))
       .subscribe((res) => {
         this.months = [
@@ -393,6 +395,36 @@ export class StatisticComponent implements OnInit, OnDestroy {
           res.app.matches,
           res.stats.playtimeLegend,
           res.stats.minutes,
+        ];
+
+        this.displayedColumnsTextPlayer = [
+          res.stats.rank,
+          res.common.player,
+          res.stats.wins,
+          res.stats.losses,
+          res.stats.difference,
+          res.stats.dominations,
+          res.stats.defeats,
+          '2:0',
+          '2:1',
+          '1:2',
+          '0:2',
+          res.app.matches,
+        ];
+
+        this.displayedColumnsTextTeam = [
+          res.stats.rank,
+          res.common.team,
+          res.stats.wins,
+          res.stats.losses,
+          res.stats.difference,
+          res.stats.dominations,
+          res.stats.defeats,
+          '2:0',
+          '2:1',
+          '1:2',
+          '0:2',
+          res.app.matches,
         ];
 
         this.localeId = res.app.language.id;

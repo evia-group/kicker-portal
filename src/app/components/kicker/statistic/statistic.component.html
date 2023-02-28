@@ -2,12 +2,22 @@
   <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
   <mat-tab-group mat-align-tabs="start">
     <mat-tab label="{{ 'stats.players' | translate }}">
-      <app-leaderboard [secondColumn]="'Player'"></app-leaderboard>
+      <app-leaderboard
+        [dataSubject$]="playerData$"
+        [displayedColumnsText]="displayedColumnsTextPlayer"
+        [displayedColumns]="displayedColumns"
+        [activeColumn]="activeColumn"
+        [sortDirection]="sortDirection"
+        [disableClear]="disableClear"></app-leaderboard>
     </mat-tab>
     <mat-tab label="{{ 'stats.teams' | translate }}">
       <app-leaderboard
-        [secondColumn]="'Team'"
-        [showingTeams]="true"></app-leaderboard>
+        [dataSubject$]="teamsData$"
+        [displayedColumnsText]="displayedColumnsTextTeam"
+        [displayedColumns]="displayedColumns"
+        [activeColumn]="activeColumn"
+        [sortDirection]="sortDirection"
+        [disableClear]="disableClear"></app-leaderboard>
     </mat-tab>
   </mat-tab-group>
 </mat-card>

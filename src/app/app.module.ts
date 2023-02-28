@@ -111,14 +111,14 @@ export function createTranslateLoader(http: HttpClient) {
     provideFirestore(() => {
       const firestore = getFirestore();
       if (environment['useEmulators']) {
-        connectFirestoreEmulator(firestore, 'localhost', 8082);
+        connectFirestoreEmulator(firestore, 'localhost', 8080);
       }
       return firestore;
     }),
     provideAuth(() => {
       const auth = getAuth();
       if (environment['useEmulators']) {
-        connectAuthEmulator(auth, 'http://localhost:9098', {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
           disableWarnings: true,
         });
       }
@@ -127,7 +127,7 @@ export function createTranslateLoader(http: HttpClient) {
     provideFunctions(() => {
       const functions = getFunctions();
       if (environment['useEmulators']) {
-        connectFunctionsEmulator(functions, 'localhost', 5022);
+        connectFunctionsEmulator(functions, 'localhost', 5001);
       }
       return functions;
     }),

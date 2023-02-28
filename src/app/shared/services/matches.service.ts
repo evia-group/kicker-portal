@@ -10,7 +10,7 @@ import {
   DocumentReference,
   Timestamp,
 } from '@angular/fire/firestore';
-import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { shareReplay, take } from 'rxjs/operators';
 import { IMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
@@ -36,8 +36,6 @@ export class MatchesService implements OnDestroy {
   public playtime$: Observable<any>;
 
   public resetForm$ = new Subject<boolean>();
-
-  public leaderboardData$ = new ReplaySubject<any>(2);
 
   protected collection: CollectionReference;
 
