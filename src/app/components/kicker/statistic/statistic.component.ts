@@ -96,18 +96,15 @@ export class StatisticComponent implements OnInit, OnDestroy {
       this.tableService.teamData$,
       this.matchesService.matchesSub$,
     ]).subscribe((data: any) => {
-      console.log(data);
       const playerDataAvailable = data[0][0].length > 0;
       const teamDataAvailable = data[1][0].length > 0;
       const matchesDataAvailable = data[2].length > 0;
       if (playerDataAvailable) {
-        console.log('player');
         this.playersTable = data[0][0];
         this.playersMap = data[0][1];
         this.playerTableData$.next(this.playersTable);
       }
       if (teamDataAvailable) {
-        console.log('team');
         this.teamsTable = data[1][0];
         this.teamsMap = data[1][1];
         this.teamsTableData$.next(this.teamsTable);
@@ -133,7 +130,6 @@ export class StatisticComponent implements OnInit, OnDestroy {
           this.playersMap,
           this.teamsMap
         );
-        console.log('matches');
       }
     });
 
