@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
 import { SortDirection } from '@angular/material/sort';
 import { TableService } from '../../../shared/services/table.service';
-import { StatisticsService } from '../../../shared/services/statistics.service';
+import { ChartsService } from '../../../shared/services/charts.service';
 import { TextService } from '../../../shared/services/text.service';
 
 @Component({
@@ -86,7 +86,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
   constructor(
     private matchesService: MatchesService,
     private tableService: TableService,
-    private statisticsService: StatisticsService,
+    private chartsService: ChartsService,
     private textService: TextService
   ) {}
 
@@ -128,7 +128,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
           this.teamYearsList,
           this.matchesChartDataTeam,
           this.doughnutDataTeam,
-        ] = this.statisticsService.createStatisticData(
+        ] = this.chartsService.createStatisticData(
           data[2],
           this.playersMap,
           this.teamsMap
@@ -159,7 +159,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
   updateYearsList(isTeamSelection: boolean) {
     if (isTeamSelection) {
-      this.teamYearsList = this.statisticsService.setYearsList(
+      this.teamYearsList = this.chartsService.setYearsList(
         this.selectedTeam,
         this.teamsMap
       );
@@ -167,15 +167,15 @@ export class StatisticComponent implements OnInit, OnDestroy {
         this.selectedYearTeam =
           this.teamYearsList[this.teamYearsList.length - 1];
       }
-      this.doughnutDataTeam = this.statisticsService.getDoughnutData(
+      this.doughnutDataTeam = this.chartsService.getDoughnutData(
         this.teamsMap.get(this.selectedTeam)
       );
-      this.matchesChartDataTeam = this.statisticsService.getMatchesChartData(
+      this.matchesChartDataTeam = this.chartsService.getMatchesChartData(
         this.teamsMap.get(this.selectedTeam),
         this.selectedYearTeam
       );
     } else {
-      this.playerYearsList = this.statisticsService.setYearsList(
+      this.playerYearsList = this.chartsService.setYearsList(
         this.selectedPlayer,
         this.playersMap
       );
@@ -183,10 +183,10 @@ export class StatisticComponent implements OnInit, OnDestroy {
         this.selectedYearPlayer =
           this.playerYearsList[this.playerYearsList.length - 1];
       }
-      this.doughnutDataPlayer = this.statisticsService.getDoughnutData(
+      this.doughnutDataPlayer = this.chartsService.getDoughnutData(
         this.playersMap.get(this.selectedPlayer)
       );
-      this.matchesChartDataPlayer = this.statisticsService.getMatchesChartData(
+      this.matchesChartDataPlayer = this.chartsService.getMatchesChartData(
         this.playersMap.get(this.selectedPlayer),
         this.selectedYearPlayer
       );
@@ -195,12 +195,12 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
   updateMatchesData(isTeam: boolean) {
     if (isTeam) {
-      this.matchesChartDataTeam = this.statisticsService.getMatchesChartData(
+      this.matchesChartDataTeam = this.chartsService.getMatchesChartData(
         this.teamsMap.get(this.selectedTeam),
         this.selectedYearTeam
       );
     } else {
-      this.matchesChartDataPlayer = this.statisticsService.getMatchesChartData(
+      this.matchesChartDataPlayer = this.chartsService.getMatchesChartData(
         this.playersMap.get(this.selectedPlayer),
         this.selectedYearPlayer
       );

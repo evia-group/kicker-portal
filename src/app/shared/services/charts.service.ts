@@ -6,7 +6,7 @@ import { ILeaderboard } from '../interfaces/statistic.interface';
 @Injectable({
   providedIn: 'root',
 })
-export class StatisticsService {
+export class ChartsService {
   matchesDataAvailable = false;
   selectedPlayer: string;
   selectedTeam: string;
