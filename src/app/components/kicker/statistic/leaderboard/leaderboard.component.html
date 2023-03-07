@@ -1,11 +1,11 @@
-<mat-spinner *ngIf="!chartIsReady"></mat-spinner>
-<div [style.display]="chartIsReady ? 'block' : 'none'">
+<mat-spinner *ngIf="!receivedData"></mat-spinner>
+<div *ngIf="receivedData">
   <mat-form-field appearance="standard">
-    <mat-label>{{ 'stats.filter' | translate }}</mat-label>
+    <mat-label>{{ filterText }}</mat-label>
     <input
       matInput
       (keyup)="applyFilter($event)"
-      placeholder="{{ 'stats.filterHint' | translate }}" />
+      placeholder="{{ filterHintText }}" />
   </mat-form-field>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="boardData" matSort>
@@ -20,10 +20,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator
-      [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons
-      aria-label="Select page">
+    <mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons>
     </mat-paginator>
   </div>
 </div>

@@ -10,7 +10,7 @@ import {
   DocumentReference,
   Timestamp,
 } from '@angular/fire/firestore';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { shareReplay, take } from 'rxjs/operators';
 import { IMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
@@ -51,6 +51,8 @@ export class MatchesService implements OnDestroy {
     return this._selectedUsers;
   }
 
+  matchesSub$ = new BehaviorSubject([]);
+
   constructor(
     protected db: Firestore,
     protected userService: UsersService,
@@ -63,6 +65,8 @@ export class MatchesService implements OnDestroy {
       `${environment.prefix}Matches`
     ) as CollectionReference<IMatch>;
     this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
+
+    this.matches$.subscribe(this.matchesSub$);
 
     const playtimeCol = collection(
       db,
