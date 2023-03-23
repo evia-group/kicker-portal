@@ -5,13 +5,10 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { ChartConfiguration } from 'chart.js';
 import { take } from 'rxjs';
 import { MatchesService } from 'src/app/shared/services/matches.service';
-import { MatDatepicker } from '@angular/material/datepicker';
 import * as _moment from 'moment';
-
 import { default as _rollupMoment, Moment } from 'moment';
 import { DateAdapter } from '@angular/material/core';
 
@@ -34,9 +31,11 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
 
   today = moment();
 
-  yearDate = new FormControl(this.today);
-  monthDate = new FormControl(this.today);
-  dayDate = new FormControl(this.today);
+  yearMoment = moment();
+  monthMoment = moment();
+  dayMoment = moment();
+
+  actualMoment = this.yearMoment;
 
   selectedOption = 'Year';
   selectedYear = this.today.year();
@@ -89,6 +88,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   chartIsReady = false;
 
   maxTime = 0;
+  datePickerFormatType = 0;
 
   dayFilter = (_d: Moment | null): boolean => {
     return true;
@@ -101,6 +101,8 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   monthFilter = (_d: Moment | null): boolean => {
     return true;
   };
+
+  datePickerFilter = this.yearFilter;
 
   constructor(
     private matchesService: MatchesService,
@@ -220,14 +222,14 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
             }
           };
 
-          this.yearDate = new FormControl(moment(this.maxTime));
-          this.monthDate = new FormControl(moment(this.maxTime));
-          this.dayDate = new FormControl(moment(this.maxTime));
+          this.datePickerFilter = this.yearFilter;
+
+          this.yearMoment = moment(this.maxTime);
+          this.monthMoment = moment(this.maxTime);
+          this.dayMoment = moment(this.maxTime);
 
           this.setChartData(this.getYearData(moment(this.maxTime).year()));
-          this.yearDate.markAllAsTouched();
-          this.monthDate.markAllAsTouched();
-          this.dayDate.markAllAsTouched();
+
           this.playtimeDataAvailable = true;
 
           this.selectedYear = moment(this.maxTime).year();
@@ -267,37 +269,18 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     }
   }
 
-  setDateOnInput(
-    normalizedMonthAndYear: Moment,
-    datepicker?: MatDatepicker<Moment>
-  ) {
-    const date = this.getForm();
-    const ctrlValue = date.value;
-    if (ctrlValue && date.valid) {
-      this.selectedYear = normalizedMonthAndYear.year();
-      this.selectedMonth = normalizedMonthAndYear.month();
-      this.selectedDay = normalizedMonthAndYear.date();
-      ctrlValue.year(this.selectedYear);
-      ctrlValue.month(this.selectedMonth);
-      ctrlValue.date(this.selectedDay);
-      date.setValue(ctrlValue);
-      this.setChartOnOption(
-        this.selectedYear,
-        this.selectedMonth,
-        this.selectedDay
-      );
+  setDateOnInput(normalizedDate: Moment) {
+    if (this.datePickerFormatType === 0) {
+      this.yearMoment = normalizedDate;
+    } else if (this.datePickerFormatType === 1) {
+      this.monthMoment = normalizedDate;
+    } else {
+      this.dayMoment = normalizedDate;
     }
-    if (datepicker) {
-      datepicker.close();
-    }
-  }
+    this.selectedYear = normalizedDate.year();
+    this.selectedMonth = normalizedDate.month();
+    this.selectedDay = normalizedDate.date();
 
-  onChange() {
-    const date = this.getForm();
-    const ctrlValue = date.value;
-    this.selectedYear = ctrlValue.year();
-    this.selectedMonth = ctrlValue.month();
-    this.selectedDay = ctrlValue.date();
     this.setChartOnOption(
       this.selectedYear,
       this.selectedMonth,
@@ -305,16 +288,28 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     );
   }
 
-  getForm(): FormControl {
-    let date: FormControl;
+  onChange() {
     if (this.selectedOption === 'Year') {
-      date = this.yearDate;
+      this.datePickerFormatType = 0;
+      this.datePickerFilter = this.yearFilter;
+      this.actualMoment = this.yearMoment;
     } else if (this.selectedOption === 'Month') {
-      date = this.monthDate;
+      this.datePickerFormatType = 1;
+      this.datePickerFilter = this.monthFilter;
+      this.actualMoment = this.monthMoment;
     } else {
-      date = this.dayDate;
+      this.datePickerFormatType = 2;
+      this.datePickerFilter = this.dayFilter;
+      this.actualMoment = this.dayMoment;
     }
-    return date;
+    this.selectedYear = this.actualMoment.year();
+    this.selectedMonth = this.actualMoment.month();
+    this.selectedDay = this.actualMoment.date();
+    this.setChartOnOption(
+      this.selectedYear,
+      this.selectedMonth,
+      this.selectedDay
+    );
   }
 
   createEmptyDataStructure(year: number) {
@@ -347,8 +342,8 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   getYearData(year: number) {
-    const data = this.playtimeChartData.get(year).map((monthArray) => {
-      const monthArraySum = monthArray
+    return this.playtimeChartData.get(year).map((monthArray) => {
+      return monthArray
         .map((item) =>
           item.reduce((accumulator, value) => {
             return accumulator + value;
@@ -357,9 +352,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
         .reduce((accumulator, value) => {
           return accumulator + value;
         }, 0);
-      return monthArraySum;
     });
-    return data;
   }
 
   setChartData(chartData: number[]) {

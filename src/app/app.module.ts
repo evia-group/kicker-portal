@@ -54,12 +54,15 @@ import { MatchesChartComponent } from './components/kicker/statistic/matches-cha
 import { PlaytimeChartComponent } from './components/kicker/statistic/playtime-chart/playtime-chart.component';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { YearDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-date-format.directive';
-import { YearMonthDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-month-date-format.directive';
-import { YearMonthDayDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-month-day-date-format.directive';
 import { MatPaginatorIntlService } from './shared/services/mat-paginator-intl.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import {
+  connectDatabaseEmulator,
+  getDatabase,
+  provideDatabase,
+} from '@angular/fire/database';
+import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -90,9 +93,7 @@ export function createTranslateLoader(http: HttpClient) {
     ResultDoughnutChartComponent,
     MatchesChartComponent,
     PlaytimeChartComponent,
-    YearDateFormatDirective,
-    YearMonthDateFormatDirective,
-    YearMonthDayDateFormatDirective,
+    DatepickerComponent,
   ],
   imports: [
     BrowserModule,
@@ -130,6 +131,13 @@ export function createTranslateLoader(http: HttpClient) {
         connectFunctionsEmulator(functions, 'localhost', 5001);
       }
       return functions;
+    }),
+    provideDatabase(() => {
+      const database = getDatabase();
+      if (environment['useEmulators']) {
+        connectDatabaseEmulator(database, 'localhost', 9000);
+      }
+      return database;
     }),
     FormsModule,
     ReactiveFormsModule,
