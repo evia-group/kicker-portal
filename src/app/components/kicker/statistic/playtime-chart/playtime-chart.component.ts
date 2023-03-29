@@ -1,16 +1,9 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { take } from 'rxjs';
 import { MatchesService } from 'src/app/shared/services/matches.service';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-import { DateAdapter } from '@angular/material/core';
 
 const moment = _rollupMoment || _moment;
 
@@ -28,6 +21,15 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
 
   @Input()
   localeId: string;
+
+  @Input()
+  datepickerLabelTexts = ['', '', ''];
+
+  @Input()
+  datepickerHintTexts = ['', '', ''];
+
+  currentDatepickerLabel = '';
+  currentDatepickerHint = '';
 
   today = moment();
 
@@ -90,6 +92,8 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   maxTime = 0;
   datePickerFormatType = 0;
 
+  panelClass = 'year-picker';
+
   dayFilter = (_d: Moment | null): boolean => {
     return true;
   };
@@ -104,13 +108,10 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
 
   datePickerFilter = this.yearFilter;
 
-  constructor(
-    private matchesService: MatchesService,
-    private _adapter: DateAdapter<any>
-  ) {}
+  constructor(private matchesService: MatchesService) {}
 
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.setLocaleId();
+  ngOnChanges(): void {
+    this.setDatepickerText();
     this.setYScaleTitle();
     if (this.months && this.playtimeDataAvailable) {
       this.setChartOnOption(
@@ -245,12 +246,6 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     }
   }
 
-  setLocaleId() {
-    if (this.localeId) {
-      this._adapter.setLocale(this.localeId);
-    }
-  }
-
   setChartOnOption(
     selectedYear: number,
     selectedMonth: number,
@@ -288,20 +283,31 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     );
   }
 
+  setDatepickerText() {
+    this.currentDatepickerLabel =
+      this.datepickerLabelTexts[this.datePickerFormatType];
+    this.currentDatepickerHint =
+      this.datepickerHintTexts[this.datePickerFormatType];
+  }
+
   onChange() {
     if (this.selectedOption === 'Year') {
       this.datePickerFormatType = 0;
       this.datePickerFilter = this.yearFilter;
       this.actualMoment = this.yearMoment;
+      this.panelClass = 'year-picker';
     } else if (this.selectedOption === 'Month') {
       this.datePickerFormatType = 1;
       this.datePickerFilter = this.monthFilter;
       this.actualMoment = this.monthMoment;
+      this.panelClass = 'year-month-picker';
     } else {
       this.datePickerFormatType = 2;
       this.datePickerFilter = this.dayFilter;
       this.actualMoment = this.dayMoment;
+      this.panelClass = 'year-month-day-picker';
     }
+    this.setDatepickerText();
     this.selectedYear = this.actualMoment.year();
     this.selectedMonth = this.actualMoment.month();
     this.selectedDay = this.actualMoment.date();
@@ -356,7 +362,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   setChartData(chartData: number[]) {
-    let labelData = [];
+    let labelData;
     if (this.selectedOption === 'Day') {
       labelData = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,

@@ -7,60 +7,15 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { FormControl } from '@angular/forms';
 import * as _moment from 'moment';
 
 import { default as _rollupMoment, Moment } from 'moment';
 import { DateFilterFn, MatDatepicker } from '@angular/material/datepicker';
+import { DateFormat } from './date-format';
 
 const moment = _rollupMoment || _moment;
-
-export class DateFormat {
-  value = 0;
-
-  get display() {
-    let returnValue;
-    if (this.value === 0) {
-      returnValue = {
-        dateInput: 'YYYY',
-        monthYearLabel: 'MMM YYYY',
-        dateA11yLabel: 'LL',
-        monthYearA11yLabel: 'MMMM YYYY',
-      };
-      return returnValue;
-    } else if (this.value === 1) {
-      returnValue = {
-        dateInput: 'MM/YYYY',
-        monthYearLabel: 'MMM YYYY',
-        dateA11yLabel: 'LL',
-        monthYearA11yLabel: 'MMMM YYYY',
-      };
-    } else {
-      returnValue = {
-        dateInput: 'DD/MM/YYYY',
-        monthYearLabel: 'MMM YYYY',
-        dateA11yLabel: 'LL',
-        monthYearA11yLabel: 'MMMM YYYY',
-      };
-    }
-    return returnValue;
-  }
-
-  get parse() {
-    if (this.value === 0) {
-      return { dateInput: 'YYYY' };
-    } else if (this.value === 1) {
-      return {
-        dateInput: 'MM/YYYY',
-      };
-    } else {
-      return {
-        dateInput: 'DD/MM/YYYY',
-      };
-    }
-  }
-}
 
 @Component({
   selector: 'app-datepicker',
@@ -78,6 +33,18 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input()
   formControlMoment = moment();
 
+  @Input()
+  localeId = 'de';
+
+  @Input()
+  panelClass = '';
+
+  @Input()
+  textLabel = '';
+
+  @Input()
+  textHint = '';
+
   @Output()
   newDateEvent = new EventEmitter();
 
@@ -85,12 +52,10 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
   startView: 'month' | 'year' | 'multi-year' = 'month';
 
-  panelClass = 'year-picker';
-
-  textIdLabel = '';
-  textIdHint = '';
-
-  constructor(@Inject(MAT_DATE_FORMATS) private config: DateFormat) {}
+  constructor(
+    @Inject(MAT_DATE_FORMATS) private config: DateFormat,
+    private dateAdapter: DateAdapter<any>
+  ) {}
 
   ngOnInit(): void {
     this.updatePicker();
@@ -101,6 +66,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   updatePicker() {
+    this.dateAdapter.setLocale(this.localeId);
     this.config.value = this.formatType;
     this.dateFormControl = new FormControl(this.formControlMoment);
     this.dateFormControl.markAllAsTouched();
@@ -111,33 +77,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
         : this.formatType === 1
         ? 'year'
         : 'month';
-    this.panelClass =
-      this.formatType === 0
-        ? 'year-picker'
-        : this.formatType === 1
-        ? 'year-month-picker'
-        : 'year-month-day-picker';
-    this.textIdLabel =
-      this.formatType === 0
-        ? 'stats.year'
-        : this.formatType === 1
-        ? 'stats.monthYear'
-        : 'stats.dayMonthYear';
-    this.textIdHint =
-      this.formatType === 0
-        ? 'stats.yearFormat'
-        : this.formatType === 1
-        ? 'stats.monthFormat'
-        : 'stats.dayFormat';
   }
 
   emitDate(normalizedDate: any) {
     if (this.dateFormControl.valid && this.dateFormControl.value) {
-      const ctrlValue = this.dateFormControl.value;
-      ctrlValue.year(normalizedDate.year());
-      ctrlValue.month(normalizedDate.month());
-      ctrlValue.date(normalizedDate.date());
-      this.dateFormControl.setValue(ctrlValue);
+      this.formControlMoment = this.dateFormControl.value;
+      this.formControlMoment.year(normalizedDate.year());
+      this.formControlMoment.month(normalizedDate.month());
+      this.formControlMoment.date(normalizedDate.date());
+      this.dateFormControl.setValue(this.formControlMoment);
       this.newDateEvent.emit(normalizedDate);
     }
   }

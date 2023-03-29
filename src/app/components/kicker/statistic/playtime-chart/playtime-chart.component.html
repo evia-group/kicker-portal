@@ -1,9 +1,13 @@
 <ng-container *ngIf="chartIsReady">
   <div class="flex-box">
     <app-datepicker
+      [localeId]="localeId"
       [formatType]="datePickerFormatType"
       [dateFilter]="datePickerFilter"
       [formControlMoment]="actualMoment"
+      [panelClass]="panelClass"
+      [textLabel]="currentDatepickerLabel"
+      [textHint]="currentDatepickerHint"
       (newDateEvent)="setDateOnInput($event)"></app-datepicker>
     <mat-radio-group
       aria-label="Select an option"

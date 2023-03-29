@@ -82,6 +82,18 @@ export class TextService {
 
         const localeId = res.app.language.id;
 
+        const datepickerLabelTexts = [
+          res.stats.year,
+          res.stats.monthYear,
+          res.stats.dayMonthYear,
+        ];
+
+        const datepickerHintTexts = [
+          res.stats.yearFormat,
+          res.stats.monthFormat,
+          res.stats.dayFormat,
+        ];
+
         this.textData$.next([
           months,
           legendLabels,
@@ -90,6 +102,8 @@ export class TextService {
           filterText,
           filterHintText,
           localeId,
+          datepickerLabelTexts,
+          datepickerHintTexts,
         ]);
       });
   }

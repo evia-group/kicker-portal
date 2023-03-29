@@ -82,6 +82,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
   filterHintText = '';
   filterText = '';
   pageSizeOptions = [5, 10, 20];
+  datepickerLabelTexts = [];
+  datepickerHintTexts = [];
 
   constructor(
     private matchesService: MatchesService,
@@ -143,6 +145,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
           this.filterText,
           this.filterHintText,
           this.localeId,
+          this.datepickerLabelTexts,
+          this.datepickerHintTexts,
         ] = data;
       }
     });
