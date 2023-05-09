@@ -63,6 +63,8 @@ import {
   provideDatabase,
 } from '@angular/fire/database';
 import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AutocompleteSelectionComponent } from './shared/components/autocomplete-selection/autocomplete-selection.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -94,6 +96,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatchesChartComponent,
     PlaytimeChartComponent,
     DatepickerComponent,
+    AutocompleteSelectionComponent,
   ],
   imports: [
     BrowserModule,
@@ -150,6 +153,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatDatepickerModule,
     MatProgressSpinnerModule,
     MatChipsModule,
+    MatAutocompleteModule,
   ],
   providers: [
     {

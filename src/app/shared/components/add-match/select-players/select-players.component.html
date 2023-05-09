@@ -4,65 +4,41 @@
       <div
         class="select-player-team-container"
         [formGroupName]="team === 0 ? 'team1' : 'team2'">
-        <mat-form-field>
-          <mat-label>{{ 'common.player' | translate }}</mat-label>
-          <mat-select
-            id="{{ 2 * team }}"
-            formControlName="one"
-            [compareWith]="this.matchesService.compareValues"
-            (selectionChange)="updatePlayers(2 * team)">
-            <mat-option
-              *ngFor="let player of getPlayersList(2 * team)"
-              [value]="{ id: player.id, name: player.name }">
-              {{ player.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>{{ 'common.player' | translate }}</mat-label>
-          <mat-select
-            id="{{ 2 * team + 1 }}"
-            formControlName="two"
-            [compareWith]="this.matchesService.compareValues"
-            (selectionChange)="updatePlayers(2 * team + 1)">
-            <mat-option
-              *ngFor="let player of getPlayersList(2 * team + 1)"
-              [value]="{ id: player.id, name: player.name }">
-              {{ player.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <app-autocomplete-selection
+          [selectionFormControl]="
+            team === 0 ? team1player1Control : team2player1Control
+          "
+          [options]="team === 0 ? team1player1Options : team2player1Options"
+          [displayWithFunction]="displayWithFunction"
+          [placeholderText]="placeholderText"
+          [labelText]="playerLabelText"></app-autocomplete-selection>
+        <app-autocomplete-selection
+          [selectionFormControl]="
+            team === 0 ? team1player2Control : team2player2Control
+          "
+          [options]="team === 0 ? team1player2Options : team2player2Options"
+          [displayWithFunction]="displayWithFunction"
+          [placeholderText]="placeholderText"
+          [labelText]="playerLabelText"></app-autocomplete-selection>
       </div>
     </ng-container>
   </ng-container>
-
   <ng-container *ngIf="showingTeams" formGroupName="players">
     <ng-container *ngFor="let team of teams">
       <div
         class="select-team-container"
         [formGroupName]="team === 0 ? 'team1' : 'team2'">
-        <mat-form-field>
-          <mat-label>{{ 'common.team' | translate }}</mat-label>
-          <mat-select
-            id="{{ team }}"
-            formControlName="three"
-            [compareWith]="this.matchesService.compareValues"
-            (selectionChange)="updatePlayers(team)">
-            <mat-option
-              *ngFor="let player of getPlayersList(team)"
-              [value]="{
-                id: player.id,
-                name: player.name,
-                players: player.players
-              }">
-              {{ player.name }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="checkForError(team)">{{
-            'info.chooseTeams' | translate
-          }}</mat-error>
-        </mat-form-field>
+        <app-autocomplete-selection
+          [options]="team === 0 ? team1Options : team2Options"
+          [displayWithFunction]="displayWithFunction"
+          [selectionFormControl]="team === 0 ? team1Control : team2Control"
+          [hasError]="team === 0 ? team1HasError : team2HasError"
+          [errorText]="team === 0 ? team1ErrorText : team2ErrorText"
+          [placeholderText]="placeholderText"
+          [labelText]="teamLabelText"
+          (optionSelectedEvent)="
+            setPlayersForTeams($event, team)
+          "></app-autocomplete-selection>
         <mat-card-actions>
           <button
             *ngIf="showingTeams"

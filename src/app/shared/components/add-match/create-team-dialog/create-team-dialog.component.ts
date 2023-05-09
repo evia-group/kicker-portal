@@ -1,17 +1,21 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { IPlayers } from 'src/app/shared/interfaces/match.interface';
-import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
+import { ITeam } from 'src/app/shared/interfaces/user.interface';
 import { UsersService } from 'src/app/shared/services/users.service';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 import { InfoBarService } from 'src/app/shared/services/info-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TeamsService } from 'src/app/shared/services/teams.service';
-import { MatchesService } from 'src/app/shared/services/matches.service';
-import { take } from 'rxjs';
+import { ReplaySubject, Subject, take } from 'rxjs';
 
 @Component({
   selector: 'app-create-team-dialog',
@@ -19,26 +23,9 @@ import { take } from 'rxjs';
   styleUrls: ['./create-team-dialog.component.scss'],
 })
 export class CreateTeamDialogComponent implements OnInit, OnDestroy {
-  addTeamForm: FormGroup = this.fb.group({
-    team: this.fb.group(
-      {
-        one: [null, { validators: Validators.required }],
-        two: [null, { validators: Validators.required }],
-        teamId: [null],
-      },
-      { validators: Validators.required }
-    ),
-  });
+  addTeamForm: FormGroup = this.fb.group({ validators: Validators.required });
 
-  allPlayers: IUser[] = [];
-
-  playerLists: IUser[][] = [[], []];
-
-  selectedPlayers: string[] = ['', ''];
-
-  touched: boolean[] = [false, false];
-
-  usersSub: Subscription;
+  dataSubscription: Subscription;
 
   infoText = '';
 
@@ -50,31 +37,34 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
 
   players: number[] = [0, 1];
 
+  options = [[], []];
+
   constructor(
     public dialogRef: MatDialogRef<CreateTeamDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: number,
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      id: number;
+      dataSub: ReplaySubject<any>;
+      resultSub: Subject<any>;
+      control1: FormControl;
+      control2: FormControl;
+      options1: any[];
+      options2: any[];
+      displayWithFunction: (option: any) => any;
+    },
     private userService: UsersService,
     private fb: FormBuilder,
     protected db: Firestore,
     protected infoBar: InfoBarService,
     protected translateService: TranslateService,
-    private teamsService: TeamsService,
-    private matchesService: MatchesService
+    private teamsService: TeamsService
   ) {}
 
   ngOnInit(): void {
-    this.usersSub = this.userService.users$.subscribe((data: IUser[]) => {
-      this.allPlayers = data;
-      this.matchesService.initProcess(
-        false,
-        this.addTeamForm,
-        this.selectedPlayers,
-        this.playerLists,
-        this.allPlayers,
-        this.touched,
-        true
-      );
-    });
+    this.addTeamForm.addControl('one', this.data.control1);
+    this.addTeamForm.addControl('two', this.data.control2);
+    this.addTeamForm.reset();
+
     this.translateService
       .get(['info', 'common'])
       .pipe(take(1))
@@ -83,47 +73,30 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
         this.closeText = res.info.close;
         this.warnText = res.common.teamExists;
       });
+
+    this.dataSubscription = this.data.dataSub.subscribe(
+      (newData: [number, any]) => {
+        const id = newData[0];
+        this.options[id] = newData[1];
+      }
+    );
   }
 
   ngOnDestroy(): void {
-    this.usersSub.unsubscribe();
-  }
-
-  getPlayersList(selId: number) {
-    this.matchesService.addTouched(
-      selId,
-      false,
-      this.addTeamForm,
-      true,
-      this.touched
-    );
-    return this.playerLists[selId];
-  }
-
-  updatePlayers(playerId: number) {
-    this.matchesService.updatePlayers(
-      playerId,
-      false,
-      this.addTeamForm,
-      true,
-      this.selectedPlayers,
-      this.playerLists,
-      this.allPlayers
-    );
+    // this.usersSub.unsubscribe();
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 
   async saveTeam() {
     const selP: IPlayers[] = [];
-    this.selectedPlayers.forEach((id) => {
-      this.allPlayers.forEach((player) => {
-        if (id === player.id) {
-          selP.push(player);
-        }
-      });
-    });
+    selP.push(this.data.control1.value, this.data.control2.value);
     const teamId = this.teamsService.createTeamId(selP);
-    await this.createTeam(teamId, selP);
+    const teamName = this.teamsService.createTeamName(selP);
+    await this.createTeam(teamId, teamName, selP);
     if (!this.teamExists) {
+      this.data.resultSub.next([{ id: teamId, name: teamName }, this.data.id]);
       this.closeDialog();
     }
   }
@@ -132,13 +105,13 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  async createTeam(teamId: string, teamPlayers: IPlayers[]) {
+  async createTeam(teamId: string, teamName: string, teamPlayers: IPlayers[]) {
     this.teamExists = false;
     const docRef = doc(this.db, environment.prefix + `Teams/${teamId}`);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       const team: ITeam = {
-        name: this.teamsService.createTeamName(teamPlayers),
+        name: teamName,
         players: [
           doc(this.db, environment.prefix + `Users/${teamPlayers[0].id}`),
           doc(this.db, environment.prefix + `Users/${teamPlayers[1].id}`),
@@ -154,8 +127,6 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
         dominations: 0,
         defeats: 0,
       };
-      const result = { id: teamId, name: team.name, players: team.players };
-      this.teamsService.setDialogResult(result, this.data);
       await setDoc(doc(this.db, environment.prefix + `Teams/${teamId}`), team)
         .then(() => {
           this.infoBar.openCustomSnackBar(this.infoText, this.closeText, 5);
@@ -168,7 +139,7 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
       this.infoBar.openCustomSnackBar(
         this.warnText,
         this.closeText,
-        50,
+        5,
         'alert-snackbar'
       );
       this.teamExists = true;

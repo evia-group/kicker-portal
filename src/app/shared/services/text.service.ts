@@ -18,7 +18,7 @@ export class TextService {
 
   getText() {
     this.translateService
-      .get(['months', 'stats', 'app', 'common'])
+      .get(['months', 'stats', 'app', 'common', 'info'])
       .pipe(take(1))
       .subscribe((res) => {
         const months = [
@@ -94,6 +94,10 @@ export class TextService {
           res.stats.dayFormat,
         ];
 
+        const errorText = res.info.chooseTeams;
+
+        const placeholderText = res.common.placeholder;
+
         this.textData$.next([
           months,
           legendLabels,
@@ -104,6 +108,8 @@ export class TextService {
           localeId,
           datepickerLabelTexts,
           datepickerHintTexts,
+          errorText,
+          placeholderText,
         ]);
       });
   }

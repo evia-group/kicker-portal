@@ -10,15 +10,12 @@ import {
   DocumentReference,
   Timestamp,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { shareReplay, take } from 'rxjs/operators';
 import { IMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
 import { FormGroup } from '@angular/forms';
-import { UsersService } from './users.service';
-import { TeamsService } from './teams.service';
 import { environment } from '../../../environments/environment';
-import { ITeam, IUser } from '../interfaces/user.interface';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
 @Injectable({
@@ -35,28 +32,12 @@ export class MatchesService implements OnDestroy {
 
   public playtime$: Observable<any>;
 
-  public resetForm$ = new Subject<boolean>();
-
   protected collection: CollectionReference;
-
-  protected overlap = false;
-
-  private _selectedUsers: string[][] = [[], []];
-
-  public set selectedUsers(selectedUsers: string[][]) {
-    this._selectedUsers = selectedUsers;
-  }
-
-  public get selectedUsers() {
-    return this._selectedUsers;
-  }
 
   matchesSub$ = new BehaviorSubject([]);
 
   constructor(
     protected db: Firestore,
-    protected userService: UsersService,
-    protected teamService: TeamsService,
     protected infoBar: InfoBarService,
     protected translateService: TranslateService
   ) {
@@ -216,196 +197,5 @@ export class MatchesService implements OnDestroy {
 
   async delete(matchId) {
     await deleteDoc(doc(this.db, this.collection.path, matchId));
-  }
-
-  initProcess(
-    showingTeams: boolean,
-    matchForm: FormGroup,
-    selectedPlayers: string[],
-    playerLists: (IUser | ITeam)[][],
-    allPlayers: (IUser | ITeam)[],
-    touched: boolean[],
-    inDialog: boolean
-  ) {
-    const allIds: string[] = [];
-
-    allPlayers.forEach((player) => {
-      allIds.push(player.id);
-    });
-
-    selectedPlayers.forEach((pId, index) => {
-      if (!allIds.includes(pId)) {
-        this.resetControl(index, showingTeams, matchForm, inDialog);
-      }
-    });
-
-    this.setPlayerLists(playerLists, selectedPlayers, allPlayers);
-
-    this.teamService.getDialogResult().forEach((res, index) => {
-      if (res) {
-        touched[index] = true;
-      }
-    });
-
-    touched.forEach((isTouched, index) => {
-      if (isTouched) {
-        this.markControlTouched(index, showingTeams, matchForm, inDialog);
-      }
-    });
-
-    return allIds;
-  }
-
-  resetControl(
-    index: number,
-    showingTeams: boolean,
-    matchForm: FormGroup,
-    inDialog: boolean
-  ) {
-    this.getControl(index, showingTeams, matchForm, inDialog).reset();
-  }
-
-  getControl(
-    index: number,
-    showingTeams: boolean,
-    matchForm: FormGroup,
-    inDialog: boolean
-  ) {
-    if (inDialog) {
-      if (index === 0) {
-        return matchForm.get('team.one');
-      } else if (index === 1) {
-        return matchForm.get('team.two');
-      }
-    } else {
-      if (showingTeams) {
-        if (index === 0) {
-          return matchForm.get('players.team1.three');
-        } else if (index === 1) {
-          return matchForm.get('players.team2.three');
-        }
-      } else {
-        if (index === 0) {
-          return matchForm.get('players.team1.one');
-        } else if (index === 1) {
-          return matchForm.get('players.team1.two');
-        } else if (index === 2) {
-          return matchForm.get('players.team2.one');
-        } else if (index === 3) {
-          return matchForm.get('players.team2.two');
-        }
-      }
-    }
-  }
-
-  markControlTouched(
-    index: number,
-    showingTeams: boolean,
-    matchForm: FormGroup,
-    inDialog: boolean
-  ) {
-    this.getControl(index, showingTeams, matchForm, inDialog).markAsTouched();
-  }
-
-  addTouched(
-    index: number,
-    showingTeams: boolean,
-    matchForm: FormGroup,
-    inDialog: boolean,
-    touched: boolean[]
-  ) {
-    touched[index] = this.getControl(
-      index,
-      showingTeams,
-      matchForm,
-      inDialog
-    ).touched;
-  }
-
-  updatePlayers(
-    selId: number,
-    showingTeams: boolean,
-    matchForm: FormGroup,
-    inDialog: boolean,
-    selectedPlayers: string[],
-    playerLists: (IUser | ITeam)[][],
-    allPlayers: (IUser | ITeam)[],
-    allUserIds?: string[]
-  ) {
-    const selectData = this.getControl(
-      selId,
-      showingTeams,
-      matchForm,
-      inDialog
-    );
-    selectedPlayers[selId] = selectData.value.id;
-    if (showingTeams) {
-      const teamId: string = selectData.value.id;
-      this.selectedUsers[selId].length = 0;
-      allUserIds.forEach((userId) => {
-        if (teamId.startsWith(userId) || teamId.endsWith(userId)) {
-          this.selectedUsers[selId].push(userId);
-        }
-      });
-      if (selId === 0) {
-        matchForm
-          .get('players.team1.one')
-          .setValue(selectData.value.players[0]);
-        matchForm
-          .get('players.team1.two')
-          .setValue(selectData.value.players[1]);
-        matchForm.get('players.team1.teamId').setValue(selectData.value.id);
-      } else {
-        matchForm
-          .get('players.team2.one')
-          .setValue(selectData.value.players[0]);
-        matchForm
-          .get('players.team2.two')
-          .setValue(selectData.value.players[1]);
-        matchForm.get('players.team2.teamId').setValue(selectData.value.id);
-      }
-    }
-    this.setPlayerLists(playerLists, selectedPlayers, allPlayers);
-  }
-
-  setPlayerLists(
-    playerLists: (IUser | ITeam)[][],
-    selectedPlayers: string[],
-    allPlayers: (IUser | ITeam)[]
-  ) {
-    for (let i = 0; i < playerLists.length; i++) {
-      playerLists[i] = this.createPlayersList(i, selectedPlayers, allPlayers);
-    }
-  }
-
-  createPlayersList(
-    selId: number,
-    selectedPlayers: string[],
-    allPlayers: (IUser | ITeam)[]
-  ) {
-    return allPlayers.filter((player) => {
-      return (
-        !selectedPlayers.includes(player.id) ||
-        selectedPlayers.indexOf(player.id) === selId
-      );
-    });
-  }
-
-  overlapPlayers() {
-    this.overlap = false;
-    this.selectedUsers[0].forEach((playerId) => {
-      if (this.selectedUsers[1].includes(playerId)) {
-        this.overlap = true;
-      }
-    });
-    if (this.overlap) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  compareValues(o1: any, o2: any) {
-    return o1 && o2 && o1.id === o2.id;
   }
 }

@@ -52,6 +52,7 @@
     "saveTeam": "Mannschaft speichern",
     "close": "Abbrechen",
     "teamExists": "Die Mannschaft existiert bereits!",
+    "placeholder": "Wähle aus",
     "kickerStatus": {
       "available": {
         "title": "Kicker ist frei",
