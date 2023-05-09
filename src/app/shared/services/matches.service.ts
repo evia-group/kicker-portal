@@ -124,7 +124,7 @@ export class MatchesService implements OnDestroy {
       doc(this.db, `${environment.prefix}Teams/${team2})}`),
     ];
 
-    let players = [];
+    let players: any[];
     if (showingTeams) {
       players = [
         match.get('players.team1.one').value,

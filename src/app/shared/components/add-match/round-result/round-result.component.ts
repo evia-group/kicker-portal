@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatchesService } from 'src/app/shared/services/matches.service';
 
 @Component({
   selector: 'app-round-result',
@@ -19,8 +18,6 @@ export class RoundResultComponent implements OnInit {
 
   @Input()
   showingTeams = false;
-
-  constructor(private matchesService: MatchesService) {}
 
   ngOnInit() {
     this.matchForm
