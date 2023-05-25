@@ -98,6 +98,12 @@ export class TextService {
 
         const placeholderText = res.common.placeholder;
 
+        const infoTextSaveTeam = res.info.saveTeam;
+
+        const closeTextSnackBar = res.info.close;
+
+        const warnTextTeamExists = res.common.teamExists;
+
         this.textData$.next([
           months,
           legendLabels,
@@ -110,6 +116,9 @@ export class TextService {
           datepickerHintTexts,
           errorText,
           placeholderText,
+          infoTextSaveTeam,
+          closeTextSnackBar,
+          warnTextTeamExists,
         ]);
       });
   }

@@ -9,13 +9,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { IPlayers } from 'src/app/shared/interfaces/match.interface';
 import { ITeam } from 'src/app/shared/interfaces/user.interface';
-import { UsersService } from 'src/app/shared/services/users.service';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 import { InfoBarService } from 'src/app/shared/services/info-bar.service';
-import { TranslateService } from '@ngx-translate/core';
 import { TeamsService } from 'src/app/shared/services/teams.service';
 import { ReplaySubject, Subject, take } from 'rxjs';
+import { TextService } from '../../../services/text.service';
 
 @Component({
   selector: 'app-create-team-dialog',
@@ -32,6 +31,10 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
   closeText = '';
 
   warnText = '';
+
+  labelText = '';
+
+  placeholderText = '';
 
   teamExists = false;
 
@@ -52,12 +55,11 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
       options2: any[];
       displayWithFunction: (option: any) => any;
     },
-    private userService: UsersService,
     private fb: FormBuilder,
     protected db: Firestore,
     protected infoBar: InfoBarService,
-    protected translateService: TranslateService,
-    private teamsService: TeamsService
+    private teamsService: TeamsService,
+    private textService: TextService
   ) {}
 
   ngOnInit(): void {
@@ -65,14 +67,13 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
     this.addTeamForm.addControl('two', this.data.control2);
     this.addTeamForm.reset();
 
-    this.translateService
-      .get(['info', 'common'])
-      .pipe(take(1))
-      .subscribe((res) => {
-        this.infoText = res.info.saveTeam;
-        this.closeText = res.info.close;
-        this.warnText = res.common.teamExists;
-      });
+    this.textService.textData$.pipe(take(1)).subscribe((res) => {
+      this.labelText = res[2][1];
+      this.placeholderText = res[10];
+      this.infoText = res[11];
+      this.closeText = res[12];
+      this.warnText = res[13];
+    });
 
     this.dataSubscription = this.data.dataSub.subscribe(
       (newData: [number, any]) => {
@@ -83,7 +84,6 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.usersSub.unsubscribe();
     if (this.dataSubscription) {
       this.dataSubscription.unsubscribe();
     }

@@ -6,9 +6,9 @@
           <app-autocomplete-selection
             [selectionFormControl]="p === 0 ? data.control1 : data.control2"
             [options]="options[p]"
-            [displayWithFunction]="
-              data.displayWithFunction
-            "></app-autocomplete-selection>
+            [displayWithFunction]="data.displayWithFunction"
+            [labelText]="labelText"
+            [placeholderText]="placeholderText"></app-autocomplete-selection>
         </div>
       </div>
     </ng-container>
