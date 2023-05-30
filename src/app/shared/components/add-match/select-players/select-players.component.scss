@@ -1,28 +1,49 @@
 .select-container {
   display: grid;
-  flex-direction: row;
-  grid-template-columns: auto auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-gap: 20px;
 
   .select-player-team-container {
     display: flex;
-    .mat-form-field {
-      margin: auto;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-around;
+    .selection-width {
+      display: flex;
+      width: 48%;
     }
   }
 
   .select-team-container {
     display: flex;
-    .mat-form-field {
-      margin: 0 10px 0 10px;
-      width: 100%;
+    flex-direction: row;
+    align-items: stretch;
+    .team-selection-width {
+      display: flex;
+      width: calc(100% - 60px);
     }
-
+    .button-width {
+      display: flex;
+      width: 60px;
+    }
     .mat-card-actions {
-      margin: 0 10px 0 10px;
+      display: flex;
+      margin-left: 10px;
+      margin-right: 10px;
       button {
         font-size: 30px;
         font-weight: lighter;
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .select-container {
+    .select-player-team-container {
+      flex-direction: column;
+      .selection-width {
+        width: 100%;
       }
     }
   }
