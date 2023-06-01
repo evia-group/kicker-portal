@@ -20,7 +20,7 @@ export class MatchesChartComponent implements OnChanges {
   months: string[];
 
   @Input()
-  legendLabels: string[];
+  legendLabel: string;
 
   public barChartLegend = true;
   public barChartData: ChartConfiguration<'bar'>['data'];
@@ -59,7 +59,7 @@ export class MatchesChartComponent implements OnChanges {
   matchesChartIsReadyEvent = new EventEmitter<boolean>();
 
   ngOnChanges(): void {
-    if (this.chartData && this.months && this.legendLabels) {
+    if (this.chartData && this.months && this.legendLabel) {
       this.setChartData();
     }
   }
@@ -71,7 +71,7 @@ export class MatchesChartComponent implements OnChanges {
         {
           type: 'bar',
           data: this.chartData,
-          label: this.legendLabels[5],
+          label: this.legendLabel,
           backgroundColor: ['rgba(51, 133, 255, 0.7)'],
           borderColor: ['rgba(51, 133, 255, 1)'],
           hoverBackgroundColor: ['rgba(51, 133, 255, 1)'],

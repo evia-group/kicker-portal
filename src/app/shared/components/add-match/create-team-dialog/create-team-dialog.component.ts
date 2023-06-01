@@ -13,8 +13,8 @@ import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 import { InfoBarService } from 'src/app/shared/services/info-bar.service';
 import { TeamsService } from 'src/app/shared/services/teams.service';
-import { ReplaySubject, Subject, take } from 'rxjs';
-import { TextService } from '../../../services/text.service';
+import { ReplaySubject, Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-team-dialog',
@@ -32,9 +32,9 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
 
   warnText = '';
 
-  labelText = '';
+  labelText = 'common.player';
 
-  placeholderText = '';
+  placeholderText = 'common.placeholder';
 
   teamExists = false;
 
@@ -59,7 +59,7 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
     protected db: Firestore,
     protected infoBar: InfoBarService,
     private teamsService: TeamsService,
-    private textService: TextService
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -67,13 +67,11 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
     this.addTeamForm.addControl('two', this.data.control2);
     this.addTeamForm.reset();
 
-    this.textService.textData$.pipe(take(1)).subscribe((res) => {
-      this.labelText = res[2][1];
-      this.placeholderText = res[10];
-      this.infoText = res[11];
-      this.closeText = res[12];
-      this.warnText = res[13];
-    });
+    const translations = this.translateService.instant(['info', 'common']);
+
+    this.infoText = translations.info.saveTeam;
+    this.closeText = translations.info.close;
+    this.warnText = translations.common.teamExists;
 
     this.dataSubscription = this.data.dataSub.subscribe(
       (newData: [number, any]) => {

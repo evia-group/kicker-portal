@@ -17,7 +17,16 @@ export class ResultDoughnutChartComponent implements OnChanges {
   chartData: number[];
 
   @Input()
-  legendLabels: string[];
+  winsLegendLabel: string;
+
+  @Input()
+  lossesLegendLabel: string;
+
+  @Input()
+  dominationsLegendLabel: string;
+
+  @Input()
+  defeatsLegendLabel: string;
 
   showStats = false;
   showWL = false;
@@ -68,9 +77,21 @@ export class ResultDoughnutChartComponent implements OnChanges {
   doughnutChartIsReadyEvent = new EventEmitter<boolean>();
 
   ngOnChanges(): void {
-    if (this.chartData && this.legendLabels) {
-      this.doughnutChartLabelsWL = this.legendLabels.slice(0, 2);
-      this.doughnutChartLabelsDD = this.legendLabels.slice(2, 4);
+    if (
+      this.chartData &&
+      this.winsLegendLabel &&
+      this.lossesLegendLabel &&
+      this.dominationsLegendLabel &&
+      this.defeatsLegendLabel
+    ) {
+      this.doughnutChartLabelsWL = [
+        this.winsLegendLabel,
+        this.lossesLegendLabel,
+      ];
+      this.doughnutChartLabelsDD = [
+        this.dominationsLegendLabel,
+        this.defeatsLegendLabel,
+      ];
       this.setDataset();
     }
   }

@@ -5,7 +5,6 @@ import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
 import { SortDirection } from '@angular/material/sort';
 import { TableService } from '../../../shared/services/table.service';
 import { ChartsService } from '../../../shared/services/charts.service';
-import { TextService } from '../../../shared/services/text.service';
 
 @Component({
   selector: 'app-statistic',
@@ -36,14 +35,13 @@ export class StatisticComponent implements OnInit, OnDestroy {
   matchesChartDataTeam: number[];
 
   statisticsDataSub: Subscription;
-  textSub: Subscription;
 
-  legendLabels: string[] = [];
+  displayedColumnsTranslationKeysPlayer =
+    this.getTranslationKeysForDisplayedColumns(false);
 
-  months: string[] = [];
+  displayedColumnsTranslationKeysTeam =
+    this.getTranslationKeysForDisplayedColumns(true);
 
-  displayedColumnsTextPlayer: string[] = [];
-  displayedColumnsTextTeam: string[] = [];
   displayedColumns: string[] = [
     'rank',
     'name',
@@ -58,8 +56,6 @@ export class StatisticComponent implements OnInit, OnDestroy {
     '1:2',
     'totalMatches',
   ];
-
-  localeId: string;
 
   playersTable: ILeaderboard[];
   teamsTable: ILeaderboard[];
@@ -79,17 +75,20 @@ export class StatisticComponent implements OnInit, OnDestroy {
   activeColumn = 'rank';
   sortDirection: SortDirection = 'asc';
   disableClear = true;
-  filterHintText = '';
-  filterText = '';
+  filterHintTranslationKey = 'stats.filterHint';
+  filterTranslationKey = 'stats.filter';
   pageSizeOptions = [5, 10, 20];
-  datepickerLabelTexts = [];
-  datepickerHintTexts = [];
+  datepickerLabelKeys = ['stats.year', 'stats.monthYear', 'stats.dayMonthYear'];
+  datepickerHintKeys = [
+    'stats.yearFormat',
+    'stats.monthFormat',
+    'stats.dayFormat',
+  ];
 
   constructor(
     private matchesService: MatchesService,
     private tableService: TableService,
-    private chartsService: ChartsService,
-    private textService: TextService
+    private chartsService: ChartsService
   ) {}
 
   ngOnInit(): void {
@@ -134,27 +133,27 @@ export class StatisticComponent implements OnInit, OnDestroy {
         );
       }
     });
-
-    this.textSub = this.textService.textData$.subscribe((data) => {
-      if (data.length > 0) {
-        [
-          this.months,
-          this.legendLabels,
-          this.displayedColumnsTextPlayer,
-          this.displayedColumnsTextTeam,
-          this.filterText,
-          this.filterHintText,
-          this.localeId,
-          this.datepickerLabelTexts,
-          this.datepickerHintTexts,
-        ] = data;
-      }
-    });
   }
 
   ngOnDestroy(): void {
-    this.textSub.unsubscribe();
     this.statisticsDataSub.unsubscribe();
+  }
+
+  getTranslationKeysForDisplayedColumns(forTeams: boolean) {
+    return [
+      'stats.rank',
+      forTeams ? 'common.team' : 'common.player',
+      'stats.wins',
+      'stats.losses',
+      'stats.difference',
+      'stats.dominations',
+      'stats.defeats',
+      '2:0',
+      '2:1',
+      '1:2',
+      '0:2',
+      'app.matches',
+    ];
   }
 
   updateYearsList(isTeamSelection: boolean) {

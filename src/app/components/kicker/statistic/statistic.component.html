@@ -4,25 +4,25 @@
     <mat-tab label="{{ 'stats.players' | translate }}">
       <app-leaderboard
         [dataSubject$]="playerTableData$"
-        [displayedColumnsText]="displayedColumnsTextPlayer"
+        [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
         [displayedColumns]="displayedColumns"
         [activeColumn]="activeColumn"
         [sortDirection]="sortDirection"
         [disableClear]="disableClear"
-        [filterHintText]="filterHintText"
-        [filterText]="filterText"
+        [filterHintText]="filterHintTranslationKey"
+        [filterText]="filterTranslationKey"
         [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
     </mat-tab>
     <mat-tab label="{{ 'stats.teams' | translate }}">
       <app-leaderboard
         [dataSubject$]="teamsTableData$"
-        [displayedColumnsText]="displayedColumnsTextTeam"
+        [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
         [displayedColumns]="displayedColumns"
         [activeColumn]="activeColumn"
         [sortDirection]="sortDirection"
         [disableClear]="disableClear"
-        [filterHintText]="filterHintText"
-        [filterText]="filterText"
+        [filterHintText]="filterHintTranslationKey"
+        [filterText]="filterTranslationKey"
         [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
     </mat-tab>
   </mat-tab-group>
@@ -66,21 +66,30 @@
                 [dataMap]="playersMap"
                 [selectedData]="selectedPlayer"
                 [selectedYear]="selectedYearPlayer"
-                [months]="months"
-                [legendLabels]="legendLabels"></app-bar-line-chart>
+                [months]="'months' | translate"
+                [topBarLegendLabel]="'stats.wins' | translate"
+                [lowerBarLegendLabel]="'stats.losses' | translate"
+                [lineLegendLabel]="
+                  'stats.winRate' | translate
+                "></app-bar-line-chart>
             </div>
             <div class="matches-chart">
               <app-matches-chart
                 (matchesChartIsReadyEvent)="checkIfChartsReady(2, $event)"
                 [chartData]="matchesChartDataPlayer"
-                [legendLabels]="legendLabels"
-                [months]="months"></app-matches-chart>
+                [legendLabel]="'app.matches' | translate"
+                [months]="'months' | translate"></app-matches-chart>
             </div>
             <div class="doughnut-chart">
               <app-result-doughnut-chart
                 (doughnutChartIsReadyEvent)="checkIfChartsReady(1, $event)"
                 [chartData]="doughnutDataPlayer"
-                [legendLabels]="legendLabels"></app-result-doughnut-chart>
+                [winsLegendLabel]="'stats.wins' | translate"
+                [lossesLegendLabel]="'stats.losses' | translate"
+                [dominationsLegendLabel]="'stats.dominations' | translate"
+                [defeatsLegendLabel]="
+                  'stats.defeats' | translate
+                "></app-result-doughnut-chart>
             </div>
           </div>
         </div>
@@ -120,21 +129,30 @@
               [dataMap]="teamsMap"
               [selectedData]="selectedTeam"
               [selectedYear]="selectedYearTeam"
-              [months]="months"
-              [legendLabels]="legendLabels"></app-bar-line-chart>
+              [months]="'months' | translate"
+              [topBarLegendLabel]="'stats.wins' | translate"
+              [lowerBarLegendLabel]="'stats.losses' | translate"
+              [lineLegendLabel]="
+                'stats.winRate' | translate
+              "></app-bar-line-chart>
           </div>
           <div class="matches-chart">
             <app-matches-chart
               (matchesChartIsReadyEvent)="checkIfChartsReady(5, $event)"
               [chartData]="matchesChartDataTeam"
-              [legendLabels]="legendLabels"
-              [months]="months"></app-matches-chart>
+              [legendLabel]="'app.matches' | translate"
+              [months]="'months' | translate"></app-matches-chart>
           </div>
           <div class="doughnut-chart">
             <app-result-doughnut-chart
               (doughnutChartIsReadyEvent)="checkIfChartsReady(4, $event)"
               [chartData]="doughnutDataTeam"
-              [legendLabels]="legendLabels"></app-result-doughnut-chart>
+              [winsLegendLabel]="'stats.wins' | translate"
+              [lossesLegendLabel]="'stats.losses' | translate"
+              [dominationsLegendLabel]="'stats.dominations' | translate"
+              [defeatsLegendLabel]="
+                'stats.defeats' | translate
+              "></app-result-doughnut-chart>
           </div>
         </div>
       </div>
@@ -144,9 +162,10 @@
 <mat-card>
   <mat-card-title>{{ 'stats.playtime' | translate }}</mat-card-title>
   <app-playtime-chart
-    [months]="months"
-    [legendLabels]="legendLabels"
-    [localeId]="localeId"
-    [datepickerLabelTexts]="datepickerLabelTexts"
-    [datepickerHintTexts]="datepickerHintTexts"></app-playtime-chart>
+    [months]="'months' | translate"
+    [legendLabel]="'stats.playtimeLegend' | translate"
+    [yScaleLabel]="'stats.minutes' | translate"
+    [localeId]="'app.language.id' | translate"
+    [datepickerLabelTexts]="datepickerLabelKeys"
+    [datepickerHintTexts]="datepickerHintKeys"></app-playtime-chart>
 </mat-card>

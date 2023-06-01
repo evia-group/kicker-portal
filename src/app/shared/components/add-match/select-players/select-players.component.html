@@ -5,6 +5,7 @@
         class="select-player-team-container"
         [formGroupName]="team === 0 ? 'team1' : 'team2'">
         <app-autocomplete-selection
+          class="selection-style"
           [selectionFormControl]="
             team === 0 ? team1player1Control : team2player1Control
           "
@@ -13,6 +14,7 @@
           [placeholderText]="placeholderText"
           [labelText]="playerLabelText"></app-autocomplete-selection>
         <app-autocomplete-selection
+          class="selection-style"
           [selectionFormControl]="
             team === 0 ? team1player2Control : team2player2Control
           "
@@ -29,6 +31,7 @@
         class="select-team-container"
         [formGroupName]="team === 0 ? 'team1' : 'team2'">
         <app-autocomplete-selection
+          class="team-selection-style"
           [options]="team === 0 ? team1Options : team2Options"
           [displayWithFunction]="displayWithFunction"
           [selectionFormControl]="team === 0 ? team1Control : team2Control"

@@ -22,7 +22,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateTeamDialogComponent } from '../create-team-dialog/create-team-dialog.component';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { take } from 'rxjs/operators';
-import { TextService } from '../../../services/text.service';
 
 @Component({
   selector: 'app-select-players',
@@ -58,12 +57,12 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
 
   team1HasError = false;
   team2HasError = false;
-  team1ErrorText = '';
-  team2ErrorText = '';
+  team1ErrorText = 'info.chooseTeams';
+  team2ErrorText = 'info.chooseTeams';
 
-  placeholderText = '';
-  playerLabelText = '';
-  teamLabelText = '';
+  placeholderText = 'common.placeholder';
+  playerLabelText = 'common.player';
+  teamLabelText = 'common.team';
 
   team1player1Options = [];
   team1player2Options = [];
@@ -89,7 +88,6 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     private matchesService: MatchesService,
     private teamsService: TeamsService,
-    private textService: TextService,
     public dialog: MatDialog
   ) {}
 
@@ -143,13 +141,6 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
         this.playersProcess();
       });
     }
-    this.textService.textData$.subscribe((data) => {
-      this.team1ErrorText = data[9];
-      this.team2ErrorText = data[9];
-      this.placeholderText = data[10];
-      this.playerLabelText = data[2][1];
-      this.teamLabelText = data[3][1];
-    });
   }
 
   ngOnDestroy(): void {

@@ -27,7 +27,13 @@ export class BarLineChartComponent implements OnChanges {
   months: string[];
 
   @Input()
-  legendLabels: string[];
+  topBarLegendLabel: string;
+
+  @Input()
+  lowerBarLegendLabel: string;
+
+  @Input()
+  lineLegendLabel: string;
 
   @Output()
   barLineChartIsReadyEvent = new EventEmitter<boolean>();
@@ -99,7 +105,9 @@ export class BarLineChartComponent implements OnChanges {
       this.selectedData &&
       this.selectedYear &&
       this.months &&
-      this.legendLabels
+      this.topBarLegendLabel &&
+      this.lowerBarLegendLabel &&
+      this.lineLegendLabel
     ) {
       this.setBarChartData();
     }
@@ -112,7 +120,7 @@ export class BarLineChartComponent implements OnChanges {
         {
           type: 'bar',
           data: this.getWins(),
-          label: this.legendLabels[0],
+          label: this.topBarLegendLabel,
           backgroundColor: ['rgba(40, 164, 40, 0.7)'],
           borderColor: ['rgba(40, 164, 40, 1)'],
           hoverBackgroundColor: ['rgba(40, 164, 40, 1)'],
@@ -122,7 +130,7 @@ export class BarLineChartComponent implements OnChanges {
         {
           type: 'bar',
           data: this.getLosses(),
-          label: this.legendLabels[1],
+          label: this.lowerBarLegendLabel,
           backgroundColor: ['rgba(255, 51, 51, 0.7)'],
           borderColor: ['rgba(255, 51, 51, 1)'],
           hoverBackgroundColor: ['rgba(255, 51, 51, 1)'],
@@ -133,7 +141,7 @@ export class BarLineChartComponent implements OnChanges {
           type: 'line',
           data: this.getWinningQuotes(),
           tension: 0.3,
-          label: this.legendLabels[4],
+          label: this.lineLegendLabel,
           backgroundColor: ['rgba(248, 209, 99, 1)'],
           borderColor: ['rgba(248, 209, 99, 1)'],
           hoverBackgroundColor: ['rgba(248, 209, 99, 1)'],
