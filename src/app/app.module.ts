@@ -65,6 +65,7 @@ import {
 import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AutocompleteSelectionComponent } from './shared/components/autocomplete-selection/autocomplete-selection.component';
+import { TwoSelectionsComponent } from './shared/components/add-match/select-players/two-selections/two-selections.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -97,6 +98,7 @@ export function createTranslateLoader(http: HttpClient) {
     PlaytimeChartComponent,
     DatepickerComponent,
     AutocompleteSelectionComponent,
+    TwoSelectionsComponent,
   ],
   imports: [
     BrowserModule,
