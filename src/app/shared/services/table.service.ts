@@ -4,6 +4,18 @@ import { TeamsService } from './teams.service';
 import { BehaviorSubject } from 'rxjs';
 import { ITeam, IUser } from '../interfaces/user.interface';
 import { ILeaderboard } from '../interfaces/statistic.interface';
+import {
+  winsTimeline,
+  lossesTimeline,
+  twoZero,
+  zeroTwo,
+  twoOne,
+  oneTwo,
+  rank,
+  totalMatches,
+  diff,
+  elo,
+} from '../global-variables';
 
 @Injectable({
   providedIn: 'root',
@@ -66,38 +78,24 @@ export class TableService {
       dominations,
       defeats,
     }))(data);
-    newData['2:0'] = data.stats['2:0'];
-    newData['2:1'] = data.stats['2:1'];
-    newData['0:2'] = data.stats['0:2'];
-    newData['1:2'] = data.stats['1:2'];
-    newData['totalMatches'] = data.wins + data.losses;
-    newData['diff'] = data.wins - data.losses;
-    newData['elo'] = 0;
-    newData['winsTimeline'] = new Map<number, number[]>();
-    newData['lossesTimeline'] = new Map<number, number[]>();
-    newData['rank'] = 0;
+    newData[twoZero] = data.stats[twoZero];
+    newData[twoOne] = data.stats[twoOne];
+    newData[zeroTwo] = data.stats[zeroTwo];
+    newData[oneTwo] = data.stats[oneTwo];
+    newData[totalMatches] = data.wins + data.losses;
+    newData[diff] = data.wins - data.losses;
+    newData[elo] = 0;
+    newData[winsTimeline] = new Map<number, number[]>();
+    newData[lossesTimeline] = new Map<number, number[]>();
+    newData[rank] = 0;
 
     return newData;
   }
 
   addRanks(table: ILeaderboard[]) {
-    // table.map((item) => (item.elo = Math.round(item.elo)));
-    // table.sort((a, b) => b.elo - a.elo);
     table.sort((a, b) => b.diff - a.diff);
     table.forEach((value, index) => {
       value.rank = index + 1;
     });
-    // table.forEach((value, index) => {
-    //   if (index > 0) {
-    //     const previousValue = table[index - 1];
-    //     if (value.elo === previousValue.elo) {
-    //       value.rank = previousValue.rank;
-    //     } else {
-    //       value.rank = index + 1;
-    //     }
-    //   } else {
-    //     value.rank = index + 1;
-    //   }
-    // });
   }
 }

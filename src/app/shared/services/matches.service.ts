@@ -124,42 +124,25 @@ export class MatchesService implements OnDestroy {
       doc(this.db, `${environment.prefix}Teams/${team2})}`),
     ];
 
-    let players: any[];
-    if (showingTeams) {
-      players = [
-        match.get('players.team1.one').value,
-        match.get('players.team1.two').value,
-        match.get('players.team2.one').value,
-        match.get('players.team2.two').value,
-      ];
-    } else {
-      players = [
-        doc(
-          this.db,
-          `${environment.prefix}Users/${
-            match.get('players.team1.one').value.id
-          }`
-        ),
-        doc(
-          this.db,
-          `${environment.prefix}Users/${
-            match.get('players.team1.two').value.id
-          }`
-        ),
-        doc(
-          this.db,
-          `${environment.prefix}Users/${
-            match.get('players.team2.one').value.id
-          }`
-        ),
-        doc(
-          this.db,
-          `${environment.prefix}Users/${
-            match.get('players.team2.two').value.id
-          }`
-        ),
-      ];
-    }
+    const players = [
+      doc(
+        this.db,
+        `${environment.prefix}Users/${match.get('players.team1.one').value.id}`
+      ),
+      doc(
+        this.db,
+        `${environment.prefix}Users/${match.get('players.team1.two').value.id}`
+      ),
+      doc(
+        this.db,
+        `${environment.prefix}Users/${match.get('players.team2.one').value.id}`
+      ),
+      doc(
+        this.db,
+        `${environment.prefix}Users/${match.get('players.team2.two').value.id}`
+      ),
+    ];
+
     const result = {
       [`${team1}`]: winTeam1,
       [`${team2}`]: winTeam2,

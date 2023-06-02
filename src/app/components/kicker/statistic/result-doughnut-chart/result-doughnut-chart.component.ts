@@ -6,6 +6,12 @@ import {
   Output,
 } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import {
+  zeroTwo,
+  oneTwo,
+  twoOne,
+  twoZero,
+} from '../../../../shared/global-variables';
 
 @Component({
   selector: 'app-result-doughnut-chart',
@@ -32,7 +38,7 @@ export class ResultDoughnutChartComponent implements OnChanges {
   showWL = false;
   showDD = false;
 
-  doughnutChartLabelsStats = ['2:0', '2:1', '1:2', '0:2'];
+  doughnutChartLabelsStats = [twoZero, twoOne, oneTwo, zeroTwo];
   doughnutChartDataStats: ChartData<'doughnut'> = {
     labels: this.doughnutChartLabelsStats,
     datasets: [],

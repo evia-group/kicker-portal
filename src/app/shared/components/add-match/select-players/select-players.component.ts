@@ -70,8 +70,8 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
   team2player2Options = [];
   team1Options = [];
   team2Options = [];
-  createTeamPlayer1Options = [];
-  createTeamPlayer2Options = [];
+  createTeamPlayer1Options: IUser[] = [];
+  createTeamPlayer2Options: IUser[] = [];
 
   selectedOptions = [undefined, undefined, undefined, undefined];
   selectedTeamOptions = [undefined, undefined];
@@ -82,7 +82,7 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
   dialogDataSubject = new ReplaySubject(2);
   dialogResultSubject = new Subject();
 
-  allUsers = [];
+  allUsers: IUser[] = [];
 
   constructor(
     private usersService: UsersService,
@@ -106,6 +106,12 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
     ) as FormControl;
 
     if (this.showingTeams) {
+      this.team1Control = this.matchForm.get(
+        'players.team1.three'
+      ) as FormControl;
+      this.team2Control = this.matchForm.get(
+        'players.team2.three'
+      ) as FormControl;
       forkJoin([
         this.usersService.users$.pipe(take(1)),
         this.teamsService.teams$.pipe(take(1)),
@@ -193,13 +199,6 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
     this.team2Options = [...this.allOptions];
     this.sortOptions(this.team2Options);
 
-    this.team1Control = this.matchForm.get(
-      'players.team1.three'
-    ) as FormControl;
-    this.team2Control = this.matchForm.get(
-      'players.team2.three'
-    ) as FormControl;
-
     this.team1Control.addValidators([this.autoOverlapping(), this.autoSV(4)]);
     this.team2Control.addValidators([this.autoOverlapping(), this.autoSV(5)]);
 
@@ -243,14 +242,12 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
     const sub6 = this.team1Control.valueChanges.subscribe(() => {
       this.updateTeamOptions(0, this.team1Control);
       this.team1HasError = this.team1Control.hasError('overlapping');
-      // this.team1ErrorText = 'Error';
     });
     this.subscriptionsList.push(sub6);
 
     const sub7 = this.team2Control.valueChanges.subscribe(() => {
       this.updateTeamOptions(1, this.team2Control);
       this.team2HasError = this.team2Control.hasError('overlapping');
-      // this.team2ErrorText = 'Error';
     });
     this.subscriptionsList.push(sub7);
 

@@ -5,6 +5,20 @@ import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
 import { SortDirection } from '@angular/material/sort';
 import { TableService } from '../../../shared/services/table.service';
 import { ChartsService } from '../../../shared/services/charts.service';
+import {
+  zeroTwo,
+  oneTwo,
+  twoZero,
+  twoOne,
+  rank,
+  name,
+  wins,
+  losses,
+  diff,
+  dominations,
+  defeats,
+  totalMatches,
+} from '../../../shared/global-variables';
 
 @Component({
   selector: 'app-statistic',
@@ -43,18 +57,18 @@ export class StatisticComponent implements OnInit, OnDestroy {
     this.getTranslationKeysForDisplayedColumns(true);
 
   displayedColumns: string[] = [
-    'rank',
-    'name',
-    'wins',
-    'losses',
-    'diff',
-    'dominations',
-    'defeats',
-    '2:0',
-    '2:1',
-    '0:2',
-    '1:2',
-    'totalMatches',
+    rank,
+    name,
+    wins,
+    losses,
+    diff,
+    dominations,
+    defeats,
+    twoZero,
+    twoOne,
+    zeroTwo,
+    oneTwo,
+    totalMatches,
   ];
 
   playersTable: ILeaderboard[];
@@ -72,7 +86,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
   playerTableData$ = new BehaviorSubject([]);
   teamsTableData$ = new BehaviorSubject([]);
 
-  activeColumn = 'rank';
+  activeColumn = rank;
   sortDirection: SortDirection = 'asc';
   disableClear = true;
   filterHintTranslationKey = 'stats.filterHint';
@@ -148,10 +162,10 @@ export class StatisticComponent implements OnInit, OnDestroy {
       'stats.difference',
       'stats.dominations',
       'stats.defeats',
-      '2:0',
-      '2:1',
-      '1:2',
-      '0:2',
+      twoZero,
+      twoOne,
+      oneTwo,
+      zeroTwo,
       'app.matches',
     ];
   }

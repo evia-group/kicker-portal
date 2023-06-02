@@ -8,7 +8,7 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { IPlayers } from 'src/app/shared/interfaces/match.interface';
-import { ITeam } from 'src/app/shared/interfaces/user.interface';
+import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 import { InfoBarService } from 'src/app/shared/services/info-bar.service';
@@ -74,7 +74,7 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
     this.warnText = translations.common.teamExists;
 
     this.dataSubscription = this.data.dataSub.subscribe(
-      (newData: [number, any]) => {
+      (newData: [number, IUser[]]) => {
         const id = newData[0];
         this.options[id] = newData[1];
       }

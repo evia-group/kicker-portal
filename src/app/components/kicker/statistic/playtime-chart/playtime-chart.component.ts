@@ -26,10 +26,10 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   localeId: string;
 
   @Input()
-  datepickerLabelTexts = ['', '', ''];
+  datepickerLabelTexts: string[];
 
   @Input()
-  datepickerHintTexts = ['', '', ''];
+  datepickerHintTexts: string[];
 
   currentDatepickerLabel = '';
   currentDatepickerHint = '';
@@ -287,10 +287,14 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   setDatepickerText() {
-    this.currentDatepickerLabel =
-      this.datepickerLabelTexts[this.datePickerFormatType];
-    this.currentDatepickerHint =
-      this.datepickerHintTexts[this.datePickerFormatType];
+    if (this.datepickerLabelTexts) {
+      this.currentDatepickerLabel =
+        this.datepickerLabelTexts[this.datePickerFormatType];
+    }
+    if (this.datepickerHintTexts) {
+      this.currentDatepickerHint =
+        this.datepickerHintTexts[this.datePickerFormatType];
+    }
   }
 
   onChange() {

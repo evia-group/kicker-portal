@@ -7,6 +7,10 @@ import {
 } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
+import {
+  lossesTimeline,
+  winsTimeline,
+} from '../../../../shared/global-variables';
 
 @Component({
   selector: 'app-bar-line-chart',
@@ -156,13 +160,13 @@ export class BarLineChartComponent implements OnChanges {
   getWins() {
     return this.dataMap
       .get(this.selectedData)
-      ['winsTimeline'].get(this.selectedYear);
+      [winsTimeline].get(this.selectedYear);
   }
 
   getLosses() {
     return this.dataMap
       .get(this.selectedData)
-      ['lossesTimeline'].get(this.selectedYear)
+      [lossesTimeline].get(this.selectedYear)
       .map((num: number) => {
         return -num;
       });
@@ -171,10 +175,10 @@ export class BarLineChartComponent implements OnChanges {
   getWinningQuotes() {
     const winnings = this.dataMap
       .get(this.selectedData)
-      ['winsTimeline'].get(this.selectedYear);
+      [winsTimeline].get(this.selectedYear);
     const losses = this.dataMap
       .get(this.selectedData)
-      ['lossesTimeline'].get(this.selectedYear);
+      [lossesTimeline].get(this.selectedYear);
     const quotes = [];
 
     for (let i = 0; i < winnings.length; i++) {
