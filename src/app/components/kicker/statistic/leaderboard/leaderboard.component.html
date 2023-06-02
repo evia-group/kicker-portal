@@ -1,11 +1,11 @@
 <mat-spinner *ngIf="!receivedData"></mat-spinner>
 <div *ngIf="receivedData">
   <mat-form-field appearance="standard">
-    <mat-label>{{ filterText }}</mat-label>
+    <mat-label>{{ filterText | translate }}</mat-label>
     <input
       matInput
       (keyup)="applyFilter($event)"
-      placeholder="{{ filterHintText }}" />
+      placeholder="{{ filterHintText | translate }}" />
   </mat-form-field>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="boardData" matSort>
@@ -13,7 +13,7 @@
         *ngFor="let header of displayedColumns; let i = index"
         [matColumnDef]="header">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ displayedColumnsText[i] }}
+          {{ displayedColumnsText[i] | translate }}
         </th>
         <td mat-cell *matCellDef="let row">{{ row[header] }}</td>
       </ng-container>

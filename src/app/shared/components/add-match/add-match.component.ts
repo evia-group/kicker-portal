@@ -125,17 +125,25 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
       .valueChanges.pipe(
         combineLatestWith(this.actualForm.get('rounds.two.win').valueChanges)
       )
-      .subscribe((value) => {
-        if (value[0] && value[1] && value[0] !== value[1]) {
-          const roundThreeControl = this.actualForm.get('rounds.three.win');
-          roundThreeControl.addValidators(Validators.required);
-          roundThreeControl.setValue(null);
-        } else {
-          this.actualForm
-            .get('rounds.three.win')
-            .removeValidators(Validators.required);
+      .subscribe(
+        (roundsWinningTeams: ['team1' | 'team2', 'team1' | 'team2']) => {
+          const roundOneWinningTeam = roundsWinningTeams[0];
+          const roundTwoWinningTeam = roundsWinningTeams[1];
+          if (
+            roundOneWinningTeam &&
+            roundTwoWinningTeam &&
+            roundOneWinningTeam !== roundTwoWinningTeam
+          ) {
+            const roundThreeControl = this.actualForm.get('rounds.three.win');
+            roundThreeControl.addValidators(Validators.required);
+            roundThreeControl.setValue(null);
+          } else {
+            this.actualForm
+              .get('rounds.three.win')
+              .removeValidators(Validators.required);
+          }
         }
-      });
+      );
   }
 
   ngAfterContentChecked() {

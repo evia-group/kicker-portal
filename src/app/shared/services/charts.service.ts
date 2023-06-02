@@ -2,6 +2,15 @@ import { Injectable } from '@angular/core';
 import { IMatch } from '../interfaces/match.interface';
 import { AuthService } from './auth.service';
 import { ILeaderboard } from '../interfaces/statistic.interface';
+import {
+  lossesTimeline,
+  winsTimeline,
+  twoZero,
+  zeroTwo,
+  twoOne,
+  oneTwo,
+  name,
+} from '../global-variables';
 
 @Injectable({
   providedIn: 'root',
@@ -71,8 +80,8 @@ export class ChartsService {
               player,
               matchYear,
               matchMonth,
-              'winsTimeline',
-              'lossesTimeline'
+              winsTimeline,
+              lossesTimeline
             );
           });
 
@@ -82,8 +91,8 @@ export class ChartsService {
               player,
               matchYear,
               matchMonth,
-              'lossesTimeline',
-              'winsTimeline'
+              lossesTimeline,
+              winsTimeline
             );
           });
 
@@ -117,16 +126,16 @@ export class ChartsService {
               team1,
               matchYear,
               matchMonth,
-              'winsTimeline',
-              'lossesTimeline'
+              winsTimeline,
+              lossesTimeline
             );
             this.updateTimeline(
               teamsMap,
               team2,
               matchYear,
               matchMonth,
-              'lossesTimeline',
-              'winsTimeline'
+              lossesTimeline,
+              winsTimeline
             );
           } else {
             this.updateTimeline(
@@ -134,16 +143,16 @@ export class ChartsService {
               team2,
               matchYear,
               matchMonth,
-              'winsTimeline',
-              'lossesTimeline'
+              winsTimeline,
+              lossesTimeline
             );
             this.updateTimeline(
               teamsMap,
               team1,
               matchYear,
               matchMonth,
-              'lossesTimeline',
-              'winsTimeline'
+              lossesTimeline,
+              winsTimeline
             );
           }
         }
@@ -163,7 +172,7 @@ export class ChartsService {
         const itemId = playerIdsWithMatches[i];
         this.playersWithMatches[i] = {
           id: itemId,
-          name: playersMap.get(itemId)['name'],
+          name: playersMap.get(itemId)[name],
         };
       }
 
@@ -171,7 +180,7 @@ export class ChartsService {
         const itemId = teamIdsWithMatches[i];
         this.teamsWithMatches[i] = {
           id: itemId,
-          name: teamsMap.get(itemId)['name'],
+          name: teamsMap.get(itemId)[name],
         };
       }
 
@@ -256,15 +265,11 @@ export class ChartsService {
   }
 
   setYearsList(selectedData: string, dataMap: Map<string, ILeaderboard>) {
-    // const yearsList = [...dataMap.get(selectedData)['winsTimeline'].keys()];
-    const yearsList = Array.from(
-      dataMap.get(selectedData)['winsTimeline'].keys()
+    const yearsList: number[] = Array.from(
+      dataMap.get(selectedData)[winsTimeline].keys()
     );
-    // const lossesYearsList = [
-    //   ...dataMap.get(selectedData)['lossesTimeline'].keys(),
-    // ];
-    const lossesYearsList = Array.from(
-      dataMap.get(selectedData)['lossesTimeline'].keys()
+    const lossesYearsList: number[] = Array.from(
+      dataMap.get(selectedData)[lossesTimeline].keys()
     );
     lossesYearsList.forEach((year) => {
       if (!yearsList.includes(year)) {
@@ -282,16 +287,16 @@ export class ChartsService {
       data.losses,
       data.dominations,
       data.defeats,
-      data['2:0'],
-      data['2:1'],
-      data['1:2'],
-      data['0:2'],
+      data[twoZero],
+      data[twoOne],
+      data[oneTwo],
+      data[zeroTwo],
     ];
   }
 
   getMatchesChartData(data: ILeaderboard, selYear: number) {
-    const wins = data['winsTimeline'].get(selYear);
-    const losses = data['lossesTimeline'].get(selYear);
+    const wins = data[winsTimeline].get(selYear);
+    const losses = data[lossesTimeline].get(selYear);
     const sum: number[] = [];
 
     for (let i = 0; i < wins.length; i++) {

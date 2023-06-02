@@ -17,16 +17,19 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   months: string[];
 
   @Input()
-  legendLabels: string[];
+  legendLabel: string;
+
+  @Input()
+  yScaleLabel: string;
 
   @Input()
   localeId: string;
 
   @Input()
-  datepickerLabelTexts = ['', '', ''];
+  datepickerLabelTexts: string[];
 
   @Input()
-  datepickerHintTexts = ['', '', ''];
+  datepickerHintTexts: string[];
 
   currentDatepickerLabel = '';
   currentDatepickerHint = '';
@@ -37,7 +40,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   monthMoment = moment();
   dayMoment = moment();
 
-  actualMoment = this.yearMoment;
+  currentMoment = this.yearMoment;
 
   selectedOption = 'Year';
   selectedYear = this.today.year();
@@ -113,7 +116,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     this.setDatepickerText();
     this.setYScaleTitle();
-    if (this.months && this.playtimeDataAvailable) {
+    if (this.months && this.playtimeDataAvailable && this.legendLabel) {
       this.setChartOnOption(
         this.selectedYear,
         this.selectedMonth,
@@ -241,8 +244,8 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   setYScaleTitle() {
-    if (this.legendLabels) {
-      this.barChartOptions.scales.y.title.text = this.legendLabels[7];
+    if (this.yScaleLabel) {
+      this.barChartOptions.scales.y.title.text = this.yScaleLabel;
     }
   }
 
@@ -284,33 +287,37 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   setDatepickerText() {
-    this.currentDatepickerLabel =
-      this.datepickerLabelTexts[this.datePickerFormatType];
-    this.currentDatepickerHint =
-      this.datepickerHintTexts[this.datePickerFormatType];
+    if (this.datepickerLabelTexts) {
+      this.currentDatepickerLabel =
+        this.datepickerLabelTexts[this.datePickerFormatType];
+    }
+    if (this.datepickerHintTexts) {
+      this.currentDatepickerHint =
+        this.datepickerHintTexts[this.datePickerFormatType];
+    }
   }
 
   onChange() {
     if (this.selectedOption === 'Year') {
       this.datePickerFormatType = 0;
       this.datePickerFilter = this.yearFilter;
-      this.actualMoment = this.yearMoment;
+      this.currentMoment = this.yearMoment;
       this.panelClass = 'year-picker';
     } else if (this.selectedOption === 'Month') {
       this.datePickerFormatType = 1;
       this.datePickerFilter = this.monthFilter;
-      this.actualMoment = this.monthMoment;
+      this.currentMoment = this.monthMoment;
       this.panelClass = 'year-month-picker';
     } else {
       this.datePickerFormatType = 2;
       this.datePickerFilter = this.dayFilter;
-      this.actualMoment = this.dayMoment;
+      this.currentMoment = this.dayMoment;
       this.panelClass = 'year-month-day-picker';
     }
     this.setDatepickerText();
-    this.selectedYear = this.actualMoment.year();
-    this.selectedMonth = this.actualMoment.month();
-    this.selectedDay = this.actualMoment.date();
+    this.selectedYear = this.currentMoment.year();
+    this.selectedMonth = this.currentMoment.month();
+    this.selectedDay = this.currentMoment.date();
     this.setChartOnOption(
       this.selectedYear,
       this.selectedMonth,
@@ -379,7 +386,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
         {
           type: 'bar',
           data: chartData,
-          label: this.legendLabels[6],
+          label: this.legendLabel,
           backgroundColor: ['rgba(51, 133, 255, 0.7)'],
           borderColor: ['rgba(51, 133, 255, 1)'],
           hoverBackgroundColor: ['rgba(51, 133, 255, 1)'],

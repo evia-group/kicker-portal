@@ -22,7 +22,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateTeamDialogComponent } from '../create-team-dialog/create-team-dialog.component';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { take } from 'rxjs/operators';
-import { TextService } from '../../../services/text.service';
 
 @Component({
   selector: 'app-select-players',
@@ -58,12 +57,12 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
 
   team1HasError = false;
   team2HasError = false;
-  team1ErrorText = '';
-  team2ErrorText = '';
+  team1ErrorText = 'info.chooseTeams';
+  team2ErrorText = 'info.chooseTeams';
 
-  placeholderText = '';
-  playerLabelText = '';
-  teamLabelText = '';
+  placeholderText = 'common.placeholder';
+  playerLabelText = 'common.player';
+  teamLabelText = 'common.team';
 
   team1player1Options = [];
   team1player2Options = [];
@@ -71,8 +70,8 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
   team2player2Options = [];
   team1Options = [];
   team2Options = [];
-  createTeamPlayer1Options = [];
-  createTeamPlayer2Options = [];
+  createTeamPlayer1Options: IUser[] = [];
+  createTeamPlayer2Options: IUser[] = [];
 
   selectedOptions = [undefined, undefined, undefined, undefined];
   selectedTeamOptions = [undefined, undefined];
@@ -83,13 +82,12 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
   dialogDataSubject = new ReplaySubject(2);
   dialogResultSubject = new Subject();
 
-  allUsers = [];
+  allUsers: IUser[] = [];
 
   constructor(
     private usersService: UsersService,
     private matchesService: MatchesService,
     private teamsService: TeamsService,
-    private textService: TextService,
     public dialog: MatDialog
   ) {}
 
@@ -108,6 +106,12 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
     ) as FormControl;
 
     if (this.showingTeams) {
+      this.team1Control = this.matchForm.get(
+        'players.team1.three'
+      ) as FormControl;
+      this.team2Control = this.matchForm.get(
+        'players.team2.three'
+      ) as FormControl;
       forkJoin([
         this.usersService.users$.pipe(take(1)),
         this.teamsService.teams$.pipe(take(1)),
@@ -143,13 +147,6 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
         this.playersProcess();
       });
     }
-    this.textService.textData$.subscribe((data) => {
-      this.team1ErrorText = data[9];
-      this.team2ErrorText = data[9];
-      this.placeholderText = data[10];
-      this.playerLabelText = data[2][1];
-      this.teamLabelText = data[3][1];
-    });
   }
 
   ngOnDestroy(): void {
@@ -202,13 +199,6 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
     this.team2Options = [...this.allOptions];
     this.sortOptions(this.team2Options);
 
-    this.team1Control = this.matchForm.get(
-      'players.team1.three'
-    ) as FormControl;
-    this.team2Control = this.matchForm.get(
-      'players.team2.three'
-    ) as FormControl;
-
     this.team1Control.addValidators([this.autoOverlapping(), this.autoSV(4)]);
     this.team2Control.addValidators([this.autoOverlapping(), this.autoSV(5)]);
 
@@ -252,14 +242,12 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
     const sub6 = this.team1Control.valueChanges.subscribe(() => {
       this.updateTeamOptions(0, this.team1Control);
       this.team1HasError = this.team1Control.hasError('overlapping');
-      // this.team1ErrorText = 'Error';
     });
     this.subscriptionsList.push(sub6);
 
     const sub7 = this.team2Control.valueChanges.subscribe(() => {
       this.updateTeamOptions(1, this.team2Control);
       this.team2HasError = this.team2Control.hasError('overlapping');
-      // this.team2ErrorText = 'Error';
     });
     this.subscriptionsList.push(sub7);
 

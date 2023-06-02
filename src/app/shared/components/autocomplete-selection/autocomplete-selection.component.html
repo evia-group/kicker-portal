@@ -1,9 +1,9 @@
 <form class="selection-form">
   <mat-form-field class="full-width" appearance="fill">
-    <mat-label>{{ labelText }}</mat-label>
+    <mat-label>{{ labelText | translate }}</mat-label>
     <input
       type="text"
-      placeholder="{{ placeholderText }}"
+      placeholder="{{ placeholderText | translate }}"
       matInput
       [formControl]="selectionFormControl"
       [matAutocomplete]="auto" />
@@ -25,6 +25,6 @@
       (click)="clearValue()">
       <mat-icon>close</mat-icon>
     </button>
-    <mat-error *ngIf="hasError">{{ errorText }}</mat-error>
+    <mat-error *ngIf="hasError">{{ errorText | translate }}</mat-error>
   </mat-form-field>
 </form>

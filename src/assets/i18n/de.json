@@ -71,20 +71,20 @@
     "chooseTeams": "Spieler aus den Mannschaften überschneiden sich!",
     "noData": "Keine Daten verfügbar!"
   },
-  "months": {
-    "jan": "Januar",
-    "feb": "Februar",
-    "mar": "März",
-    "apr": "April",
-    "may": "Mai",
-    "jun": "Juni",
-    "jul": "Juli",
-    "aug": "August",
-    "sep": "September",
-    "oct": "Oktober",
-    "nov": "November",
-    "dec": "Dezember"
-  },
+  "months": [
+    "Januar",
+    "Februar",
+    "März",
+    "April",
+    "Mai",
+    "Juni",
+    "Juli",
+    "August",
+    "September",
+    "Oktober",
+    "November",
+    "Dezember"
+  ],
   "stats": {
     "leaderboard": "Bestenliste",
     "players": "Spieler",

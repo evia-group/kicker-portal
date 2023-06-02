@@ -48,7 +48,7 @@ async function createTeam(
           defeats: 0,
         };
 
-        db.doc(prefix + 'Teams/' + teamId).set(team);
+        await db.doc(prefix + 'Teams/' + teamId).set(team);
       }
     })
     .catch((err) => {
@@ -172,7 +172,7 @@ async function updateUsersAndTeamsProcedure(
 
 /* Update stats for Users and Teams when match is added to firestore in testing environment */
 exports.updateUsersAndTeamsT = functions.firestore
-  .document(`T-Matches/{documentId}`)
+  .document('T-Matches/{documentId}')
   .onCreate((snap) => {
     updateUsersAndTeamsProcedure(snap);
     return null;
@@ -180,7 +180,7 @@ exports.updateUsersAndTeamsT = functions.firestore
 
 /* Update stats for Users and Teams when match is added to firestore in production environment */
 exports.updateUsersAndTeams = functions.firestore
-  .document(`Matches/{documentId}`)
+  .document('Matches/{documentId}')
   .onCreate((snap) => {
     updateUsersAndTeamsProcedure(snap);
     return null;
