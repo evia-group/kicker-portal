@@ -33,7 +33,7 @@ export const environment = {
   production: false,
   versionNumber: 'v2.0.0',
   prefix: 'T-',
-  #Firebase Config
+  // Firebase Config
   firebase: {
     apiKey: '',
     authDomain: '',
@@ -51,7 +51,7 @@ export const environment = {
     round2: 1,
     round3: 2,
   },
-  #MS Auth
+  // MS Auth
   ms: {
     tenant: '',
   },
@@ -99,7 +99,7 @@ export const environment = {
   production: false,
   versionNumber: 'v2.0.0',
   prefix: '',
-  #Firebase Config
+  // Firebase Config
   firebase: {
     apiKey: '',
     authDomain: '',
@@ -117,7 +117,7 @@ export const environment = {
     round2: 1,
     round3: 2,
   },
-  #MS Auth
+  // MS Auth
   ms: {
     tenant: '',
   },
