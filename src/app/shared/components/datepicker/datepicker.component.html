@@ -1,0 +1,17 @@
+<mat-form-field appearance="fill">
+  <mat-label>{{ textLabel | translate }}</mat-label>
+  <input
+    matInput
+    [matDatepicker]="dpf"
+    [formControl]="dateFormControl"
+    [matDatepickerFilter]="dateFilter"
+    (dateChange)="emitDate($event.value)" />
+  <mat-hint>{{ textHint | translate }}</mat-hint>
+  <mat-datepicker-toggle matSuffix [for]="dpf"></mat-datepicker-toggle>
+  <mat-datepicker
+    #dpf
+    [startView]="startView"
+    (yearSelected)="closeYearPanel(dpf, $event)"
+    (monthSelected)="closeMonthPanel(dpf, $event)"
+    [panelClass]="panelClass"></mat-datepicker>
+</mat-form-field>

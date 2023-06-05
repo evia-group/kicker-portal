@@ -51,6 +51,7 @@
     "saveTeam": "save team",
     "close": "close",
     "teamExists": "This team already exists!",
+    "placeholder": "Pick one",
     "kickerStatus": {
       "available": {
         "title": "Kicker is available",
@@ -69,20 +70,20 @@
     "chooseTeams": "Players from the teams overlap!",
     "noData": "No Data available!"
   },
-  "months": {
-    "jan": "January",
-    "feb": "February",
-    "mar": "March",
-    "apr": "April",
-    "may": "May",
-    "jun": "June",
-    "jul": "July",
-    "aug": "August",
-    "sep": "September",
-    "oct": "October",
-    "nov": "November",
-    "dec": "December"
-  },
+  "months": [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ],
   "stats": {
     "leaderboard": "Leaderboard",
     "players": "Players",

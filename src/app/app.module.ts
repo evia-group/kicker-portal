@@ -54,12 +54,17 @@ import { MatchesChartComponent } from './components/kicker/statistic/matches-cha
 import { PlaytimeChartComponent } from './components/kicker/statistic/playtime-chart/playtime-chart.component';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { YearDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-date-format.directive';
-import { YearMonthDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-month-date-format.directive';
-import { YearMonthDayDateFormatDirective } from './components/kicker/statistic/playtime-chart/year-month-day-date-format.directive';
 import { MatPaginatorIntlService } from './shared/services/mat-paginator-intl.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import {
+  connectDatabaseEmulator,
+  getDatabase,
+  provideDatabase,
+} from '@angular/fire/database';
+import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AutocompleteSelectionComponent } from './shared/components/autocomplete-selection/autocomplete-selection.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -90,9 +95,8 @@ export function createTranslateLoader(http: HttpClient) {
     ResultDoughnutChartComponent,
     MatchesChartComponent,
     PlaytimeChartComponent,
-    YearDateFormatDirective,
-    YearMonthDateFormatDirective,
-    YearMonthDayDateFormatDirective,
+    DatepickerComponent,
+    AutocompleteSelectionComponent,
   ],
   imports: [
     BrowserModule,
@@ -111,14 +115,14 @@ export function createTranslateLoader(http: HttpClient) {
     provideFirestore(() => {
       const firestore = getFirestore();
       if (environment['useEmulators']) {
-        connectFirestoreEmulator(firestore, 'localhost', 8082);
+        connectFirestoreEmulator(firestore, 'localhost', 8080);
       }
       return firestore;
     }),
     provideAuth(() => {
       const auth = getAuth();
       if (environment['useEmulators']) {
-        connectAuthEmulator(auth, 'http://localhost:9098', {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
           disableWarnings: true,
         });
       }
@@ -127,9 +131,16 @@ export function createTranslateLoader(http: HttpClient) {
     provideFunctions(() => {
       const functions = getFunctions();
       if (environment['useEmulators']) {
-        connectFunctionsEmulator(functions, 'localhost', 5022);
+        connectFunctionsEmulator(functions, 'localhost', 5001);
       }
       return functions;
+    }),
+    provideDatabase(() => {
+      const database = getDatabase();
+      if (environment['useEmulators']) {
+        connectDatabaseEmulator(database, 'localhost', 9000);
+      }
+      return database;
     }),
     FormsModule,
     ReactiveFormsModule,
@@ -142,6 +153,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatDatepickerModule,
     MatProgressSpinnerModule,
     MatChipsModule,
+    MatAutocompleteModule,
   ],
   providers: [
     {

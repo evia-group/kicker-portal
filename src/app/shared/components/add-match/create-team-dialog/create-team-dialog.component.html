@@ -1,27 +1,19 @@
 <form [formGroup]="addTeamForm" (ngSubmit)="saveTeam()">
-  <div class="select-container" formGroupName="team">
+  <div class="select-container">
     <ng-container *ngFor="let p of players">
       <div mat-dialog-content>
         <div class="select-player-team-container">
-          <mat-form-field>
-            <mat-label>{{ 'common.player' | translate }}</mat-label>
-            <mat-select
-              id="{{ p }}"
-              (selectionChange)="updatePlayers(p)"
-              [compareWith]="this.matchesService.compareValues"
-              [formControlName]="p === 0 ? 'one' : 'two'">
-              <mat-option
-                *ngFor="let player of getPlayersList(p)"
-                [value]="{ id: player.id, name: player.name }">
-                {{ player.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <app-autocomplete-selection
+            [selectionFormControl]="p === 0 ? data.control1 : data.control2"
+            [options]="options[p]"
+            [displayWithFunction]="data.displayWithFunction"
+            [labelText]="labelText"
+            [placeholderText]="placeholderText"></app-autocomplete-selection>
         </div>
       </div>
     </ng-container>
   </div>
-  <mat-card-actions>
+  <mat-dialog-actions>
     <button mat-stroked-button type="button" (click)="closeDialog()">
       {{ 'common.close' | translate }}
     </button>
@@ -32,5 +24,5 @@
       [disabled]="!addTeamForm.valid">
       {{ 'common.saveTeam' | translate }}
     </button>
-  </mat-card-actions>
+  </mat-dialog-actions>
 </form>

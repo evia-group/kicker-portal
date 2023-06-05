@@ -53,3 +53,5 @@ Thumbs.db
 
 # Project Files
 /src/environments/**
+/database.rules.json
+/emulator_data

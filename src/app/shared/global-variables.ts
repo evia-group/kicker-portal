@@ -1,0 +1,15 @@
+export const winsTimeline = 'winsTimeLine';
+export const lossesTimeline = 'lossesTimeLine';
+export const zeroTwo = '0:2';
+export const oneTwo = '1:2';
+export const twoZero = '2:0';
+export const twoOne = '2:1';
+export const rank = 'rank';
+export const name = 'name';
+export const wins = 'wins';
+export const losses = 'losses';
+export const diff = 'diff';
+export const dominations = 'dominations';
+export const defeats = 'defeats';
+export const totalMatches = 'totalMatches';
+export const elo = 'elo';

@@ -1,4 +1,32 @@
 {
+  "functions": {
+    "source": "functions"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true,
+    "database": {
+      "port": 9000
+    }
+  },
+  "database": {
+    "rules": "database.rules.json"
+  },
   "hosting": {
     "public": "dist/kicker-portal",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
@@ -8,35 +36,5 @@
         "destination": "/index.html"
       }
     ]
-  },
-  "functions": {
-    "predeploy": "npm --prefix \"$RESOURCE_DIR\" run build",
-    "source": "functions"
-  },
-  "storage": {
-    "rules": "storage.rules"
-  },
-  "emulators": {
-    "functions": {
-      "port": 5022
-    },
-    "firestore": {
-      "port": 8082
-    },
-    "hosting": {
-      "port": 5033
-    },
-    "ui": {
-      "enabled": true
-    },
-    "auth": {
-      "port": 9098
-    },
-    "storage": {
-      "port": 9199
-    },
-    "database": {
-      "port": 9000
-    }
   }
 }

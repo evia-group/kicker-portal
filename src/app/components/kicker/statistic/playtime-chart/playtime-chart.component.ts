@@ -1,19 +1,9 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { take } from 'rxjs';
 import { MatchesService } from 'src/app/shared/services/matches.service';
-import { MatDatepicker } from '@angular/material/datepicker';
 import * as _moment from 'moment';
-
 import { default as _rollupMoment, Moment } from 'moment';
-import { DateAdapter } from '@angular/material/core';
 
 const moment = _rollupMoment || _moment;
 
@@ -27,16 +17,30 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   months: string[];
 
   @Input()
-  legendLabels: string[];
+  legendLabel: string;
+
+  @Input()
+  yScaleLabel: string;
 
   @Input()
   localeId: string;
 
+  @Input()
+  datepickerLabelTexts: string[];
+
+  @Input()
+  datepickerHintTexts: string[];
+
+  currentDatepickerLabel = '';
+  currentDatepickerHint = '';
+
   today = moment();
 
-  yearDate = new FormControl(this.today);
-  monthDate = new FormControl(this.today);
-  dayDate = new FormControl(this.today);
+  yearMoment = moment();
+  monthMoment = moment();
+  dayMoment = moment();
+
+  currentMoment = this.yearMoment;
 
   selectedOption = 'Year';
   selectedYear = this.today.year();
@@ -89,6 +93,9 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   chartIsReady = false;
 
   maxTime = 0;
+  datePickerFormatType = 0;
+
+  panelClass = 'year-picker';
 
   dayFilter = (_d: Moment | null): boolean => {
     return true;
@@ -102,15 +109,14 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     return true;
   };
 
-  constructor(
-    private matchesService: MatchesService,
-    private _adapter: DateAdapter<any>
-  ) {}
+  datePickerFilter = this.yearFilter;
 
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.setLocaleId();
+  constructor(private matchesService: MatchesService) {}
+
+  ngOnChanges(): void {
+    this.setDatepickerText();
     this.setYScaleTitle();
-    if (this.months && this.playtimeDataAvailable) {
+    if (this.months && this.playtimeDataAvailable && this.legendLabel) {
       this.setChartOnOption(
         this.selectedYear,
         this.selectedMonth,
@@ -220,28 +226,26 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
             }
           };
 
-          this.yearDate = new FormControl(moment(this.maxTime));
-          this.monthDate = new FormControl(moment(this.maxTime));
-          this.dayDate = new FormControl(moment(this.maxTime));
+          this.datePickerFilter = this.yearFilter;
+
+          this.yearMoment = moment(this.maxTime);
+          this.monthMoment = moment(this.maxTime);
+          this.dayMoment = moment(this.maxTime);
 
           this.setChartData(this.getYearData(moment(this.maxTime).year()));
-          this.yearDate.markAllAsTouched();
-          this.monthDate.markAllAsTouched();
-          this.dayDate.markAllAsTouched();
+
           this.playtimeDataAvailable = true;
+
+          this.selectedYear = moment(this.maxTime).year();
+          this.selectedMonth = moment(this.maxTime).month();
+          this.selectedDay = moment(this.maxTime).date();
         }
       });
   }
 
   setYScaleTitle() {
-    if (this.legendLabels) {
-      this.barChartOptions.scales.y.title.text = this.legendLabels[7];
-    }
-  }
-
-  setLocaleId() {
-    if (this.localeId) {
-      this._adapter.setLocale(this.localeId);
+    if (this.yScaleLabel) {
+      this.barChartOptions.scales.y.title.text = this.yScaleLabel;
     }
   }
 
@@ -263,37 +267,18 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     }
   }
 
-  setDateOnInput(
-    normalizedMonthAndYear: Moment,
-    datepicker?: MatDatepicker<Moment>
-  ) {
-    const date = this.getForm();
-    const ctrlValue = date.value;
-    if (ctrlValue && date.valid) {
-      this.selectedYear = normalizedMonthAndYear.year();
-      this.selectedMonth = normalizedMonthAndYear.month();
-      this.selectedDay = normalizedMonthAndYear.date();
-      ctrlValue.year(this.selectedYear);
-      ctrlValue.month(this.selectedMonth);
-      ctrlValue.date(this.selectedDay);
-      date.setValue(ctrlValue);
-      this.setChartOnOption(
-        this.selectedYear,
-        this.selectedMonth,
-        this.selectedDay
-      );
+  setDateOnInput(normalizedDate: Moment) {
+    if (this.datePickerFormatType === 0) {
+      this.yearMoment = normalizedDate;
+    } else if (this.datePickerFormatType === 1) {
+      this.monthMoment = normalizedDate;
+    } else {
+      this.dayMoment = normalizedDate;
     }
-    if (datepicker) {
-      datepicker.close();
-    }
-  }
+    this.selectedYear = normalizedDate.year();
+    this.selectedMonth = normalizedDate.month();
+    this.selectedDay = normalizedDate.date();
 
-  onChange() {
-    const date = this.getForm();
-    const ctrlValue = date.value;
-    this.selectedYear = ctrlValue.year();
-    this.selectedMonth = ctrlValue.month();
-    this.selectedDay = ctrlValue.date();
     this.setChartOnOption(
       this.selectedYear,
       this.selectedMonth,
@@ -301,16 +286,43 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     );
   }
 
-  getForm(): FormControl {
-    let date: FormControl;
-    if (this.selectedOption === 'Year') {
-      date = this.yearDate;
-    } else if (this.selectedOption === 'Month') {
-      date = this.monthDate;
-    } else {
-      date = this.dayDate;
+  setDatepickerText() {
+    if (this.datepickerLabelTexts) {
+      this.currentDatepickerLabel =
+        this.datepickerLabelTexts[this.datePickerFormatType];
     }
-    return date;
+    if (this.datepickerHintTexts) {
+      this.currentDatepickerHint =
+        this.datepickerHintTexts[this.datePickerFormatType];
+    }
+  }
+
+  onChange() {
+    if (this.selectedOption === 'Year') {
+      this.datePickerFormatType = 0;
+      this.datePickerFilter = this.yearFilter;
+      this.currentMoment = this.yearMoment;
+      this.panelClass = 'year-picker';
+    } else if (this.selectedOption === 'Month') {
+      this.datePickerFormatType = 1;
+      this.datePickerFilter = this.monthFilter;
+      this.currentMoment = this.monthMoment;
+      this.panelClass = 'year-month-picker';
+    } else {
+      this.datePickerFormatType = 2;
+      this.datePickerFilter = this.dayFilter;
+      this.currentMoment = this.dayMoment;
+      this.panelClass = 'year-month-day-picker';
+    }
+    this.setDatepickerText();
+    this.selectedYear = this.currentMoment.year();
+    this.selectedMonth = this.currentMoment.month();
+    this.selectedDay = this.currentMoment.date();
+    this.setChartOnOption(
+      this.selectedYear,
+      this.selectedMonth,
+      this.selectedDay
+    );
   }
 
   createEmptyDataStructure(year: number) {
@@ -343,8 +355,8 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   getYearData(year: number) {
-    const data = this.playtimeChartData.get(year).map((monthArray) => {
-      const monthArraySum = monthArray
+    return this.playtimeChartData.get(year).map((monthArray) => {
+      return monthArray
         .map((item) =>
           item.reduce((accumulator, value) => {
             return accumulator + value;
@@ -353,13 +365,11 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
         .reduce((accumulator, value) => {
           return accumulator + value;
         }, 0);
-      return monthArraySum;
     });
-    return data;
   }
 
   setChartData(chartData: number[]) {
-    let labelData = [];
+    let labelData;
     if (this.selectedOption === 'Day') {
       labelData = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -376,7 +386,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
         {
           type: 'bar',
           data: chartData,
-          label: this.legendLabels[6],
+          label: this.legendLabel,
           backgroundColor: ['rgba(51, 133, 255, 0.7)'],
           borderColor: ['rgba(51, 133, 255, 1)'],
           hoverBackgroundColor: ['rgba(51, 133, 255, 1)'],
