@@ -1,1 +1,25 @@
-<p>two-selections works!</p>
+<ng-container *ngIf="!showButton">
+  <div class="select-player-team-container">
+    <div class="selection-width">
+      <app-autocomplete-selection
+        [selectionFormControl]="firstPlayerControl"
+        [options]="firstPlayerOptions"
+        [displayWithFunction]="displayWithFunction"
+        [placeholderText]="placeholderText"
+        [labelText]="labelText"></app-autocomplete-selection>
+    </div>
+    <div class="selection-width">
+      <app-autocomplete-selection
+        [selectionFormControl]="secondPlayerControl"
+        [options]="secondPlayerOptions"
+        [displayWithFunction]="displayWithFunction"
+        [placeholderText]="placeholderText"
+        [labelText]="labelText"></app-autocomplete-selection>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="showButton">
+  <mat-card-actions>
+    <button mat-raised-button color="primary">Choose Players</button>
+  </mat-card-actions>
+</ng-container>

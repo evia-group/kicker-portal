@@ -17,3 +17,19 @@
     padding: 0 20px;
   }
 }
+
+@media (max-width: 380px) {
+  .win-round-container {
+    .mat-radio-button {
+      padding: 0 10px;
+    }
+  }
+}
+
+@media (max-width: 340px) {
+  .win-round-container {
+    .mat-radio-button {
+      padding: 0 5px;
+    }
+  }
+}
