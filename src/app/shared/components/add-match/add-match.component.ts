@@ -1,15 +1,9 @@
 import { AfterContentChecked, Component, Input, OnInit } from '@angular/core';
 import { ITeam, IUser } from '../../interfaces/user.interface';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, Observable } from 'rxjs';
 import { MatchesService } from '../../services/matches.service';
 import { TeamsService } from '../../services/teams.service';
-import {
-  Validators,
-  FormBuilder,
-  FormGroup,
-  ValidatorFn,
-  ValidationErrors,
-} from '@angular/forms';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-add-match',
@@ -75,10 +69,7 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
           three: [
             null,
             {
-              validators: [
-                Validators.required,
-                this.checkOverlapping(this.matchesService),
-              ],
+              validators: [Validators.required],
             },
           ],
           teamId: [null],
@@ -92,10 +83,7 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
           three: [
             null,
             {
-              validators: [
-                Validators.required,
-                this.checkOverlapping(this.matchesService),
-              ],
+              validators: [Validators.required],
             },
           ],
           teamId: [null],
@@ -132,6 +120,30 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
     this.actualForm = this.showingTeams
       ? this.addTeamMatchForm
       : this.addMatchForm;
+    this.actualForm
+      .get('rounds.one.win')
+      .valueChanges.pipe(
+        combineLatestWith(this.actualForm.get('rounds.two.win').valueChanges)
+      )
+      .subscribe(
+        (roundsWinningTeams: ['team1' | 'team2', 'team1' | 'team2']) => {
+          const roundOneWinningTeam = roundsWinningTeams[0];
+          const roundTwoWinningTeam = roundsWinningTeams[1];
+          if (
+            roundOneWinningTeam &&
+            roundTwoWinningTeam &&
+            roundOneWinningTeam !== roundTwoWinningTeam
+          ) {
+            const roundThreeControl = this.actualForm.get('rounds.three.win');
+            roundThreeControl.addValidators(Validators.required);
+            roundThreeControl.setValue(null);
+          } else {
+            this.actualForm
+              .get('rounds.three.win')
+              .removeValidators(Validators.required);
+          }
+        }
+      );
   }
 
   ngAfterContentChecked() {
@@ -162,7 +174,12 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
 
     this.matchesService.add(this.showingTeams, this.actualForm).then(() => {
       this.actualForm.reset();
-      this.matchesService.resetForm$.next(this.showingTeams);
+      this.actualForm.get(`rounds.one.dominationTeamOne`).disable();
+      this.actualForm.get(`rounds.one.dominationTeamTwo`).disable();
+      this.actualForm.get(`rounds.two.dominationTeamOne`).disable();
+      this.actualForm.get(`rounds.two.dominationTeamTwo`).disable();
+      this.actualForm.get(`rounds.three.dominationTeamOne`).disable();
+      this.actualForm.get(`rounds.three.dominationTeamTwo`).disable();
     });
   }
 
@@ -201,12 +218,5 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
     }
 
     return rounds;
-  }
-
-  checkOverlapping(matchesService: MatchesService): ValidatorFn {
-    return (): ValidationErrors | null => {
-      const res = matchesService.overlapPlayers();
-      return res ? { overlapping: res } : null;
-    };
   }
 }

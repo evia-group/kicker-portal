@@ -21,8 +21,6 @@ export class TeamsService {
 
   protected collection: CollectionReference;
 
-  dialogResult = [undefined, undefined];
-
   constructor(protected db: Firestore) {
     this.collection = collection(
       this.db,
@@ -54,14 +52,6 @@ export class TeamsService {
     const teamName = sortedTeam.map((player) => player.name).join(' - ');
 
     return teamName;
-  }
-
-  public setDialogResult(result, index: number) {
-    this.dialogResult[index] = result;
-  }
-
-  public getDialogResult() {
-    return this.dialogResult;
   }
 
   public async delete(teamId) {

@@ -1,10 +1,8 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, MatSortable } from '@angular/material/sort';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
-import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
-import { MatchesService } from 'src/app/shared/services/matches.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -12,72 +10,82 @@ import { MatchesService } from 'src/app/shared/services/matches.service';
   styleUrls: ['./leaderboard.component.scss'],
 })
 export class LeaderboardComponent implements OnInit, OnDestroy {
-  boardData: MatTableDataSource<ILeaderboard>;
+  boardData = new MatTableDataSource();
 
   @Input()
-  showingTeams = false;
+  dataSubject$;
 
   @Input()
-  secondColumn: string;
+  displayedColumnsText: string[];
 
-  @ViewChild(MatPaginator) boardPaginator: MatPaginator;
-  @ViewChild(MatSort) boardSort: MatSort;
+  @Input()
+  displayedColumns: string[];
 
-  displayedColumns: string[] = [
-    'rank',
-    'name',
-    'wins',
-    'losses',
-    'diff',
-    'dominations',
-    'defeats',
-    '2:0',
-    '2:1',
-    '0:2',
-    '1:2',
-    'totalMatches',
-    // 'elo',
-  ];
+  @Input()
+  activeColumn: string;
 
-  leaderboardSub: Subscription;
+  @Input()
+  sortDirection: SortDirection;
 
-  chartIsReady = false;
+  @Input()
+  disableClear: boolean;
 
-  constructor(private matchesService: MatchesService) {}
+  @Input()
+  filterHintText = '';
 
-  ngOnInit(): void {
-    this.leaderboardSub = this.matchesService.leaderboardData$.subscribe(
-      (data: [boolean, ILeaderboard[]]) => {
-        const dataForTeams = data[0];
-        const receivedBoardData = data[1];
-        if (this.showingTeams === dataForTeams) {
-          if (receivedBoardData.length > 0) {
-            this.boardData = new MatTableDataSource(receivedBoardData);
-            this.setTable();
-          }
-        }
-      }
-    );
+  @Input()
+  filterText = '';
+
+  @Input()
+  pageSizeOptions = [];
+
+  @ViewChild(MatPaginator) set boardPaginator(matPaginator) {
+    if (this.boardData && matPaginator) {
+      this.boardData.paginator = matPaginator;
+    }
   }
 
-  ngAfterViewInit(): void {
-    this.setTable();
+  @ViewChild(MatSort) set boardSort(matSort) {
+    if (this.boardData && matSort) {
+      this.boardData.sort = matSort;
+      const sortState: Sort = {
+        active: this.activeColumn,
+        direction: this.sortDirection,
+      };
+      matSort.active = sortState.active;
+      matSort.direction = sortState.direction;
+      matSort.disableClear = this.disableClear;
+      matSort.sortChange.emit(sortState);
+    }
+  }
+
+  dataSubscription: Subscription;
+
+  receivedData = false;
+
+  ngOnInit(): void {
+    try {
+      this.dataSubscription = this.dataSubject$.subscribe(
+        (tableData: never[]) => {
+          if (tableData) {
+            if (tableData.length > 0) {
+              this.receivedData = true;
+              this.boardData.data = tableData;
+            }
+          }
+        },
+        (err) => console.log(err)
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   ngOnDestroy(): void {
-    this.leaderboardSub.unsubscribe();
-  }
-
-  setTable() {
-    if (this.boardData) {
-      if (this.boardPaginator) {
-        this.boardData.paginator = this.boardPaginator;
-      }
-      if (this.boardSort) {
-        this.boardSort.sort({ id: 'rank', start: 'asc' } as MatSortable);
-        this.boardData.sort = this.boardSort;
-      }
-      this.chartIsReady = true;
+    try {
+      this.dataSubscription.unsubscribe();
+    } catch (error) {
+      console.log(error);
     }
   }
 

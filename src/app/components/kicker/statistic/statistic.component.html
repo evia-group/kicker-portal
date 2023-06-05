@@ -2,12 +2,28 @@
   <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
   <mat-tab-group mat-align-tabs="start">
     <mat-tab label="{{ 'stats.players' | translate }}">
-      <app-leaderboard [secondColumn]="'Player'"></app-leaderboard>
+      <app-leaderboard
+        [dataSubject$]="playerTableData$"
+        [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
+        [displayedColumns]="displayedColumns"
+        [activeColumn]="activeColumn"
+        [sortDirection]="sortDirection"
+        [disableClear]="disableClear"
+        [filterHintText]="filterHintTranslationKey"
+        [filterText]="filterTranslationKey"
+        [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
     </mat-tab>
     <mat-tab label="{{ 'stats.teams' | translate }}">
       <app-leaderboard
-        [secondColumn]="'Team'"
-        [showingTeams]="true"></app-leaderboard>
+        [dataSubject$]="teamsTableData$"
+        [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
+        [displayedColumns]="displayedColumns"
+        [activeColumn]="activeColumn"
+        [sortDirection]="sortDirection"
+        [disableClear]="disableClear"
+        [filterHintText]="filterHintTranslationKey"
+        [filterText]="filterTranslationKey"
+        [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
     </mat-tab>
   </mat-tab-group>
 </mat-card>
@@ -50,21 +66,30 @@
                 [dataMap]="playersMap"
                 [selectedData]="selectedPlayer"
                 [selectedYear]="selectedYearPlayer"
-                [months]="months"
-                [legendLabels]="legendLabels"></app-bar-line-chart>
+                [months]="'months' | translate"
+                [topBarLegendLabel]="'stats.wins' | translate"
+                [lowerBarLegendLabel]="'stats.losses' | translate"
+                [lineLegendLabel]="
+                  'stats.winRate' | translate
+                "></app-bar-line-chart>
             </div>
             <div class="matches-chart">
               <app-matches-chart
                 (matchesChartIsReadyEvent)="checkIfChartsReady(2, $event)"
                 [chartData]="matchesChartDataPlayer"
-                [legendLabels]="legendLabels"
-                [months]="months"></app-matches-chart>
+                [legendLabel]="'app.matches' | translate"
+                [months]="'months' | translate"></app-matches-chart>
             </div>
             <div class="doughnut-chart">
               <app-result-doughnut-chart
                 (doughnutChartIsReadyEvent)="checkIfChartsReady(1, $event)"
                 [chartData]="doughnutDataPlayer"
-                [legendLabels]="legendLabels"></app-result-doughnut-chart>
+                [winsLegendLabel]="'stats.wins' | translate"
+                [lossesLegendLabel]="'stats.losses' | translate"
+                [dominationsLegendLabel]="'stats.dominations' | translate"
+                [defeatsLegendLabel]="
+                  'stats.defeats' | translate
+                "></app-result-doughnut-chart>
             </div>
           </div>
         </div>
@@ -104,21 +129,30 @@
               [dataMap]="teamsMap"
               [selectedData]="selectedTeam"
               [selectedYear]="selectedYearTeam"
-              [months]="months"
-              [legendLabels]="legendLabels"></app-bar-line-chart>
+              [months]="'months' | translate"
+              [topBarLegendLabel]="'stats.wins' | translate"
+              [lowerBarLegendLabel]="'stats.losses' | translate"
+              [lineLegendLabel]="
+                'stats.winRate' | translate
+              "></app-bar-line-chart>
           </div>
           <div class="matches-chart">
             <app-matches-chart
               (matchesChartIsReadyEvent)="checkIfChartsReady(5, $event)"
               [chartData]="matchesChartDataTeam"
-              [legendLabels]="legendLabels"
-              [months]="months"></app-matches-chart>
+              [legendLabel]="'app.matches' | translate"
+              [months]="'months' | translate"></app-matches-chart>
           </div>
           <div class="doughnut-chart">
             <app-result-doughnut-chart
               (doughnutChartIsReadyEvent)="checkIfChartsReady(4, $event)"
               [chartData]="doughnutDataTeam"
-              [legendLabels]="legendLabels"></app-result-doughnut-chart>
+              [winsLegendLabel]="'stats.wins' | translate"
+              [lossesLegendLabel]="'stats.losses' | translate"
+              [dominationsLegendLabel]="'stats.dominations' | translate"
+              [defeatsLegendLabel]="
+                'stats.defeats' | translate
+              "></app-result-doughnut-chart>
           </div>
         </div>
       </div>
@@ -128,38 +162,10 @@
 <mat-card>
   <mat-card-title>{{ 'stats.playtime' | translate }}</mat-card-title>
   <app-playtime-chart
-    [months]="months"
-    [legendLabels]="legendLabels"
-    [localeId]="localeId"></app-playtime-chart>
+    [months]="'months' | translate"
+    [legendLabel]="'stats.playtimeLegend' | translate"
+    [yScaleLabel]="'stats.minutes' | translate"
+    [localeId]="'app.language.id' | translate"
+    [datepickerLabelTexts]="datepickerLabelKeys"
+    [datepickerHintTexts]="datepickerHintKeys"></app-playtime-chart>
 </mat-card>
-<!-- <div class="grid-container">
-  <h1 class="mat-h1">Dashboard</h1>
-  <mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile
-      *ngFor="let card of cards | async"
-      [colspan]="card.cols"
-      [rowspan]="card.rows">
-      <mat-card class="dashboard-card">
-        <mat-card-header>
-          <mat-card-title>
-            {{ card.title }}
-            <button
-              mat-icon-button
-              class="more-button"
-              [matMenuTriggerFor]="menu"
-              aria-label="Toggle menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item>Expand</button>
-              <button mat-menu-item>Remove</button>
-            </mat-menu>
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="dashboard-card-content">
-          <div>Card Content Here</div>
-        </mat-card-content>
-      </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
-</div> -->

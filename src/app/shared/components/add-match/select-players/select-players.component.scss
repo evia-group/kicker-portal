@@ -1,25 +1,29 @@
 .select-container {
   display: grid;
   flex-direction: row;
-  grid-template-columns: auto auto;
+  grid-template-columns: 450px 450px;
   grid-gap: 20px;
 
   .select-player-team-container {
     display: flex;
-    .mat-form-field {
-      margin: auto;
+    justify-content: space-around;
+
+    .selection-style {
+      width: 215px;
     }
   }
 
   .select-team-container {
     display: flex;
-    .mat-form-field {
-      margin: 0 10px 0 10px;
-      width: 100%;
+    justify-content: space-around;
+
+    .team-selection-style {
+      width: 400px;
     }
 
     .mat-card-actions {
       margin: 0 10px 0 10px;
+
       button {
         font-size: 30px;
         font-weight: lighter;
