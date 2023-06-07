@@ -43,6 +43,7 @@
       "": "save",
       "match": "save match"
     },
+    "addMatch": "Add match",
     "team1": "Team 1",
     "team2": "Team 2",
     "team": "Team",

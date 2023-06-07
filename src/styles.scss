@@ -60,3 +60,9 @@ body {
 .result-radio-button .mat-radio-label-content {
   padding-left: 0;
 }
+
+.remove-margin {
+  .mat-card-header-text {
+    margin: 0;
+  }
+}
