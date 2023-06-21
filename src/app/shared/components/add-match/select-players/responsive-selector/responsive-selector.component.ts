@@ -71,6 +71,12 @@ export class ResponsiveSelectorComponent
       .observe(Breakpoints.XSmall)
       .subscribe((result) => {
         this.showButton = result.matches;
+        if (typeof this.firstPlayerControl.value === 'string') {
+          this.firstPlayerControl.setValue('');
+        }
+        if (typeof this.secondPlayerControl.value === 'string') {
+          this.secondPlayerControl.setValue('');
+        }
         if (!result.matches) {
           this.dialog.closeAll();
         } else {
