@@ -3,17 +3,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-gap: 20px;
 
-  //.select-player-team-container {
-  //  display: flex;
-  //  flex-direction: row;
-  //  align-items: stretch;
-  //  justify-content: space-around;
-  //  .selection-width {
-  //    display: flex;
-  //    width: 48%;
-  //  }
-  //}
-
   .select-team-container {
     display: flex;
     flex-direction: row;
@@ -37,14 +26,3 @@
     }
   }
 }
-
-//@media (max-width: 900px) {
-//  .select-container {
-//    .select-player-team-container {
-//      flex-direction: column;
-//      .selection-width {
-//        width: 100%;
-//      }
-//    }
-//  }
-//}

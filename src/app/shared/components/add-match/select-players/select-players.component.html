@@ -1,8 +1,7 @@
 <div class="select-container" [formGroup]="matchForm">
   <ng-container *ngIf="!showingTeams" formGroupName="players">
     <ng-container *ngFor="let team of teams">
-      <app-two-selections
-        [formGroupName]="team === 0 ? 'team1' : 'team2'"
+      <app-responsive-selector
         [firstPlayerControl]="
           team === 0 ? team1player1Control : team2player1Control
         "
@@ -17,31 +16,10 @@
         "
         [displayWithFunction]="displayWithFunction"
         [placeholderText]="placeholderText"
-        [labelText]="playerLabelText"></app-two-selections>
-      <!--      <div-->
-      <!--        class="select-player-team-container"-->
-      <!--        [formGroupName]="team === 0 ? 'team1' : 'team2'">-->
-      <!--        <div class="selection-width">-->
-      <!--          <app-autocomplete-selection-->
-      <!--            [selectionFormControl]="-->
-      <!--              team === 0 ? team1player1Control : team2player1Control-->
-      <!--            "-->
-      <!--            [options]="team === 0 ? team1player1Options : team2player1Options"-->
-      <!--            [displayWithFunction]="displayWithFunction"-->
-      <!--            [placeholderText]="placeholderText"-->
-      <!--            [labelText]="playerLabelText"></app-autocomplete-selection>-->
-      <!--        </div>-->
-      <!--        <div class="selection-width">-->
-      <!--          <app-autocomplete-selection-->
-      <!--            [selectionFormControl]="-->
-      <!--              team === 0 ? team1player2Control : team2player2Control-->
-      <!--            "-->
-      <!--            [options]="team === 0 ? team1player2Options : team2player2Options"-->
-      <!--            [displayWithFunction]="displayWithFunction"-->
-      <!--            [placeholderText]="placeholderText"-->
-      <!--            [labelText]="playerLabelText"></app-autocomplete-selection>-->
-      <!--        </div>-->
-      <!--      </div>-->
+        [labelText]="playerLabelText"
+        [teamName]="
+          team === 0 ? 'common.team1' : 'common.team2'
+        "></app-responsive-selector>
     </ng-container>
   </ng-container>
   <ng-container *ngIf="showingTeams" formGroupName="players">

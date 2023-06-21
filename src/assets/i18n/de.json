@@ -54,6 +54,8 @@
     "close": "Abbrechen",
     "teamExists": "Die Mannschaft existiert bereits!",
     "placeholder": "Wähle aus",
+    "choosePlayers": "Wähle Spieler",
+    "editPlayers": "Auswahl ändern",
     "kickerStatus": {
       "available": {
         "title": "Kicker ist frei",

@@ -9,22 +9,11 @@
   }
 }
 
-.mat-card-actions {
-  display: flex;
-  justify-content: center;
-}
-
 @media (max-width: 1000px) {
   .select-player-team-container {
     flex-direction: column;
     .selection-width {
       width: 100%;
     }
-  }
-}
-
-@media (max-width: 350px) {
-  button {
-    font-size: 11px;
   }
 }

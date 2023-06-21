@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>{{ teamName | translate }}</h1>
+<mat-dialog-content>
+  <app-two-selections
+    [firstPlayerControl]="firstPlayerControl"
+    [secondPlayerControl]="secondPlayerControl"
+    [firstPlayerOptions]="firstPlayerOptions"
+    [secondPlayerOptions]="secondPlayerOptions"
+    [displayWithFunction]="displayWithFunction"
+    [placeholderText]="placeholderText"
+    [labelText]="labelText"></app-two-selections>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    class="close-button"
+    mat-stroked-button
+    type="button"
+    (click)="closeDialog()">
+    {{ 'common.close' | translate }}
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [disabled]="firstPlayerControl.invalid || secondPlayerControl.invalid"
+    (click)="saveTeam()">
+    {{ 'common.saveTeam' | translate }}
+  </button>
+</mat-dialog-actions>

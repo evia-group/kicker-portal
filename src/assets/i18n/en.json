@@ -53,6 +53,8 @@
     "close": "close",
     "teamExists": "This team already exists!",
     "placeholder": "Pick one",
+    "choosePlayers": "Choose Players",
+    "editPlayers": "Edit Players",
     "kickerStatus": {
       "available": {
         "title": "Kicker is available",
