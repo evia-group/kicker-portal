@@ -10,11 +10,17 @@ import { getDatabase, onValue, ref } from '@angular/fire/database';
 export class AppComponent implements OnInit {
   kickerStatus = false;
   constructor(translate: TranslateService) {
+    const lang = translate.getBrowserLang();
+
     // this language will be used as a fallback when a translation isn't found in the current language
     translate.setDefaultLang('de');
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    translate.use('de');
+    if (lang === 'de' || lang === 'en') {
+      translate.use(lang);
+    } else {
+      translate.use('de');
+    }
   }
 
   ngOnInit() {
