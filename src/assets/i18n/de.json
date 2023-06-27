@@ -65,6 +65,12 @@
         "title": "Kicker ist belegt seit",
         "subtitle": "Opps! Du musst leider noch warten"
       }
+    },
+    "toolbar": {
+      "bugs": "Bugs",
+      "github": "GitHub",
+      "language": "Sprache",
+      "user": "Benutzer"
     }
   },
   "info": {

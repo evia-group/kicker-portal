@@ -8,5 +8,8 @@
     flex-direction: column;
     gap: 10px;
     padding-bottom: 15px;
+    .mat-button-base {
+      margin-left: 0;
+    }
   }
 }
