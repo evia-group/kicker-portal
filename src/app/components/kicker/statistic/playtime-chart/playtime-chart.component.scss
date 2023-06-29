@@ -2,14 +2,37 @@
   display: flex;
   align-items: center;
   margin-top: 20px;
+  margin-left: 10px;
 
   .mat-radio-group,
   .mat-radio-button {
     margin-left: 20px;
+    margin-bottom: 10px;
   }
 }
 
 .mat-spinner {
   margin-top: 20px;
   margin-left: 20px;
+}
+
+@media (max-width: 600px) {
+  .flex-box {
+    flex-flow: column-reverse;
+    align-items: flex-start;
+
+    .mat-radio-group {
+      margin-left: -20px;
+    }
+  }
+}
+
+.chart-container {
+  height: 500px;
+}
+
+@media (max-width: 700px) {
+  .chart-container {
+    height: 300px;
+  }
 }
