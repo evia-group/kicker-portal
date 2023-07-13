@@ -1,13 +1,20 @@
-mat-card {
-  max-width: 400px;
-  margin: 10em auto;
-  text-align: center;
+.login-container {
+  display: flex;
+  justify-content: center;
 
-  mat-card-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    padding: 10px;
+  mat-card {
+    max-width: 400px;
+    margin: 10em 1em;
+    text-align: center;
+    min-width: 250px;
+    width: 100%;
+
+    mat-card-footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      padding: 10px;
+    }
   }
 }
 

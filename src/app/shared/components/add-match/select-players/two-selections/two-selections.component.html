@@ -1,0 +1,18 @@
+<div class="select-player-team-container">
+  <div class="selection-width">
+    <app-autocomplete-selection
+      [selectionFormControl]="firstPlayerControl"
+      [options]="firstPlayerOptions"
+      [displayWithFunction]="displayWithFunction"
+      [placeholderText]="placeholderText"
+      [labelText]="labelText"></app-autocomplete-selection>
+  </div>
+  <div class="selection-width">
+    <app-autocomplete-selection
+      [selectionFormControl]="secondPlayerControl"
+      [options]="secondPlayerOptions"
+      [displayWithFunction]="displayWithFunction"
+      [placeholderText]="placeholderText"
+      [labelText]="labelText"></app-autocomplete-selection>
+  </div>
+</div>

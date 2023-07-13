@@ -1,13 +1,12 @@
 .grid-container {
   margin: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 
   .add-match-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  .mat-tab-group {
-    min-width: 950px;
+    width: 100%;
+    max-width: 1200px;
+    min-width: 275px;
   }
 }

@@ -1,0 +1,33 @@
+<ng-container *ngIf="!showButton">
+  <div>
+    <app-two-selections
+      [firstPlayerControl]="firstPlayerControl"
+      [secondPlayerControl]="secondPlayerControl"
+      [firstPlayerOptions]="firstPlayerOptions"
+      [secondPlayerOptions]="secondPlayerOptions"
+      [displayWithFunction]="displayWithFunction"
+      [placeholderText]="placeholderText"
+      [labelText]="labelText"></app-two-selections>
+  </div>
+</ng-container>
+<ng-container *ngIf="showButton">
+  <div class="selection-container">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="openDialog()">
+      {{ buttonText | translate }}
+    </button>
+    <mat-chip-list
+      *ngIf="firstPlayer || secondPlayer"
+      class="mat-chip-list-stacked">
+      <mat-chip *ngIf="firstPlayer">
+        {{ firstPlayer }}
+      </mat-chip>
+      <mat-chip *ngIf="secondPlayer">
+        {{ secondPlayer }}
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+</ng-container>

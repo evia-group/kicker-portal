@@ -1,0 +1,12 @@
+.mat-dialog-actions {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 410px) {
+  .mat-dialog-actions {
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 15px;
+  }
+}

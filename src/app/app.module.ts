@@ -65,6 +65,9 @@ import {
 import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AutocompleteSelectionComponent } from './shared/components/autocomplete-selection/autocomplete-selection.component';
+import { TwoSelectionsComponent } from './shared/components/add-match/select-players/two-selections/two-selections.component';
+import { ResponsiveSelectorComponent } from './shared/components/add-match/select-players/responsive-selector/responsive-selector.component';
+import { TwoSelectionsDialogComponent } from './shared/components/add-match/select-players/two-selections-dialog/two-selections-dialog.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -97,6 +100,9 @@ export function createTranslateLoader(http: HttpClient) {
     PlaytimeChartComponent,
     DatepickerComponent,
     AutocompleteSelectionComponent,
+    TwoSelectionsComponent,
+    ResponsiveSelectorComponent,
+    TwoSelectionsDialogComponent,
   ],
   imports: [
     BrowserModule,

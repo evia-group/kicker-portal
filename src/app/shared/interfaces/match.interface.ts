@@ -1,4 +1,5 @@
 import { DocumentReference, Timestamp } from '@angular/fire/firestore';
+import { FormControl } from '@angular/forms';
 
 export interface IRounds {
   win: boolean;
@@ -32,4 +33,15 @@ export interface IMatch {
   teams: DocumentReference[];
   type: string;
   date: Timestamp;
+}
+
+export interface ISelectionsData {
+  firstPlayerControl: FormControl;
+  secondPlayerControl: FormControl;
+  firstPlayerOptions: any[];
+  secondPlayerOptions: any[];
+  displayWithFunction;
+  placeholderText: string;
+  labelText: string;
+  teamName: string;
 }

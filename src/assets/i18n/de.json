@@ -44,6 +44,7 @@
       "": "Speichern",
       "match": "Spiel speichern"
     },
+    "addMatch": "Spiel eintragen",
     "team1": "Mannschaft 1",
     "team2": "Mannschaft 2",
     "team": "Mannschaft",
@@ -53,6 +54,8 @@
     "close": "Abbrechen",
     "teamExists": "Die Mannschaft existiert bereits!",
     "placeholder": "Wähle aus",
+    "choosePlayers": "Wähle Spieler",
+    "editPlayers": "Auswahl ändern",
     "kickerStatus": {
       "available": {
         "title": "Kicker ist frei",

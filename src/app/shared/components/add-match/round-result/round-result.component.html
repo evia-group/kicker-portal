@@ -12,8 +12,12 @@
         aria-label="Select an option"
         (change)="enableDominationSlider($event)"
         formControlName="win">
-        <mat-radio-button value="team1"></mat-radio-button>
-        <mat-radio-button value="team2"></mat-radio-button>
+        <mat-radio-button
+          class="result-radio-button"
+          value="team1"></mat-radio-button>
+        <mat-radio-button
+          class="result-radio-button"
+          value="team2"></mat-radio-button>
       </mat-radio-group>
       <mat-slide-toggle
         style="justify-self: end"
