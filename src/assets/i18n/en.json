@@ -64,6 +64,12 @@
         "title": "Kicker is not available since",
         "subtitle": "Opps! You must wait to play a game"
       }
+    },
+    "toolbar": {
+      "bugs": "Bugs",
+      "github": "GitHub",
+      "language": "Language",
+      "user": "User"
     }
   },
   "info": {

@@ -1,7 +1,7 @@
-import { MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../../environments/environment';
 import { getDatabase, onValue, ref } from '@angular/fire/database';
@@ -21,8 +21,11 @@ export class NavigationComponent implements OnDestroy, OnInit {
   kickerStatus = true;
   kickerBusyTime: Date;
   private mobileQueryListener: () => void;
+  breakpointObserverSubscription: Subscription;
+  showDropdown = false;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private authService: AuthService,
@@ -49,10 +52,16 @@ export class NavigationComponent implements OnDestroy, OnInit {
         this.kickerBusyTime = new Date(snapshot.val().startTime * 1000);
       }
     });
+    this.breakpointObserverSubscription = this.breakpointObserver
+      .observe('(max-width: 700px)')
+      .subscribe((result) => {
+        this.showDropdown = result.matches;
+      });
   }
 
   ngOnDestroy(): void {
     this.mobileQuery.removeEventListener('change', this.mobileQueryListener);
+    this.breakpointObserverSubscription.unsubscribe();
   }
 
   public changeLanguage(language: string): void {
