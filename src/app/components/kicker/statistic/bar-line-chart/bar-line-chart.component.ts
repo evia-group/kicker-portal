@@ -46,6 +46,7 @@ export class BarLineChartComponent implements OnChanges {
   public barChartData: ChartConfiguration<'bar' | 'line'>['data'];
 
   public barChartOptions: ChartConfiguration<'bar' | 'line'>['options'] = {
+    maintainAspectRatio: false,
     responsive: true,
     scales: {
       x: {
@@ -85,6 +86,7 @@ export class BarLineChartComponent implements OnChanges {
       legend: {
         labels: {
           color: 'rgb(199,199,199)',
+          boxWidth: 20,
         },
       },
       tooltip: {
