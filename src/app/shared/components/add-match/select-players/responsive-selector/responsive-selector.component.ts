@@ -54,6 +54,11 @@ export class ResponsiveSelectorComponent
   ) {}
 
   ngOnChanges(): void {
+    if (!this.firstPlayerControl.value && !this.secondPlayerControl.value) {
+      this.firstPlayer = '';
+      this.secondPlayer = '';
+      this.changeButtonText();
+    }
     this.dataSubject.next({
       firstPlayerControl: this.firstPlayerControl,
       secondPlayerControl: this.secondPlayerControl,
