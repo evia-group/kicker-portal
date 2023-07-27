@@ -1,6 +1,6 @@
 <div class="container">
-  <div class="content">
-    <nav mat-tab-nav-bar mat-align-tabs="center" appMatTabScrollSpeed>
+  <div class="header mat-tab-header-pagination-controls-enabled">
+    <nav mat-tab-nav-bar mat-align-tabs="center" appMatTabScroll>
       <a
         mat-app-background
         mat-tab-link
@@ -14,6 +14,14 @@
         {{ link.label | translate }}
       </a>
     </nav>
+  </div>
+  <div class="content">
     <router-outlet></router-outlet>
+  </div>
+  <div class="footer">
+    <mat-toolbar>
+      <span class="toolbar-spacer"></span>
+      <span>{{ versionNumber }}</span></mat-toolbar
+    >
   </div>
 </div>

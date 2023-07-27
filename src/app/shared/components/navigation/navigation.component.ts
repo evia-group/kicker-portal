@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { environment } from '../../../../environments/environment';
 import { getDatabase, onValue, ref } from '@angular/fire/database';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -15,7 +14,6 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent implements OnDestroy, OnInit {
-  versionNumber: string = environment.versionNumber;
   isLoggedIn$: Observable<boolean>;
   mobileQuery: MediaQueryList;
   kickerStatus = true;

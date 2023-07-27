@@ -1,17 +1,16 @@
-import { Directive, OnInit } from '@angular/core';
+import { AfterViewInit, Directive, OnInit, Renderer2 } from '@angular/core';
 import { MatTabNav } from '@angular/material/tabs';
-import { fromEvent, pairwise, switchMap, takeUntil, tap } from 'rxjs';
 
 @Directive({
   selector: '[appMatTabScroll]',
 })
-export class MatTabScrollDirective implements OnInit {
+export class MatTabScrollDirective implements OnInit, AfterViewInit {
   private tabListContainer;
   private tabList;
-  private currentTabListTransition: string;
-  private tabListMaxScroll: number;
+  private previousButton: HTMLButtonElement;
+  private nextButton: HTMLButtonElement;
 
-  constructor(private matTabNav: MatTabNav) {}
+  constructor(private matTabNav: MatTabNav, private renderer: Renderer2) {}
 
   ngOnInit(): void {
     this.tabListContainer = this.matTabNav._tabListContainer.nativeElement;
@@ -22,62 +21,134 @@ export class MatTabScrollDirective implements OnInit {
     if (!this.tabList) {
       throw new Error('No TabList found!');
     }
-    this.matTabNavEventsHandler();
-  }
-
-  private matTabNavEventsHandler() {
-    fromEvent(this.tabListContainer, 'touchstart')
-      .pipe(
-        tap(() => {
-          this.currentTabListTransition = this.tabList.style.transition;
-          this.tabList.style.transition = 'none';
-          this.tabListMaxScroll =
-            -1 * (this.tabList.offsetWidth - this.tabListContainer.offsetWidth);
-        }),
-        switchMap(() => {
-          return fromEvent(this.tabListContainer, 'touchmove').pipe(
-            takeUntil(
-              fromEvent(this.tabListContainer, 'touchend').pipe(
-                tap(() => {
-                  this.tabList.style.transition = this.currentTabListTransition;
-                })
-              )
-            ),
-            pairwise()
-          );
-        })
+    this.renderer.setStyle(this.tabListContainer, 'overflow-x', 'scroll');
+    this.renderer.setStyle(this.tabListContainer, '-ms-overflow-style', 'none');
+    this.renderer.setStyle(this.tabListContainer, 'scrollbar-width', 'none');
+    const style = this.renderer.createElement('style');
+    this.renderer.appendChild(
+      style,
+      this.renderer.createText(
+        '.mat-tab-link-container::-webkit-scrollbar { display: none; }'
       )
-      .subscribe((res: [any, any]) => {
-        const rect = this.tabListContainer.getBoundingClientRect();
-
-        const previousX = res[0].touches[0].clientX - rect.left;
-
-        const currentX = res[1].touches[0].clientX - rect.left;
-
-        this.scrollMatTabNav(currentX - previousX);
-      });
+    );
+    this.renderer.appendChild(this.tabListContainer, style);
+    this.tabListContainer.addEventListener('scroll', () => {
+      this.toggleButtons();
+    });
   }
 
-  private scrollMatTabNav(scrollX: number) {
-    if (!this.tabList || !this.tabListMaxScroll) {
-      return;
-    }
-    const currentTransform = this.tabList.style.transform;
-    let currentScroll: number;
-    if (currentTransform && currentTransform.indexOf('translateX') > -1) {
-      let tmp = currentTransform.substring('translateX('.length);
-      tmp = tmp.substring(0, tmp.length - 'px'.length);
-      currentScroll = parseInt(tmp, 10);
+  ngAfterViewInit(): void {
+    window.addEventListener('resize', (event) =>
+      this.handleWindowResize(event)
+    );
+    const nav = document.querySelector('.mat-tab-nav-bar');
+    this.previousButton = this.createButton('before');
+    this.previousButton.addEventListener('click', () => {
+      const scrollX = Math.max(
+        0,
+        this.tabListContainer.scrollLeft - this.getSlideDistance() / 3
+      );
+      this.scrollToX(scrollX);
+    });
+    nav.insertBefore(this.previousButton, nav.firstChild);
+
+    this.nextButton = this.createButton('after');
+    this.nextButton.addEventListener('click', () => {
+      const scrollX = Math.min(
+        this.getMaxScroll(),
+        this.tabListContainer.scrollLeft + this.getSlideDistance() / 3
+      );
+      this.scrollToX(scrollX);
+    });
+    nav.appendChild(this.nextButton);
+
+    this.toggleButtons();
+    this.handleWindowResize();
+  }
+
+  createButton(className: string): HTMLButtonElement {
+    const oldButton = document.querySelector(
+      `.mat-tab-header-pagination-${className}`
+    );
+    const newButton = document.createElement('button');
+    oldButton.classList.forEach((buttonClass) => {
+      newButton.classList.add(buttonClass);
+    });
+    oldButton.remove();
+    newButton.setAttribute('type', 'button');
+    const arrow = document.createElement('div');
+    arrow.classList.add('mat-tab-header-pagination-chevron');
+    newButton.appendChild(arrow);
+    return newButton;
+  }
+
+  scrollToX(scrollX: number) {
+    this.tabListContainer.scrollTo({
+      top: 0,
+      left: scrollX,
+      behavior: 'smooth',
+    });
+    this.toggleButtons();
+  }
+
+  getSlideDistance() {
+    const rect = this.tabListContainer.getBoundingClientRect();
+    return rect.width - rect.left;
+  }
+
+  toggleButtons() {
+    const maxScroll = this.getMaxScroll();
+    if (this.tabListContainer.scrollLeft <= 0) {
+      this.enableButton(this.nextButton);
+      this.disableButton(this.previousButton);
+    } else if (this.tabListContainer.scrollLeft >= maxScroll) {
+      this.enableButton(this.previousButton);
+      this.disableButton(this.nextButton);
     } else {
-      currentScroll = 0;
+      this.enableButton(this.previousButton);
+      this.enableButton(this.nextButton);
     }
-    let newScroll = currentScroll + scrollX;
-    if (newScroll > 0) {
-      newScroll = 0;
+  }
+
+  getMaxScroll() {
+    return this.tabList.offsetWidth - this.tabListContainer.offsetWidth;
+  }
+
+  disableButton(button: HTMLButtonElement) {
+    button.disabled = true;
+    button.classList.add('mat-tab-header-pagination-disabled');
+  }
+
+  enableButton(button: HTMLButtonElement) {
+    button.disabled = false;
+    button.classList.remove('mat-tab-header-pagination-disabled');
+  }
+
+  hideButtons() {
+    this.nextButton.style.display = 'none';
+    this.previousButton.style.display = 'none';
+  }
+
+  showButtons() {
+    this.nextButton.style.display = 'flex';
+    this.previousButton.style.display = 'flex';
+  }
+
+  handleWindowResize(_event?: UIEvent) {
+    const matTabNavWidth =
+      document.querySelector('.mat-tab-nav-bar').clientWidth;
+    const matTabLinks = this.tabList.querySelectorAll(
+      '.mat-tab-links .mat-tab-link'
+    );
+    let matTabLinksWidth = 0;
+    matTabLinks.forEach((matTabLink) => {
+      matTabLinksWidth += matTabLink.offsetWidth;
+    });
+    if (matTabLinksWidth <= matTabNavWidth) {
+      this.hideButtons();
+    } else {
+      this.showButtons();
+      this.toggleButtons();
     }
-    if (newScroll < this.tabListMaxScroll) {
-      newScroll = this.tabListMaxScroll;
-    }
-    this.tabList.style.transform = `translateX(${newScroll}px`;
   }
 }

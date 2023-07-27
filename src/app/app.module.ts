@@ -69,8 +69,6 @@ import { TwoSelectionsComponent } from './shared/components/add-match/select-pla
 import { ResponsiveSelectorComponent } from './shared/components/add-match/select-players/responsive-selector/responsive-selector.component';
 import { TwoSelectionsDialogComponent } from './shared/components/add-match/select-players/two-selections-dialog/two-selections-dialog.component';
 import { MatTabScrollDirective } from './shared/directives/mat-tab-scroll.directive';
-import { MatTabScrollSpeedDirective } from './shared/directives/mat-tab-scroll-speed.directive';
-import { HammerModule } from '@angular/platform-browser';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -107,7 +105,6 @@ export function createTranslateLoader(http: HttpClient) {
     ResponsiveSelectorComponent,
     TwoSelectionsDialogComponent,
     MatTabScrollDirective,
-    MatTabScrollSpeedDirective,
   ],
   imports: [
     BrowserModule,
@@ -165,7 +162,6 @@ export function createTranslateLoader(http: HttpClient) {
     MatProgressSpinnerModule,
     MatChipsModule,
     MatAutocompleteModule,
-    HammerModule,
   ],
   providers: [
     {
