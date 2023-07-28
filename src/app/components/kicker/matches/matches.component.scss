@@ -1,12 +1,13 @@
 .grid-container {
   margin: 20px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
 
   .add-match-container {
     width: 100%;
     max-width: 1200px;
     min-width: 275px;
+    margin-bottom: 20px;
   }
 }
