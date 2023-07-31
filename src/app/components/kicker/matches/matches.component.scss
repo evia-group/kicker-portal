@@ -2,9 +2,9 @@
   margin: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
 
-  .add-match-container {
+  .match-container {
     width: 100%;
     max-width: 1200px;
     min-width: 275px;

@@ -1,3 +1,12 @@
 <mat-card>
   <mat-card-title>Last added matches</mat-card-title>
+  <mat-card-content>
+    <div class="matches-container">
+      <div class="match-row" *ngFor="let match of lastAddedMatches">
+        <span class="left-team">{{ match.team1 }}</span>
+        <span class="result">{{ match.result }}</span>
+        <span class="right-team">{{ match.team2 }}</span>
+      </div>
+    </div>
+  </mat-card-content>
 </mat-card>

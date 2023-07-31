@@ -1,0 +1,23 @@
+.matches-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.match-row {
+  display: grid;
+  grid-template-columns: 45% 10% 45%;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .result {
+    text-align: center;
+  }
+
+  .left-team {
+    text-align: right;
+  }
+
+  .right-team {
+    text-align: left;
+  }
+}
