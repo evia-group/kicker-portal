@@ -50,7 +50,9 @@
             color="primary"
             type="submit"
             [disabled]="
-              showingTeams ? !addTeamMatchForm.valid : !addMatchForm.valid
+              showingTeams
+                ? !addTeamMatchForm.valid || teamsSaveButtonDisabled
+                : !addMatchForm.valid || playersSaveButtonDisabled
             ">
             {{ 'common.save.match' | translate }}
           </button>

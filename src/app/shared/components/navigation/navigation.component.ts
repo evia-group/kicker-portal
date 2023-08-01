@@ -1,4 +1,4 @@
-import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -15,7 +15,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class NavigationComponent implements OnDestroy, OnInit {
   isLoggedIn$: Observable<boolean>;
-  mobileQuery: MediaQueryList;
   kickerStatus = true;
   kickerBusyTime: Date;
   private mobileQueryListener: () => void;
@@ -25,16 +24,13 @@ export class NavigationComponent implements OnDestroy, OnInit {
   constructor(
     private breakpointObserver: BreakpointObserver,
     changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher,
     private authService: AuthService,
     private translate: TranslateService,
     private router: Router,
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 100px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addEventListener('change', this.mobileQueryListener);
     this.isLoggedIn$ = this.authService.isLoggedIn;
 
     iconRegistry.addSvgIcon(
@@ -58,7 +54,6 @@ export class NavigationComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy(): void {
-    this.mobileQuery.removeEventListener('change', this.mobileQueryListener);
     this.breakpointObserverSubscription.unsubscribe();
   }
 

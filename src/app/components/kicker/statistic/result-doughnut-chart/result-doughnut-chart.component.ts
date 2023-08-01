@@ -60,6 +60,7 @@ export class ResultDoughnutChartComponent implements OnChanges {
       legend: {
         labels: {
           color: 'rgb(199,199,199)',
+          boxWidth: 20,
         },
       },
     },

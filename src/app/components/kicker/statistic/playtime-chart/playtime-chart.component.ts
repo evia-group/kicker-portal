@@ -53,6 +53,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   public barChartData: ChartConfiguration<'bar'>['data'];
 
   public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    maintainAspectRatio: false,
     responsive: true,
     scales: {
       x: {
@@ -82,6 +83,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
       legend: {
         labels: {
           color: 'rgb(199,199,199)',
+          boxWidth: 20,
         },
       },
     },

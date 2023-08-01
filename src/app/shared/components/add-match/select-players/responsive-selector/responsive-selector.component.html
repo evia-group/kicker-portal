@@ -16,6 +16,7 @@
       mat-raised-button
       color="primary"
       type="button"
+      [disabled]="firstPlayerControl.disabled"
       (click)="openDialog()">
       {{ buttonText | translate }}
     </button>
