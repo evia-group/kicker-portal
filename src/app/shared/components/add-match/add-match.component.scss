@@ -41,6 +41,17 @@
 
   button {
     margin-top: 10px;
+
+    .button-content {
+      display: flex;
+      align-items: center;
+
+      .mat-icon {
+        display: flex;
+        justify-content: right;
+        align-items: center;
+      }
+    }
   }
 }
 

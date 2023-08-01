@@ -54,7 +54,17 @@
                 ? !addTeamMatchForm.valid || teamsSaveButtonDisabled
                 : !addMatchForm.valid || playersSaveButtonDisabled
             ">
-            {{ 'common.save.match' | translate }}
+            <span class="button-content">
+              {{ 'common.save.match' | translate }}
+              <mat-icon
+                *ngIf="
+                  showingTeams
+                    ? teamsSaveButtonDisabled
+                    : playersSaveButtonDisabled
+                ">
+                <mat-spinner [diameter]="20"></mat-spinner>
+              </mat-icon>
+            </span>
           </button>
         </mat-card-actions>
       </form>
