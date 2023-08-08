@@ -69,6 +69,7 @@ import { TwoSelectionsComponent } from './shared/components/add-match/select-pla
 import { ResponsiveSelectorComponent } from './shared/components/add-match/select-players/responsive-selector/responsive-selector.component';
 import { TwoSelectionsDialogComponent } from './shared/components/add-match/select-players/two-selections-dialog/two-selections-dialog.component';
 import { LastAddedMatchesComponent } from './shared/components/last-added-matches/last-added-matches.component';
+import { LocalizedDatePipe } from './shared/pipes/localized-date.pipe';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -105,6 +106,7 @@ export function createTranslateLoader(http: HttpClient) {
     ResponsiveSelectorComponent,
     TwoSelectionsDialogComponent,
     LastAddedMatchesComponent,
+    LocalizedDatePipe,
   ],
   imports: [
     BrowserModule,

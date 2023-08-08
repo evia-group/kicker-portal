@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatchesService } from '../../services/matches.service';
-import { IMatch } from '../../interfaces/match.interface';
+import { IMatch, LastMatches } from '../../interfaces/match.interface';
 import { TeamsService } from '../../services/teams.service';
-import { combineLatestWith } from 'rxjs';
+import { combineLatestWith, Subscription } from 'rxjs';
 import { ITeam } from '../../interfaces/user.interface';
 
 @Component({
@@ -10,49 +10,61 @@ import { ITeam } from '../../interfaces/user.interface';
   templateUrl: './last-added-matches.component.html',
   styleUrls: ['./last-added-matches.component.scss'],
 })
-export class LastAddedMatchesComponent implements OnInit {
+export class LastAddedMatchesComponent implements OnInit, OnDestroy {
   numberOfMatchesToShow = 5;
-  lastAddedMatches = [];
+  lastAddedMatches: LastMatches[] = [];
+  subscription: Subscription;
+  matchesAvailable = false;
   constructor(
     private matchesService: MatchesService,
     private teamsService: TeamsService
   ) {}
 
   ngOnInit(): void {
-    this.matchesService.matchesSub$
+    this.subscription = this.matchesService.matchesSub$
       .pipe(combineLatestWith(this.teamsService.teams$))
-      .subscribe((data: [IMatch[], ITeam[]]) => {
-        this.lastAddedMatches.length = 0;
-        const matches = data[0];
-        const teams = data[1];
-        if (this.numberOfMatchesToShow > matches.length) {
-          this.numberOfMatchesToShow = matches.length;
-        }
-        matches.sort((a, b) => {
-          return b.date.toMillis() - a.date.toMillis();
-        });
-        // console.log(data);
-        const lastMatches = matches.slice(0, this.numberOfMatchesToShow);
-        // console.log(lastMatches);
-        lastMatches.forEach((match) => {
+      .subscribe(([matches, teams]: [IMatch[], ITeam[]]) => {
+        this.numberOfMatchesToShow = Math.min(
+          this.numberOfMatchesToShow,
+          matches.length
+        );
+        const lastMatches = matches
+          .sort((a, b) => {
+            return b.date.toMillis() - a.date.toMillis();
+          })
+          .slice(0, this.numberOfMatchesToShow);
+        let lastMatchesStrings: LastMatches[] = lastMatches.map((match) => {
           const teamIds = Object.keys(match.result);
           const resultTeam1 = match.result[teamIds[0]];
           const resultTeam2 = match.result[teamIds[1]];
           const nameTeam1 = this.getTeamNameById(teamIds[0], teams);
           const nameTeam2 = this.getTeamNameById(teamIds[1], teams);
-          if (nameTeam1 && nameTeam2) {
-            this.lastAddedMatches.push({
-              team1: nameTeam1,
-              team2: nameTeam2,
-              result: resultTeam1 + ':' + resultTeam2,
-            });
-          }
+          return nameTeam1 && nameTeam2
+            ? {
+                team1: nameTeam1,
+                team2: nameTeam2,
+                result: resultTeam1 + ':' + resultTeam2,
+                date: match.date.toDate(),
+              }
+            : null;
         });
+        lastMatchesStrings = lastMatchesStrings.filter(Boolean);
+
+        if (lastMatchesStrings.length === this.numberOfMatchesToShow) {
+          this.lastAddedMatches.length = 0;
+          this.lastAddedMatches = lastMatchesStrings;
+        }
+        this.matchesAvailable = true;
       });
   }
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
   getTeamNameById(teamId: string, teams: ITeam[]) {
-    const foundTeam = teams.find((team) => team.id === teamId);
-    return foundTeam ? foundTeam.name : undefined;
+    return teams
+      .find((team) => team.id === teamId)
+      ?.name.replace(/ -/g, '\u00A0-');
   }
 }
