@@ -70,6 +70,7 @@ import { ResponsiveSelectorComponent } from './shared/components/add-match/selec
 import { TwoSelectionsDialogComponent } from './shared/components/add-match/select-players/two-selections-dialog/two-selections-dialog.component';
 import { LastAddedMatchesComponent } from './shared/components/last-added-matches/last-added-matches.component';
 import { LocalizedDatePipe } from './shared/pipes/localized-date.pipe';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -107,6 +108,7 @@ export function createTranslateLoader(http: HttpClient) {
     TwoSelectionsDialogComponent,
     LastAddedMatchesComponent,
     LocalizedDatePipe,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,

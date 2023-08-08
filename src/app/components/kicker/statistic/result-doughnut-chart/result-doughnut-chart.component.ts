@@ -34,6 +34,9 @@ export class ResultDoughnutChartComponent implements OnChanges {
   @Input()
   defeatsLegendLabel: string;
 
+  @Input()
+  allChartsReady = false;
+
   showStats = false;
   showWL = false;
   showDD = false;

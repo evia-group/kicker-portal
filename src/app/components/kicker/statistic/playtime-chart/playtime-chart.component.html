@@ -1,3 +1,4 @@
+<app-spinner *ngIf="!chartIsReady"></app-spinner>
 <ng-container *ngIf="chartIsReady">
   <div class="flex-box">
     <app-datepicker
@@ -32,4 +33,3 @@
       [legend]="barChartLegend"></canvas>
   </div>
 </ng-container>
-<mat-spinner *ngIf="!chartIsReady"></mat-spinner>

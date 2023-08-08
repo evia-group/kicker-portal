@@ -1,8 +1,6 @@
 <mat-card>
   <mat-card-title>{{ 'common.lastMatches' | translate }}</mat-card-title>
-  <div class="spinner-container" *ngIf="!matchesAvailable">
-    <mat-spinner></mat-spinner>
-  </div>
+  <app-spinner *ngIf="!matchesAvailable"></app-spinner>
   <mat-card-content *ngIf="matchesAvailable && lastAddedMatches.length === 0">
     <p>No matches available!</p>
   </mat-card-content>
