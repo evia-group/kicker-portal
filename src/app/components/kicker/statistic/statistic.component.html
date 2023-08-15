@@ -32,7 +32,6 @@
     <mat-card-title>{{
       'stats.playerAndTeamStats' | translate
     }}</mat-card-title>
-    <!-- <h3 *ngIf="!matchesDataAvailable">{{ 'info.noData' | translate }}</h3> -->
     <mat-tab-group mat-align-tabs="start">
       <mat-tab label="{{ 'stats.players' | translate }}">
         <app-spinner *ngIf="!allChartsReadyP"></app-spinner>
@@ -64,7 +63,7 @@
           <div
             class="flex-container"
             [ngStyle]="{ display: allChartsReadyP ? 'block' : 'none' }">
-            <div class="bar-line-chart">
+            <div>
               <app-bar-line-chart
                 (barLineChartIsReadyEvent)="checkIfChartsReady(0, $event)"
                 [dataMap]="playersMap"
@@ -84,7 +83,7 @@
                 [months]="'months' | translate"
                 [allChartsReady]="allChartsReadyP"></app-matches-chart>
             </div>
-            <div class="doughnut-chart">
+            <div>
               <app-result-doughnut-chart
                 (doughnutChartIsReadyEvent)="checkIfChartsReady(1, $event)"
                 [chartData]="doughnutDataPlayer"
@@ -126,7 +125,7 @@
         <div
           class="flex-container"
           [ngStyle]="{ display: allChartsReadyP ? 'block' : 'none' }">
-          <div class="bar-line-chart">
+          <div>
             <app-bar-line-chart
               (barLineChartIsReadyEvent)="checkIfChartsReady(3, $event)"
               [dataMap]="teamsMap"
@@ -146,7 +145,7 @@
               [months]="'months' | translate"
               [allChartsReady]="allChartsReadyT"></app-matches-chart>
           </div>
-          <div class="doughnut-chart">
+          <div>
             <app-result-doughnut-chart
               (doughnutChartIsReadyEvent)="checkIfChartsReady(4, $event)"
               [chartData]="doughnutDataTeam"
