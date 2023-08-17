@@ -142,7 +142,7 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
       );
       this.subscriptionsList.push(dialogResultSub);
     } else {
-      this.usersService.users$.pipe(take(1)).subscribe((data: IUser[]) => {
+      this.usersService.users$.subscribe((data: IUser[]) => {
         this.allOptions = data;
         this.playersProcess();
       });

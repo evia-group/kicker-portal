@@ -22,6 +22,9 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
 
   actualForm: FormGroup;
 
+  playersSaveButtonDisabled = false;
+  teamsSaveButtonDisabled = false;
+
   public addMatchForm = this.fb.group({
     players: this.fb.group({
       team1: this.fb.group(
@@ -152,35 +155,48 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
   }
 
   public async saveMatch() {
-    if (!this.showingTeams) {
-      this.actualForm
-        .get('players.team1.teamId')
-        .setValue(
-          this.teamsService.createTeamId([
-            this.actualForm.get('players.team1.one').value,
-            this.actualForm.get('players.team1.two').value,
-          ])
-        );
+    if (
+      (this.showingTeams && !this.teamsSaveButtonDisabled) ||
+      (!this.showingTeams && !this.playersSaveButtonDisabled)
+    ) {
+      if (!this.showingTeams) {
+        this.playersSaveButtonDisabled = true;
+        this.actualForm.disable();
+        this.actualForm
+          .get('players.team1.teamId')
+          .setValue(
+            this.teamsService.createTeamId([
+              this.actualForm.get('players.team1.one').value,
+              this.actualForm.get('players.team1.two').value,
+            ])
+          );
 
-      this.actualForm
-        .get('players.team2.teamId')
-        .setValue(
-          this.teamsService.createTeamId([
-            this.actualForm.get('players.team2.one').value,
-            this.actualForm.get('players.team2.two').value,
-          ])
-        );
+        this.actualForm
+          .get('players.team2.teamId')
+          .setValue(
+            this.teamsService.createTeamId([
+              this.actualForm.get('players.team2.one').value,
+              this.actualForm.get('players.team2.two').value,
+            ])
+          );
+      } else {
+        this.teamsSaveButtonDisabled = true;
+      }
+
+      this.matchesService.add(this.showingTeams, this.actualForm).then(() => {
+        this.actualForm.reset();
+        this.actualForm.enable();
+        this.actualForm.get(`rounds.one.dominationTeamOne`).disable();
+        this.actualForm.get(`rounds.one.dominationTeamTwo`).disable();
+        this.actualForm.get(`rounds.two.dominationTeamOne`).disable();
+        this.actualForm.get(`rounds.two.dominationTeamTwo`).disable();
+        this.actualForm.get(`rounds.three.dominationTeamOne`).disable();
+        this.actualForm.get(`rounds.three.dominationTeamTwo`).disable();
+        this.showingTeams
+          ? (this.teamsSaveButtonDisabled = false)
+          : (this.playersSaveButtonDisabled = false);
+      });
     }
-
-    this.matchesService.add(this.showingTeams, this.actualForm).then(() => {
-      this.actualForm.reset();
-      this.actualForm.get(`rounds.one.dominationTeamOne`).disable();
-      this.actualForm.get(`rounds.one.dominationTeamTwo`).disable();
-      this.actualForm.get(`rounds.two.dominationTeamOne`).disable();
-      this.actualForm.get(`rounds.two.dominationTeamTwo`).disable();
-      this.actualForm.get(`rounds.three.dominationTeamOne`).disable();
-      this.actualForm.get(`rounds.three.dominationTeamTwo`).disable();
-    });
   }
 
   private getWins(team: string) {
