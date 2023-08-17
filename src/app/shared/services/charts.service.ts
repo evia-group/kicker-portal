@@ -34,6 +34,7 @@ export class ChartsService {
   constructor(private authService: AuthService) {}
 
   createStatisticData(matches: IMatch[], playersMap, teamsMap) {
+    this.clearTimelines(playersMap, teamsMap);
     if (matches.length > 0) {
       this.matchesDataAvailable = true;
       this.selectedPlayer = undefined;
@@ -222,6 +223,30 @@ export class ChartsService {
       this.doughnutDataTeam,
     ];
   }
+
+  clearTimelines(playersMap, teamsMap) {
+    playersMap.forEach((player: ILeaderboard) => {
+      const playerWinsTimeline = player[winsTimeline];
+      if (playerWinsTimeline) {
+        playerWinsTimeline.clear();
+      }
+      const playerLossesTimeline = player[lossesTimeline];
+      if (playerLossesTimeline) {
+        playerLossesTimeline.clear();
+      }
+    });
+    teamsMap.forEach((team: ILeaderboard) => {
+      const teamWinsTimeLine = team[winsTimeline];
+      if (teamWinsTimeLine) {
+        teamWinsTimeLine.clear();
+      }
+      const teamLossesTimeLine = team[lossesTimeline];
+      if (teamLossesTimeLine) {
+        teamLossesTimeLine.clear();
+      }
+    });
+  }
+
   getPlayersOfTeam(teamId: string): string[] {
     let counter = 0;
     const teamPlayers: string[] = [];
