@@ -32,19 +32,5 @@ export class KickerComponent {
       active: true,
       index: 1,
     },
-    // {
-    //   label: 'app.tournaments',
-    //   link: '/kicker/tournaments',
-    //   icon: 'games',
-    //   active: false,
-    //   index: 2,
-    // },
-    // {
-    //   label: 'app.matchmaking',
-    //   link: '/kicker/matchmaking',
-    //   icon: 'groups',
-    //   active: false,
-    //   index: 2,
-    // },
   ];
 }
