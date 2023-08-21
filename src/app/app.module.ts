@@ -71,6 +71,7 @@ import { TwoSelectionsDialogComponent } from './shared/components/add-match/sele
 import { LastAddedMatchesComponent } from './shared/components/last-added-matches/last-added-matches.component';
 import { LocalizedDatePipe } from './shared/pipes/localized-date.pipe';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
+import { MatTabScrollDirective } from './shared/directives/mat-tab-scroll.directive';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -109,6 +110,7 @@ export function createTranslateLoader(http: HttpClient) {
     LastAddedMatchesComponent,
     LocalizedDatePipe,
     SpinnerComponent,
+    MatTabScrollDirective,
   ],
   imports: [
     BrowserModule,
