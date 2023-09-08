@@ -34,7 +34,7 @@ export class MatchesService implements OnDestroy {
 
   protected collection: CollectionReference;
 
-  matchesSub$ = new BehaviorSubject([]);
+  matchesSub$ = new BehaviorSubject(undefined);
 
   constructor(
     protected db: Firestore,

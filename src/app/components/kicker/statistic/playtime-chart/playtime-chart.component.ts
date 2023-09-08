@@ -91,6 +91,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
 
   allYears: number[] = [];
 
+  waitingForData = true;
   playtimeDataAvailable = false;
   chartIsReady = false;
 
@@ -131,6 +132,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     this.matchesService.playtime$
       .pipe(take(1))
       .subscribe((playtimeData: [{ startTime: string; endTime: string }]) => {
+        this.waitingForData = false;
         if (playtimeData.length > 0) {
           const playtimeNumData = playtimeData.map((item) => {
             return {

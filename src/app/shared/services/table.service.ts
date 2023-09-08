@@ -21,8 +21,8 @@ import {
   providedIn: 'root',
 })
 export class TableService {
-  playersDataAvailable = false;
-  teamsDataAvailable = false;
+  receivedPlayersData = false;
+  receivedTeamsData = false;
 
   playersMap = new Map<string, ILeaderboard>();
   teamsMap = new Map<string, ILeaderboard>();
@@ -30,17 +30,14 @@ export class TableService {
   playersTable: ILeaderboard[];
   teamsTable: ILeaderboard[];
 
-  playerData$ = new BehaviorSubject([[], new Map()]);
-  teamData$ = new BehaviorSubject([[], new Map()]);
+  playerData$ = new BehaviorSubject(undefined);
+  teamData$ = new BehaviorSubject(undefined);
 
-  constructor(
-    private usersService: UsersService,
-    private teamsService: TeamsService
-  ) {
+  constructor(usersService: UsersService, teamsService: TeamsService) {
     usersService.users$.subscribe((data) => {
+      this.receivedPlayersData = true;
       const playersData = data;
       if (playersData.length > 0) {
-        this.playersDataAvailable = true;
         playersData.map((player: IUser) => {
           const res = this.createTableData(player);
           this.playersMap.set(player.id, res);
@@ -50,13 +47,15 @@ export class TableService {
         );
         this.addRanks(this.playersTable);
         this.playerData$.next([this.playersTable, this.playersMap]);
+      } else {
+        this.playerData$.next([[], new Map()]);
       }
     });
 
     teamsService.teams$.subscribe((data) => {
+      this.receivedTeamsData = true;
       const teamsData = data;
       if (teamsData.length > 0) {
-        this.teamsDataAvailable = true;
         teamsData.map((team: IUser | ITeam) => {
           const res = this.createTableData(team);
           this.teamsMap.set(team.id, res);
@@ -66,6 +65,8 @@ export class TableService {
         );
         this.addRanks(this.teamsTable);
         this.teamData$.next([this.teamsTable, this.teamsMap]);
+      } else {
+        this.teamData$.next([[], new Map()]);
       }
     });
   }

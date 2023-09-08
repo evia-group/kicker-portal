@@ -33,16 +33,113 @@ export class ChartsService {
 
   constructor(private authService: AuthService) {}
 
-  createStatisticData(matches: IMatch[], playersMap, teamsMap) {
-    this.clearTimelines(playersMap, teamsMap);
+  createStatisticPlayerData(matches: IMatch[], playersMap) {
+    this.clearTimeline(playersMap);
     if (matches.length > 0) {
       this.matchesDataAvailable = true;
       this.selectedPlayer = undefined;
-      this.selectedTeam = undefined;
       const loggedInUser = this.authService.user.uid;
       matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
 
       const playerIdsWithMatches: string[] = [];
+
+      matches.forEach((match: IMatch) => {
+        const matchTeams = Object.keys(match.result);
+        const team1 = matchTeams[0];
+        const team2 = matchTeams[1];
+        const resultTeam1 = match.result[team1];
+
+        const matchYear = match.date.toDate().getFullYear();
+        const matchMonth = match.date.toDate().getMonth();
+
+        this.playerIds = Array.from(playersMap.keys());
+        const playersTeam1 = this.getPlayersOfTeam(team1);
+        const playersTeam2 = this.getPlayersOfTeam(team2);
+
+        playersTeam1.forEach((player) => {
+          if (!playerIdsWithMatches.includes(player)) {
+            playerIdsWithMatches.push(player);
+          }
+        });
+
+        playersTeam2.forEach((player) => {
+          if (!playerIdsWithMatches.includes(player)) {
+            playerIdsWithMatches.push(player);
+          }
+        });
+
+        const winningTeam = resultTeam1 === 2 ? playersTeam1 : playersTeam2;
+        const loosingTeam = resultTeam1 === 2 ? playersTeam2 : playersTeam1;
+
+        winningTeam.forEach((player) => {
+          this.updateTimeline(
+            playersMap,
+            player,
+            matchYear,
+            matchMonth,
+            winsTimeline,
+            lossesTimeline
+          );
+        });
+
+        loosingTeam.forEach((player) => {
+          this.updateTimeline(
+            playersMap,
+            player,
+            matchYear,
+            matchMonth,
+            lossesTimeline,
+            winsTimeline
+          );
+        });
+      });
+
+      if (playerIdsWithMatches.includes(loggedInUser)) {
+        this.selectedPlayer = loggedInUser;
+      } else {
+        this.selectedPlayer = playerIdsWithMatches[0];
+      }
+
+      for (let i = 0; i < playerIdsWithMatches.length; i++) {
+        const itemId = playerIdsWithMatches[i];
+        this.playersWithMatches[i] = {
+          id: itemId,
+          name: playersMap.get(itemId)[name],
+        };
+      }
+
+      this.playerYearsList = this.setYearsList(this.selectedPlayer, playersMap);
+
+      this.selectedYearPlayer =
+        this.playerYearsList[this.playerYearsList.length - 1];
+
+      this.doughnutDataPlayer = this.getDoughnutData(
+        playersMap.get(this.selectedPlayer)
+      );
+      this.matchesChartDataPlayer = this.getMatchesChartData(
+        playersMap.get(this.selectedPlayer),
+        this.selectedYearPlayer
+      );
+    }
+    return [
+      playersMap,
+      this.selectedPlayer,
+      this.playersWithMatches,
+      this.selectedYearPlayer,
+      this.playerYearsList,
+      this.matchesChartDataPlayer,
+      this.doughnutDataPlayer,
+    ];
+  }
+
+  createStatisticTeamData(matches: IMatch[], teamsMap) {
+    this.clearTimeline(teamsMap);
+    if (matches.length > 0) {
+      this.matchesDataAvailable = true;
+      this.selectedTeam = undefined;
+      const loggedInUser = this.authService.user.uid;
+      matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
+
       const teamIdsWithMatches: string[] = [];
 
       matches.forEach((match: IMatch) => {
@@ -55,48 +152,7 @@ export class ChartsService {
         const matchMonth = match.date.toDate().getMonth();
         const teamIds = Array.from(teamsMap.keys());
 
-        this.playerIds = Array.from(playersMap.keys());
-        const playersTeam1 = this.getPlayersOfTeam(team1);
-        const playersTeam2 = this.getPlayersOfTeam(team2);
-
         if (teamIds.includes(team1) || teamIds.includes(team2)) {
-          playersTeam1.forEach((player) => {
-            if (!playerIdsWithMatches.includes(player)) {
-              playerIdsWithMatches.push(player);
-            }
-          });
-
-          playersTeam2.forEach((player) => {
-            if (!playerIdsWithMatches.includes(player)) {
-              playerIdsWithMatches.push(player);
-            }
-          });
-
-          const winningTeam = resultTeam1 === 2 ? playersTeam1 : playersTeam2;
-          const loosingTeam = resultTeam1 === 2 ? playersTeam2 : playersTeam1;
-
-          winningTeam.forEach((player) => {
-            this.updateTimeline(
-              playersMap,
-              player,
-              matchYear,
-              matchMonth,
-              winsTimeline,
-              lossesTimeline
-            );
-          });
-
-          loosingTeam.forEach((player) => {
-            this.updateTimeline(
-              playersMap,
-              player,
-              matchYear,
-              matchMonth,
-              lossesTimeline,
-              winsTimeline
-            );
-          });
-
           if (!teamIdsWithMatches.includes(team1) && teamIds.includes(team1)) {
             teamIdsWithMatches.push(team1);
           }
@@ -159,22 +215,8 @@ export class ChartsService {
         }
       });
 
-      if (playerIdsWithMatches.includes(loggedInUser)) {
-        this.selectedPlayer = loggedInUser;
-      } else {
-        this.selectedPlayer = playerIdsWithMatches[0];
-      }
-
       if (!this.selectedTeam) {
         this.selectedTeam = teamIdsWithMatches[0];
-      }
-
-      for (let i = 0; i < playerIdsWithMatches.length; i++) {
-        const itemId = playerIdsWithMatches[i];
-        this.playersWithMatches[i] = {
-          id: itemId,
-          name: playersMap.get(itemId)[name],
-        };
       }
 
       for (let i = 0; i < teamIdsWithMatches.length; i++) {
@@ -185,21 +227,11 @@ export class ChartsService {
         };
       }
 
-      this.playerYearsList = this.setYearsList(this.selectedPlayer, playersMap);
       this.teamYearsList = this.setYearsList(this.selectedTeam, teamsMap);
 
-      this.selectedYearPlayer =
-        this.playerYearsList[this.playerYearsList.length - 1];
       this.selectedYearTeam = this.teamYearsList[this.teamYearsList.length - 1];
-      this.doughnutDataPlayer = this.getDoughnutData(
-        playersMap.get(this.selectedPlayer)
-      );
       this.doughnutDataTeam = this.getDoughnutData(
         teamsMap.get(this.selectedTeam)
-      );
-      this.matchesChartDataPlayer = this.getMatchesChartData(
-        playersMap.get(this.selectedPlayer),
-        this.selectedYearPlayer
       );
       this.matchesChartDataTeam = this.getMatchesChartData(
         teamsMap.get(this.selectedTeam),
@@ -207,14 +239,7 @@ export class ChartsService {
       );
     }
     return [
-      playersMap,
       teamsMap,
-      this.selectedPlayer,
-      this.playersWithMatches,
-      this.selectedYearPlayer,
-      this.playerYearsList,
-      this.matchesChartDataPlayer,
-      this.doughnutDataPlayer,
       this.selectedTeam,
       this.teamsWithMatches,
       this.selectedYearTeam,
@@ -224,25 +249,15 @@ export class ChartsService {
     ];
   }
 
-  clearTimelines(playersMap, teamsMap) {
-    playersMap.forEach((player: ILeaderboard) => {
-      const playerWinsTimeline = player[winsTimeline];
-      if (playerWinsTimeline) {
-        playerWinsTimeline.clear();
+  clearTimeline(currentMap) {
+    currentMap.forEach((item) => {
+      const currentWinsTimeline = item[winsTimeline];
+      if (currentWinsTimeline) {
+        currentWinsTimeline.clear();
       }
-      const playerLossesTimeline = player[lossesTimeline];
-      if (playerLossesTimeline) {
-        playerLossesTimeline.clear();
-      }
-    });
-    teamsMap.forEach((team: ILeaderboard) => {
-      const teamWinsTimeLine = team[winsTimeline];
-      if (teamWinsTimeLine) {
-        teamWinsTimeLine.clear();
-      }
-      const teamLossesTimeLine = team[lossesTimeline];
-      if (teamLossesTimeLine) {
-        teamLossesTimeLine.clear();
+      const currentLossesTimeline = item[lossesTimeline];
+      if (currentLossesTimeline) {
+        currentLossesTimeline.clear();
       }
     });
   }

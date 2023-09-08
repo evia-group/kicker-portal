@@ -3,28 +3,34 @@
     <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
     <mat-tab-group mat-align-tabs="start">
       <mat-tab label="{{ 'stats.players' | translate }}">
-        <app-leaderboard
-          [dataSubject$]="playerTableData$"
-          [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
-          [displayedColumns]="displayedColumns"
-          [activeColumn]="activeColumn"
-          [sortDirection]="sortDirection"
-          [disableClear]="disableClear"
-          [filterHintText]="filterHintTranslationKey"
-          [filterText]="filterTranslationKey"
-          [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+        <mat-card-content>
+          <app-leaderboard
+            [dataSubject$]="playerTableData$"
+            [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
+            [displayedColumns]="displayedColumns"
+            [activeColumn]="activeColumn"
+            [sortDirection]="sortDirection"
+            [disableClear]="disableClear"
+            [filterHintText]="filterHintTranslationKey"
+            [filterText]="filterTranslationKey"
+            [pageSizeOptions]="pageSizeOptions"
+            [receivedData]="receivedDataP"></app-leaderboard>
+        </mat-card-content>
       </mat-tab>
       <mat-tab label="{{ 'stats.teams' | translate }}">
-        <app-leaderboard
-          [dataSubject$]="teamsTableData$"
-          [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
-          [displayedColumns]="displayedColumns"
-          [activeColumn]="activeColumn"
-          [sortDirection]="sortDirection"
-          [disableClear]="disableClear"
-          [filterHintText]="filterHintTranslationKey"
-          [filterText]="filterTranslationKey"
-          [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+        <mat-card-content>
+          <app-leaderboard
+            [dataSubject$]="teamsTableData$"
+            [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
+            [displayedColumns]="displayedColumns"
+            [activeColumn]="activeColumn"
+            [sortDirection]="sortDirection"
+            [disableClear]="disableClear"
+            [filterHintText]="filterHintTranslationKey"
+            [filterText]="filterTranslationKey"
+            [pageSizeOptions]="pageSizeOptions"
+            [receivedData]="receivedDataT"></app-leaderboard>
+        </mat-card-content>
       </mat-tab>
     </mat-tab-group>
   </mat-card>
@@ -34,7 +40,15 @@
     }}</mat-card-title>
     <mat-tab-group mat-align-tabs="start">
       <mat-tab label="{{ 'stats.players' | translate }}">
-        <app-spinner *ngIf="!allChartsReadyP"></app-spinner>
+        <app-spinner *ngIf="!receivedDataP || !receivedDataM"></app-spinner>
+        <p
+          *ngIf="
+            receivedDataP &&
+            receivedDataM &&
+            (!playerDataAvailable || !matchesDataAvailable)
+          ">
+          {{ 'info.noData' | translate }}
+        </p>
         <div class="selections" *ngIf="allChartsReadyP">
           <mat-form-field appearance="fill">
             <mat-label>{{ 'common.player' | translate }}</mat-label>
@@ -97,7 +111,15 @@
         </div>
       </mat-tab>
       <mat-tab label="{{ 'stats.teams' | translate }}">
-        <app-spinner *ngIf="!allChartsReadyT"></app-spinner>
+        <app-spinner *ngIf="!receivedDataT || !receivedDataM"></app-spinner>
+        <p
+          *ngIf="
+            receivedDataT &&
+            receivedDataM &&
+            (!teamDataAvailable || !matchesDataAvailable)
+          ">
+          {{ 'info.noData' | translate }}
+        </p>
         <div class="selections" *ngIf="allChartsReadyT">
           <mat-form-field appearance="fill">
             <mat-label>{{ 'common.team' | translate }}</mat-label>
@@ -124,7 +146,7 @@
         </div>
         <div
           class="flex-container"
-          [ngStyle]="{ display: allChartsReadyP ? 'block' : 'none' }">
+          [ngStyle]="{ display: allChartsReadyT ? 'block' : 'none' }">
           <div>
             <app-bar-line-chart
               (barLineChartIsReadyEvent)="checkIfChartsReady(3, $event)"
@@ -161,12 +183,14 @@
   </mat-card>
   <mat-card>
     <mat-card-title>{{ 'stats.playtime' | translate }}</mat-card-title>
-    <app-playtime-chart
-      [months]="'months' | translate"
-      [legendLabel]="'stats.playtimeLegend' | translate"
-      [yScaleLabel]="'stats.minutes' | translate"
-      [localeId]="'app.language.id' | translate"
-      [datepickerLabelTexts]="datepickerLabelKeys"
-      [datepickerHintTexts]="datepickerHintKeys"></app-playtime-chart>
+    <mat-card-content>
+      <app-playtime-chart
+        [months]="'months' | translate"
+        [legendLabel]="'stats.playtimeLegend' | translate"
+        [yScaleLabel]="'stats.minutes' | translate"
+        [localeId]="'app.language.id' | translate"
+        [datepickerLabelTexts]="datepickerLabelKeys"
+        [datepickerHintTexts]="datepickerHintKeys"></app-playtime-chart>
+    </mat-card-content>
   </mat-card>
 </div>
