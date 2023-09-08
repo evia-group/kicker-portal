@@ -24,7 +24,7 @@ export class LastAddedMatchesComponent implements OnInit, OnDestroy {
     this.subscription = this.matchesService.matchesSub$
       .pipe(combineLatestWith(this.teamsService.teams$))
       .subscribe(([matches, teams]: [IMatch[], ITeam[]]) => {
-        this.numberOfMatchesToShow = Math.min(
+        const currentNumberOfMatches = Math.min(
           this.numberOfMatchesToShow,
           matches.length
         );
@@ -32,7 +32,7 @@ export class LastAddedMatchesComponent implements OnInit, OnDestroy {
           .sort((a, b) => {
             return b.date.toMillis() - a.date.toMillis();
           })
-          .slice(0, this.numberOfMatchesToShow);
+          .slice(0, currentNumberOfMatches);
         let lastMatchesStrings: LastMatches[] = lastMatches.map((match) => {
           const teamIds = Object.keys(match.result);
           const resultTeam1 = match.result[teamIds[0]];
@@ -50,7 +50,7 @@ export class LastAddedMatchesComponent implements OnInit, OnDestroy {
         });
         lastMatchesStrings = lastMatchesStrings.filter(Boolean);
 
-        if (lastMatchesStrings.length === this.numberOfMatchesToShow) {
+        if (lastMatchesStrings.length === currentNumberOfMatches) {
           this.lastAddedMatches.length = 0;
           this.lastAddedMatches = lastMatchesStrings;
         }
