@@ -3,6 +3,10 @@
     <mat-card-title>{{ 'common.addMatch' | translate }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
+    <mat-radio-group [(ngModel)]="singleMode">
+      <mat-radio-button [value]="true">1 vs 1</mat-radio-button>
+      <mat-radio-button [value]="false">2 vs 2</mat-radio-button>
+    </mat-radio-group>
     <div class="match-container">
       <hr class="spacer" />
       <div class="match-header">
@@ -18,7 +22,8 @@
         <app-select-players
           [players]="data"
           [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
-          [showingTeams]="showingTeams"></app-select-players>
+          [showingTeams]="showingTeams"
+          [singleMode]="singleMode"></app-select-players>
         <mat-divider></mat-divider>
 
         <app-round-result

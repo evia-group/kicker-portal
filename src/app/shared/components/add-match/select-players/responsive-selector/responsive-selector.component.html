@@ -1,4 +1,4 @@
-<ng-container *ngIf="!showButton">
+<ng-container *ngIf="!showButton && !singleMode">
   <div>
     <app-two-selections
       [firstPlayerControl]="firstPlayerControl"
@@ -10,7 +10,7 @@
       [labelText]="labelText"></app-two-selections>
   </div>
 </ng-container>
-<ng-container *ngIf="showButton">
+<ng-container *ngIf="showButton && !singleMode">
   <div class="selection-container">
     <button
       mat-raised-button
@@ -31,4 +31,15 @@
       </mat-chip>
     </mat-chip-list>
   </div>
+</ng-container>
+<ng-container *ngIf="!showButton && singleMode">
+  <app-autocomplete-selection
+    [selectionFormControl]="firstPlayerControl"
+    [options]="firstPlayerOptions"
+    [displayWithFunction]="displayWithFunction"
+    [placeholderText]="placeholderText"
+    [labelText]="labelText"></app-autocomplete-selection>
+</ng-container>
+<ng-container *ngIf="showButton && singleMode">
+  <p>single-mode-button</p>
 </ng-container>

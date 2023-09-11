@@ -17,9 +17,8 @@
         [displayWithFunction]="displayWithFunction"
         [placeholderText]="placeholderText"
         [labelText]="playerLabelText"
-        [teamName]="
-          team === 0 ? 'common.team1' : 'common.team2'
-        "></app-responsive-selector>
+        [teamName]="team === 0 ? 'common.team1' : 'common.team2'"
+        [singleMode]="singleMode"></app-responsive-selector>
     </ng-container>
   </ng-container>
   <ng-container *ngIf="showingTeams" formGroupName="players">

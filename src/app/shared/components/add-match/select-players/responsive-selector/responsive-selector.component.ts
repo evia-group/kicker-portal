@@ -38,6 +38,9 @@ export class ResponsiveSelectorComponent
   @Input()
   teamName: string;
 
+  @Input()
+  singleMode = false;
+
   breakpointObserverSubscription: Subscription;
 
   showButton = false;

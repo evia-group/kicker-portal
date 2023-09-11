@@ -38,6 +38,9 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
   @Input()
   matchForm: FormGroup;
 
+  @Input()
+  singleMode = false;
+
   teams: number[] = [0, 1];
 
   allOptions: (IUser | ITeam)[] = [];
