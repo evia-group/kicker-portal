@@ -1,4 +1,11 @@
 <div class="grid-container">
-  <app-add-match class="match-container" [data]="users$"></app-add-match>
+  <mat-radio-group [(ngModel)]="singleMode">
+    <mat-radio-button [value]="true">1 vs 1</mat-radio-button>
+    <mat-radio-button [value]="false">2 vs 2</mat-radio-button>
+  </mat-radio-group>
+  <app-add-match
+    class="match-container"
+    [data]="users$"
+    [singleMode]="singleMode"></app-add-match>
   <app-last-added-matches class="match-container"></app-last-added-matches>
 </div>

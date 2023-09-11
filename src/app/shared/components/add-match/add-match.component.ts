@@ -17,6 +17,7 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
   @Input()
   data: Observable<IUser[]> | Observable<ITeam[]>;
 
+  @Input()
   singleMode = false;
 
   winsTeam1 = new BehaviorSubject<number>(0);

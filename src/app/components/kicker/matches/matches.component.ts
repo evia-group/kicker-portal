@@ -13,6 +13,8 @@ export class MatchesComponent {
   users$: Observable<IUser[]>;
   teams$: Observable<ITeam[]>;
 
+  singleMode = false;
+
   constructor(
     protected userService: UsersService,
     protected teamService: TeamsService
