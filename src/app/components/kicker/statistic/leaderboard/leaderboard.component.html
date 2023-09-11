@@ -1,5 +1,6 @@
-<mat-spinner *ngIf="!receivedData"></mat-spinner>
-<div *ngIf="receivedData">
+<app-spinner *ngIf="!receivedData"></app-spinner>
+<p *ngIf="receivedData && !dataAvailable">{{ 'info.noData' | translate }}</p>
+<div *ngIf="receivedData && dataAvailable">
   <mat-form-field appearance="standard">
     <mat-label>{{ filterText | translate }}</mat-label>
     <input

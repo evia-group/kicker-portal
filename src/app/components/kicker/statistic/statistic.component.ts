@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatchesService } from 'src/app/shared/services/matches.service';
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
 import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
 import { SortDirection } from '@angular/material/sort';
 import { TableService } from '../../../shared/services/table.service';
@@ -83,8 +83,16 @@ export class StatisticComponent implements OnInit, OnDestroy {
   allChartsReadyP = false;
   allChartsReadyT = false;
 
-  playerTableData$ = new BehaviorSubject([]);
-  teamsTableData$ = new BehaviorSubject([]);
+  playerTableData$ = new ReplaySubject(1);
+  teamsTableData$ = new ReplaySubject(1);
+
+  receivedDataP = false;
+  receivedDataT = false;
+  receivedDataM = false;
+
+  playerDataAvailable = false;
+  teamDataAvailable = false;
+  matchesDataAvailable = false;
 
   activeColumn = rank;
   sortDirection: SortDirection = 'asc';
@@ -111,40 +119,55 @@ export class StatisticComponent implements OnInit, OnDestroy {
       this.tableService.teamData$,
       this.matchesService.matchesSub$,
     ]).subscribe((data: any) => {
-      const playerDataAvailable = data[0][0].length > 0;
-      const teamDataAvailable = data[1][0].length > 0;
-      const matchesDataAvailable = data[2].length > 0;
-      if (playerDataAvailable) {
-        this.playersTable = data[0][0];
-        this.playersMap = data[0][1];
-        this.playerTableData$.next(this.playersTable);
+      if (data[0]) {
+        this.receivedDataP = true;
+        this.playerDataAvailable = data[0][0].length > 0;
+        if (this.playerDataAvailable) {
+          this.playersTable = data[0][0];
+          this.playersMap = data[0][1];
+          this.playerTableData$.next(this.playersTable);
+        }
       }
-      if (teamDataAvailable) {
-        this.teamsTable = data[1][0];
-        this.teamsMap = data[1][1];
-        this.teamsTableData$.next(this.teamsTable);
+      if (data[1]) {
+        this.receivedDataT = true;
+        this.teamDataAvailable = data[1][0].length > 0;
+        if (this.teamDataAvailable) {
+          this.teamsTable = data[1][0];
+          this.teamsMap = data[1][1];
+          this.teamsTableData$.next(this.teamsTable);
+        }
       }
-      if (playerDataAvailable && teamDataAvailable && matchesDataAvailable) {
-        [
-          this.playersMap,
-          this.teamsMap,
-          this.selectedPlayer,
-          this.playersWithMatches,
-          this.selectedYearPlayer,
-          this.playerYearsList,
-          this.matchesChartDataPlayer,
-          this.doughnutDataPlayer,
-          this.selectedTeam,
-          this.teamsWithMatches,
-          this.selectedYearTeam,
-          this.teamYearsList,
-          this.matchesChartDataTeam,
-          this.doughnutDataTeam,
-        ] = this.chartsService.createStatisticData(
-          data[2],
-          this.playersMap,
-          this.teamsMap
-        );
+      if (data[2]) {
+        this.receivedDataM = true;
+        this.matchesDataAvailable = data[2].length > 0;
+        if (this.playerDataAvailable && this.matchesDataAvailable) {
+          [
+            this.playersMap,
+            this.selectedPlayer,
+            this.playersWithMatches,
+            this.selectedYearPlayer,
+            this.playerYearsList,
+            this.matchesChartDataPlayer,
+            this.doughnutDataPlayer,
+          ] = this.chartsService.createStatisticPlayerData(
+            data[2],
+            this.playersMap
+          );
+        }
+        if (this.teamDataAvailable && this.matchesDataAvailable) {
+          [
+            this.teamsMap,
+            this.selectedTeam,
+            this.teamsWithMatches,
+            this.selectedYearTeam,
+            this.teamYearsList,
+            this.matchesChartDataTeam,
+            this.doughnutDataTeam,
+          ] = this.chartsService.createStatisticTeamData(
+            data[2],
+            this.teamsMap
+          );
+        }
       }
     });
   }

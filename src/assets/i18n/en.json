@@ -44,6 +44,7 @@
       "match": "save match"
     },
     "addMatch": "Add match",
+    "lastMatches": "Last added matches",
     "team1": "Team 1",
     "team2": "Team 2",
     "team": "Team",

@@ -1,4 +1,8 @@
-<ng-container *ngIf="chartIsReady">
+<app-spinner *ngIf="waitingForData"></app-spinner>
+<p *ngIf="!waitingForData && !playtimeDataAvailable">
+  {{ 'info.noData' | translate }}
+</p>
+<ng-container *ngIf="!waitingForData && playtimeDataAvailable">
   <div class="flex-box">
     <app-datepicker
       [localeId]="localeId"
@@ -32,4 +36,3 @@
       [legend]="barChartLegend"></canvas>
   </div>
 </ng-container>
-<mat-spinner *ngIf="!chartIsReady"></mat-spinner>

@@ -45,3 +45,10 @@ export interface ISelectionsData {
   labelText: string;
   teamName: string;
 }
+
+export interface LastMatches {
+  team1: string;
+  team2: string;
+  result: string;
+  date: Date;
+}
