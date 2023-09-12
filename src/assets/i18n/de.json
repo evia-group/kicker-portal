@@ -51,12 +51,17 @@
     "team": "Mannschaft",
     "domination": "zu Null",
     "player": "Spieler",
+    "player1": "Spieler 1",
+    "player2": "Spieler 2",
     "saveTeam": "Mannschaft speichern",
+    "savePlayer": "Spieler speichern",
     "close": "Abbrechen",
     "teamExists": "Die Mannschaft existiert bereits!",
     "placeholder": "Wähle aus",
     "choosePlayers": "Wähle Spieler",
+    "choosePlayer": "Wähle Spieler",
     "editPlayers": "Auswahl ändern",
+    "editPlayer": "Auswahl ändern",
     "kickerStatus": {
       "available": {
         "title": "Kicker ist frei",

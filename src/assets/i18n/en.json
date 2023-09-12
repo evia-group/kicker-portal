@@ -50,12 +50,17 @@
     "team": "Team",
     "domination": "to Zero",
     "player": "Player",
+    "player1": "Player 1",
+    "player2": "Player 2",
     "saveTeam": "save team",
+    "savePlayer": "save player",
     "close": "close",
     "teamExists": "This team already exists!",
     "placeholder": "Pick one",
     "choosePlayers": "Choose Players",
+    "choosePlayer": "Choose Player",
     "editPlayers": "Edit Players",
+    "editPlayer": "Edit Player",
     "kickerStatus": {
       "available": {
         "title": "Kicker is available",

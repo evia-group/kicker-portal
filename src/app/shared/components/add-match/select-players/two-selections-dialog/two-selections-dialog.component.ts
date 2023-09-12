@@ -14,9 +14,9 @@ export interface DialogData {
   styleUrls: ['./two-selections-dialog.component.scss'],
 })
 export class TwoSelectionsDialogComponent implements OnInit, OnDestroy {
-  firstPlayerControl: FormControl;
+  firstPlayerControl = new FormControl();
 
-  secondPlayerControl: FormControl;
+  secondPlayerControl = new FormControl();
 
   firstPlayerOptions;
 
@@ -40,6 +40,8 @@ export class TwoSelectionsDialogComponent implements OnInit, OnDestroy {
 
   firstReception = true;
 
+  singleMode = false;
+
   constructor(
     private dialogRef: MatDialogRef<TwoSelectionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: DialogData
@@ -60,13 +62,16 @@ export class TwoSelectionsDialogComponent implements OnInit, OnDestroy {
         this.placeholderText = selectionsData.placeholderText;
         this.labelText = selectionsData.labelText;
         this.teamName = selectionsData.teamName;
+        this.singleMode = selectionsData.singleMode;
 
         if (this.firstReception) {
           this.firstReception = false;
           this.firstPlayerPreviousValue = this.firstPlayerControl.value;
           this.firstPlayerTouched = this.firstPlayerControl.touched;
-          this.secondPlayerPreviousValue = this.secondPlayerControl.value;
-          this.secondPlayerTouched = this.secondPlayerControl.touched;
+          if (!this.singleMode) {
+            this.secondPlayerPreviousValue = this.secondPlayerControl.value;
+            this.secondPlayerTouched = this.secondPlayerControl.touched;
+          }
         }
       }
     );
@@ -85,7 +90,11 @@ export class TwoSelectionsDialogComponent implements OnInit, OnDestroy {
     } else {
       this.firstPlayerControl.setValue(this.firstPlayerPreviousValue);
     }
-    if (!this.secondPlayerPreviousValue && !this.secondPlayerTouched) {
+    if (
+      !this.singleMode &&
+      !this.secondPlayerPreviousValue &&
+      !this.secondPlayerTouched
+    ) {
       this.secondPlayerControl.reset();
     } else {
       this.secondPlayerControl.setValue(this.secondPlayerPreviousValue);
