@@ -7,7 +7,7 @@ const db = admin.firestore();
 /* When a new user is added to firebase, this function gets triggered.
    It adds a new user to firestore. */
 exports.newUser = functions.auth.user().onCreate((user) => {
-  const prefix = process.env.PREFIX;
+  const prefix = process.env.PREFIX || '';
 
   const newUser: IUser = {
     id: user.uid,
@@ -23,7 +23,5 @@ exports.newUser = functions.auth.user().onCreate((user) => {
       '2:1': 0,
     },
   };
-  db.doc(prefix + 'Users/' + user.uid).set(newUser);
-
-  return null;
+  return db.doc(prefix + 'Users/' + user.uid).set(newUser);
 });

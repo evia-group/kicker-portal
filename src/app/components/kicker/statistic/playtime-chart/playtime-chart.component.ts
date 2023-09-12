@@ -31,6 +31,8 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   @Input()
   datepickerHintTexts: string[];
 
+  MAX_DIFFERENCE = 720;
+
   currentDatepickerLabel = '';
   currentDatepickerHint = '';
 
@@ -150,57 +152,71 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
             const dataEndYear = endDate.getFullYear();
             const dataStartSeconds = startDate.getSeconds();
 
-            let dateForCalc: Date;
-            if (dataStartSeconds >= 30) {
-              startTime += (60 - dataStartSeconds) * 1000;
-              dateForCalc = new Date(startTime);
-            } else {
-              dateForCalc = startDate;
-            }
-
-            let dataStartYear = dateForCalc.getFullYear();
-            let dataStartMonth = dateForCalc.getMonth();
-            let dataStartDay = dateForCalc.getDate() - 1;
-            let dataStartHour = dateForCalc.getHours();
-            let dataStartMinutes = dateForCalc.getMinutes();
-
-            for (let i = dataStartYear; i <= dataEndYear; i++) {
-              if (!this.playtimeChartData.get(i)) {
-                this.playtimeChartData.set(i, this.createEmptyDataStructure(i));
-              }
-            }
-
-            while (difference > 0) {
-              const minutesToAdd = 60 - dataStartMinutes;
-              if (difference > minutesToAdd) {
-                this.playtimeChartData.get(dataStartYear)[dataStartMonth][
-                  dataStartDay
-                ][dataStartHour] += minutesToAdd;
-                difference -= minutesToAdd;
+            if (difference <= this.MAX_DIFFERENCE) {
+              let dateForCalc: Date;
+              if (dataStartSeconds >= 30) {
+                startTime += (60 - dataStartSeconds) * 1000;
+                dateForCalc = new Date(startTime);
               } else {
-                this.playtimeChartData.get(dataStartYear)[dataStartMonth][
-                  dataStartDay
-                ][dataStartHour] += difference;
-                difference = 0;
+                dateForCalc = startDate;
               }
-              dataStartMinutes = 0;
-              if (dataStartHour < 23) {
-                dataStartHour += 1;
-              } else {
-                dataStartHour = 0;
-                if (
-                  dataStartDay <
-                  this.getDaysInMonth(dataStartYear, dataStartMonth)
-                ) {
-                  dataStartDay += 1;
-                } else {
-                  dataStartDay = 0;
-                  if (dataStartMonth < 11) {
-                    dataStartMonth += 1;
+
+              let dataStartYear = dateForCalc.getFullYear();
+              let dataStartMonth = dateForCalc.getMonth();
+              let dataStartDay = dateForCalc.getDate() - 1;
+              let dataStartHour = dateForCalc.getHours();
+              let dataStartMinutes = dateForCalc.getMinutes();
+
+              for (let i = dataStartYear; i <= dataEndYear; i++) {
+                if (!this.playtimeChartData.get(i)) {
+                  this.playtimeChartData.set(
+                    i,
+                    this.createEmptyDataStructure(i)
+                  );
+                }
+              }
+
+              while (difference > 0) {
+                try {
+                  const minutesToAdd = 60 - dataStartMinutes;
+                  const currentHour =
+                    this.playtimeChartData.get(dataStartYear)[dataStartMonth][
+                      dataStartDay
+                    ][dataStartHour];
+                  if (difference > minutesToAdd) {
+                    this.playtimeChartData.get(dataStartYear)[dataStartMonth][
+                      dataStartDay
+                    ][dataStartHour] = Math.min(60, currentHour + minutesToAdd);
+                    difference -= minutesToAdd;
                   } else {
-                    dataStartMonth = 0;
-                    dataStartYear += 1;
+                    this.playtimeChartData.get(dataStartYear)[dataStartMonth][
+                      dataStartDay
+                    ][dataStartHour] = Math.min(60, currentHour + difference);
+                    difference = 0;
                   }
+                  dataStartMinutes = 0;
+                  if (dataStartHour < 23) {
+                    dataStartHour += 1;
+                  } else {
+                    dataStartHour = 0;
+                    if (
+                      dataStartDay <
+                      this.getDaysInMonth(dataStartYear, dataStartMonth) - 1
+                    ) {
+                      dataStartDay += 1;
+                    } else {
+                      dataStartDay = 0;
+                      if (dataStartMonth < 11) {
+                        dataStartMonth += 1;
+                      } else {
+                        dataStartMonth = 0;
+                        dataStartYear += 1;
+                      }
+                    }
+                  }
+                } catch (error) {
+                  console.log(error);
+                  break;
                 }
               }
             }
