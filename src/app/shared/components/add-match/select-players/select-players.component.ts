@@ -9,9 +9,6 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { UsersService } from 'src/app/shared/services/users.service';
-import { MatchesService } from 'src/app/shared/services/matches.service';
-import { TeamsService } from 'src/app/shared/services/teams.service';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-select-players',
@@ -53,12 +50,7 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
 
   subscriptionsList: Subscription[] = [];
 
-  constructor(
-    private usersService: UsersService,
-    private matchesService: MatchesService,
-    private teamsService: TeamsService,
-    public dialog: MatDialog
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   ngOnInit(): void {
     this.team1player1Control = this.matchForm.get(
