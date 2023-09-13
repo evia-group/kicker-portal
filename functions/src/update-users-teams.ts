@@ -164,6 +164,137 @@ function updateUsersAndTeamsProcedure(
   });
 }
 
+function addSingleMatchFields(document: admin.firestore.DocumentReference) {
+  const newFieldsMap = new Map();
+  newFieldsMap.set('s-wins', 0);
+  newFieldsMap.set('s-losses', 0);
+  newFieldsMap.set('s-dominations', 0);
+  newFieldsMap.set('s-defeats', 0);
+  newFieldsMap.set('s-stats.0:2', 0);
+  newFieldsMap.set('s-stats.1:2', 0);
+  newFieldsMap.set('s-stats.2:1', 0);
+  newFieldsMap.set('s-stats.2:0', 0);
+
+  return document.update(Object.fromEntries(newFieldsMap));
+}
+
+async function updateUsersProcedure(
+  snap: functions.firestore.QueryDocumentSnapshot
+) {
+  const result = snap.data().result;
+  const keys = Object.keys(result);
+  const player1Id = keys[0];
+  const resPlayer1 = result[keys[0]];
+  const player2Id = keys[1];
+  const resPlayer2 = result[keys[1]];
+  const player1Reference = db.doc('Users/' + player1Id);
+  const player2Reference = db.doc('Users/' + player2Id);
+
+  const playersSnap = await Promise.all([
+    player1Reference.get(),
+    player2Reference.get(),
+  ]);
+
+  const playersToAddFields: Promise<admin.firestore.WriteResult>[] = [];
+  playersSnap.forEach((playerSnap) => {
+    if (playerSnap.exists) {
+      const playerData = playerSnap.data();
+      if (playerData && playerData['s-wins'] === undefined) {
+        playersToAddFields.push(addSingleMatchFields(playerSnap.ref));
+      }
+    }
+  });
+
+  await Promise.all(playersToAddFields);
+
+  const player1UpdateMap = new Map<string, admin.firestore.FieldValue>();
+  const player2UpdateMap = new Map<string, admin.firestore.FieldValue>();
+
+  if (resPlayer1 === 2) {
+    player1UpdateMap.set('s-wins', increment_value);
+    player1UpdateMap.set(
+      's-stats.' + resPlayer1 + ':' + resPlayer2,
+      increment_value
+    );
+    player2UpdateMap.set('s-losses', increment_value);
+    player2UpdateMap.set(
+      's-stats.' + resPlayer2 + ':' + resPlayer1,
+      increment_value
+    );
+  } else {
+    player2UpdateMap.set('s-wins', increment_value);
+    player2UpdateMap.set(
+      's-stats.' + resPlayer2 + ':' + resPlayer1,
+      increment_value
+    );
+    player1UpdateMap.set('s-losses', increment_value);
+    player1UpdateMap.set(
+      's-stats.' + resPlayer1 + ':' + resPlayer2,
+      increment_value
+    );
+  }
+
+  let player1Counter = 0;
+  let player2Counter = 0;
+
+  snap
+    .data()
+    .dominations.forEach((dPlayer: DocumentReference<DocumentData>) => {
+      if (dPlayer.id === player1Id) {
+        player1Counter++;
+      } else {
+        player2Counter++;
+      }
+    });
+
+  if (player1Counter > 0) {
+    player1UpdateMap.set(
+      's-dominations',
+      admin.firestore.FieldValue.increment(player1Counter)
+    );
+  }
+
+  if (player2Counter > 0) {
+    player2UpdateMap.set(
+      's-dominations',
+      admin.firestore.FieldValue.increment(player2Counter)
+    );
+  }
+
+  player1Counter = 0;
+  player2Counter = 0;
+
+  snap.data().defeats.forEach((dPlayer: DocumentReference<DocumentData>) => {
+    if (dPlayer.id === player1Id) {
+      player1Counter++;
+    } else {
+      player2Counter++;
+    }
+  });
+
+  if (player1Counter > 0) {
+    player1UpdateMap.set(
+      's-defeats',
+      admin.firestore.FieldValue.increment(player1Counter)
+    );
+  }
+
+  if (player2Counter > 0) {
+    player2UpdateMap.set(
+      's-defeats',
+      admin.firestore.FieldValue.increment(player2Counter)
+    );
+  }
+
+  const player1UpdateObject = Object.fromEntries(player1UpdateMap);
+  const player2UpdateObject = Object.fromEntries(player2UpdateMap);
+
+  return Promise.all([
+    player1Reference.update(player1UpdateObject),
+    player2Reference.update(player2UpdateObject),
+  ]);
+}
+
 /* Update stats for Users and Teams when match is added to firestore in testing environment */
 exports.updateUsersAndTeamsT = functions.firestore
   .document('T-Matches/{documentId}')
@@ -176,4 +307,11 @@ exports.updateUsersAndTeams = functions.firestore
   .document('Matches/{documentId}')
   .onCreate((snap) => {
     return updateUsersAndTeamsProcedure(snap);
+  });
+
+/* Update stats for Users when singe match (1vs1) is added to firestore */
+exports.updateUsers = functions.firestore
+  .document('Single-Matches/{documentId}')
+  .onCreate((snap) => {
+    return updateUsersProcedure(snap);
   });

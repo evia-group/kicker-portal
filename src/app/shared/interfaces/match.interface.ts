@@ -38,7 +38,6 @@ export interface IMatch {
 export interface ISingleMatch {
   defeats: DocumentReference[];
   dominations: DocumentReference[];
-  players: DocumentReference[];
   result: {
     [playerId: string]: number;
   };

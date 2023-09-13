@@ -216,20 +216,9 @@ export class MatchesService implements OnDestroy {
     const defeats: DocumentReference[] = [];
     const dominations: DocumentReference[] = [];
 
-    const players = [
-      doc(
-        this.db,
-        `${environment.prefix}Users/${match.get('players.team1.one').value.id}`
-      ),
-      doc(
-        this.db,
-        `${environment.prefix}Users/${match.get('players.team2.one').value.id}`
-      ),
-    ];
-
     const result = {
-      [`${player1}`]: winPlayer1,
-      [`${player2}`]: winPlayer2,
+      [player1]: winPlayer1,
+      [player2]: winPlayer2,
     };
 
     for (let i = 0; i < dominationsPlayer1; i++) {
@@ -245,7 +234,6 @@ export class MatchesService implements OnDestroy {
     const resultMatch: ISingleMatch = {
       defeats,
       dominations,
-      players,
       result,
       type: `${winPlayer1}:${winPlayer2}`,
       date: Timestamp.now(),
