@@ -166,14 +166,14 @@ function updateUsersAndTeamsProcedure(
 
 function addSingleMatchFields(document: admin.firestore.DocumentReference) {
   const newFieldsMap = new Map();
-  newFieldsMap.set('s-wins', 0);
-  newFieldsMap.set('s-losses', 0);
-  newFieldsMap.set('s-dominations', 0);
-  newFieldsMap.set('s-defeats', 0);
-  newFieldsMap.set('s-stats.0:2', 0);
-  newFieldsMap.set('s-stats.1:2', 0);
-  newFieldsMap.set('s-stats.2:1', 0);
-  newFieldsMap.set('s-stats.2:0', 0);
+  newFieldsMap.set('s_wins', 0);
+  newFieldsMap.set('s_losses', 0);
+  newFieldsMap.set('s_dominations', 0);
+  newFieldsMap.set('s_defeats', 0);
+  newFieldsMap.set('s_stats.0:2', 0);
+  newFieldsMap.set('s_stats.1:2', 0);
+  newFieldsMap.set('s_stats.2:1', 0);
+  newFieldsMap.set('s_stats.2:0', 0);
 
   return document.update(Object.fromEntries(newFieldsMap));
 }
@@ -199,7 +199,7 @@ async function updateUsersProcedure(
   playersSnap.forEach((playerSnap) => {
     if (playerSnap.exists) {
       const playerData = playerSnap.data();
-      if (playerData && playerData['s-wins'] === undefined) {
+      if (playerData && playerData['s_wins'] === undefined) {
         playersToAddFields.push(addSingleMatchFields(playerSnap.ref));
       }
     }
@@ -211,25 +211,25 @@ async function updateUsersProcedure(
   const player2UpdateMap = new Map<string, admin.firestore.FieldValue>();
 
   if (resPlayer1 === 2) {
-    player1UpdateMap.set('s-wins', increment_value);
+    player1UpdateMap.set('s_wins', increment_value);
     player1UpdateMap.set(
-      's-stats.' + resPlayer1 + ':' + resPlayer2,
+      's_stats.' + resPlayer1 + ':' + resPlayer2,
       increment_value
     );
-    player2UpdateMap.set('s-losses', increment_value);
+    player2UpdateMap.set('s_losses', increment_value);
     player2UpdateMap.set(
-      's-stats.' + resPlayer2 + ':' + resPlayer1,
+      's_stats.' + resPlayer2 + ':' + resPlayer1,
       increment_value
     );
   } else {
-    player2UpdateMap.set('s-wins', increment_value);
+    player2UpdateMap.set('s_wins', increment_value);
     player2UpdateMap.set(
-      's-stats.' + resPlayer2 + ':' + resPlayer1,
+      's_stats.' + resPlayer2 + ':' + resPlayer1,
       increment_value
     );
-    player1UpdateMap.set('s-losses', increment_value);
+    player1UpdateMap.set('s_losses', increment_value);
     player1UpdateMap.set(
-      's-stats.' + resPlayer1 + ':' + resPlayer2,
+      's_stats.' + resPlayer1 + ':' + resPlayer2,
       increment_value
     );
   }
@@ -249,14 +249,14 @@ async function updateUsersProcedure(
 
   if (player1Counter > 0) {
     player1UpdateMap.set(
-      's-dominations',
+      's_dominations',
       admin.firestore.FieldValue.increment(player1Counter)
     );
   }
 
   if (player2Counter > 0) {
     player2UpdateMap.set(
-      's-dominations',
+      's_dominations',
       admin.firestore.FieldValue.increment(player2Counter)
     );
   }
@@ -274,14 +274,14 @@ async function updateUsersProcedure(
 
   if (player1Counter > 0) {
     player1UpdateMap.set(
-      's-defeats',
+      's_defeats',
       admin.firestore.FieldValue.increment(player1Counter)
     );
   }
 
   if (player2Counter > 0) {
     player2UpdateMap.set(
-      's-defeats',
+      's_defeats',
       admin.firestore.FieldValue.increment(player2Counter)
     );
   }

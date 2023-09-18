@@ -107,6 +107,10 @@ export class StatisticComponent implements OnInit, OnDestroy {
     'stats.dayFormat',
   ];
 
+  singleMode = false;
+
+  singleModeSubscription: Subscription;
+
   constructor(
     private matchesService: MatchesService,
     private tableService: TableService,
@@ -114,6 +118,12 @@ export class StatisticComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.matchesService.singleModeSub$.subscribe((singleMode) => {
+      if (this.singleMode !== singleMode) {
+        this.singleMode = singleMode;
+      }
+    });
+
     this.statisticsDataSub = combineLatest([
       this.tableService.playerData$,
       this.tableService.teamData$,
@@ -172,8 +182,13 @@ export class StatisticComponent implements OnInit, OnDestroy {
     });
   }
 
+  onSingleModeChange(singleMode: boolean) {
+    this.matchesService.singleModeSub$.next(singleMode);
+  }
+
   ngOnDestroy(): void {
-    this.statisticsDataSub.unsubscribe();
+    this.statisticsDataSub?.unsubscribe();
+    this.singleModeSubscription?.unsubscribe();
   }
 
   getTranslationKeysForDisplayedColumns(forTeams: boolean) {

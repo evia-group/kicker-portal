@@ -22,6 +22,16 @@ exports.newUser = functions.auth.user().onCreate((user) => {
       '1:2': 0,
       '2:1': 0,
     },
+    s_wins: 0,
+    s_losses: 0,
+    s_defeats: 0,
+    s_dominations: 0,
+    s_stats: {
+      '0:2': 0,
+      '2:0': 0,
+      '1:2': 0,
+      '2:1': 0,
+    },
   };
   return db.doc(prefix + 'Users/' + user.uid).set(newUser);
 });

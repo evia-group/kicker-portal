@@ -48,4 +48,17 @@
 .stats-container {
   max-width: 1240px;
   margin: auto;
+
+  .radio-container {
+    display: flex;
+    justify-content: center;
+
+    .mat-radio-group {
+      margin-top: 20px;
+
+      .mat-radio-button ~ .mat-radio-button {
+        margin-left: 25px;
+      }
+    }
+  }
 }

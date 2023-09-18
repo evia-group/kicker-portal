@@ -10,7 +10,7 @@ import {
   DocumentReference,
   Timestamp,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
 import { shareReplay, take } from 'rxjs/operators';
 import { IMatch, ISingleMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
@@ -42,6 +42,8 @@ export class MatchesService implements OnDestroy {
   matchesSub$ = new BehaviorSubject(undefined);
 
   singleMatchesSub$ = new BehaviorSubject(undefined);
+
+  singleModeSub$ = new ReplaySubject<boolean>(1);
 
   constructor(
     protected db: Firestore,
