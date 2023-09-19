@@ -28,24 +28,34 @@ import {
 export class StatisticComponent implements OnInit, OnDestroy {
   playersMap = new Map<string, ILeaderboard>();
 
+  playersMapSM = new Map<string, ILeaderboard>();
+
   teamsMap = new Map<string, ILeaderboard>();
 
   selectedPlayer: string;
+  selectedPlayerSM: string;
   selectedTeam: string;
 
   playersWithMatches: { id: string; name: string }[] = [];
+
+  playersWithMatchesSM: { id: string; name: string }[] = [];
+
   teamsWithMatches: { id: string; name: string }[] = [];
 
   playerYearsList: number[];
+  playerYearsListSM: number[];
   teamYearsList: number[];
 
   selectedYearPlayer: number;
+  selectedYearPlayerSM: number;
   selectedYearTeam: number;
 
   doughnutDataPlayer: number[];
+  doughnutDataPlayerSM: number[];
   doughnutDataTeam: number[];
 
   matchesChartDataPlayer: number[];
+  matchesChartDataPlayerSM: number[];
   matchesChartDataTeam: number[];
 
   statisticsDataSub: Subscription;
@@ -72,6 +82,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
   ];
 
   playersTable: ILeaderboard[];
+  playersTableSM: ILeaderboard[];
   teamsTable: ILeaderboard[];
 
   barLineChartReadyP = false;
@@ -80,19 +91,27 @@ export class StatisticComponent implements OnInit, OnDestroy {
   barLineChartReadyT = false;
   doughnutChartReadyT = false;
   matchesChartReadyT = false;
+  barLineChartReadyPSM = false;
+  doughnutChartReadyPSM = false;
+  matchesChartReadyPSM = false;
   allChartsReadyP = false;
   allChartsReadyT = false;
+  allChartsReadyPSM = false;
 
   playerTableData$ = new ReplaySubject(1);
+  playerTableDataSM$ = new ReplaySubject(1);
   teamsTableData$ = new ReplaySubject(1);
 
   receivedDataP = false;
   receivedDataT = false;
   receivedDataM = false;
+  receivedDataSM = false;
 
   playerDataAvailable = false;
+  playerDataAvailableSM = false;
   teamDataAvailable = false;
   matchesDataAvailable = false;
+  matchesDataAvailableSM = false;
 
   activeColumn = rank;
   sortDirection: SortDirection = 'asc';
@@ -128,15 +147,22 @@ export class StatisticComponent implements OnInit, OnDestroy {
       this.tableService.playerData$,
       this.tableService.teamData$,
       this.matchesService.matchesSub$,
+      this.matchesService.singleMatchesSub$,
     ]).subscribe((data: any) => {
       if (data[0]) {
         this.receivedDataP = true;
         this.playerDataAvailable = data[0][0].length > 0;
+        this.playerDataAvailableSM = data[0][2].length > 0;
         if (this.playerDataAvailable) {
           this.playersTable = data[0][0];
           this.playersMap = data[0][1];
-          this.playerTableData$.next(this.playersTable);
         }
+        this.playerTableData$.next(this.playersTable);
+        if (this.playerDataAvailableSM) {
+          this.playersTableSM = data[0][2];
+          this.playersMapSM = data[0][3];
+        }
+        this.playerTableDataSM$.next(this.playersTableSM);
       }
       if (data[1]) {
         this.receivedDataT = true;
@@ -144,8 +170,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
         if (this.teamDataAvailable) {
           this.teamsTable = data[1][0];
           this.teamsMap = data[1][1];
-          this.teamsTableData$.next(this.teamsTable);
         }
+        this.teamsTableData$.next(this.teamsTable);
       }
       if (data[2]) {
         this.receivedDataM = true;
@@ -179,6 +205,24 @@ export class StatisticComponent implements OnInit, OnDestroy {
           );
         }
       }
+      // if (data[3]) {
+      //   this.receivedDataSM = true;
+      //   this.matchesDataAvailableSM = data[3].length > 0;
+      //   if (this.playerDataAvailableSM && this.matchesDataAvailableSM) {
+      //     [
+      //       this.playersMapSM,
+      //       this.selectedPlayerSM,
+      //       this.playersWithMatchesSM,
+      //       this.selectedYearPlayerSM,
+      //       this.playerYearsListSM,
+      //       this.matchesChartDataPlayerSM,
+      //       this.doughnutDataPlayerSM,
+      //     ] = this.chartsService.createStatisticPlayerData(
+      //       data[3],
+      //       this.playersMapSM
+      //     );
+      //   }
+      // }
     });
   }
 

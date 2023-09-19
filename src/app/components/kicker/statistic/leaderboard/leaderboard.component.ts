@@ -39,7 +39,6 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
   @Input()
   pageSizeOptions = [];
 
-  @Input()
   receivedData = false;
 
   @ViewChild(MatPaginator) set boardPaginator(matPaginator) {
@@ -70,6 +69,7 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
     try {
       this.dataSubscription = this.dataSubject$.subscribe(
         (tableData: never[]) => {
+          this.receivedData = true;
           if (tableData) {
             if (tableData.length > 0) {
               this.dataAvailable = true;

@@ -16,28 +16,36 @@ import {
   providedIn: 'root',
 })
 export class ChartsService {
-  matchesDataAvailable = false;
-  selectedPlayer: string;
-  selectedTeam: string;
-  playerIds: string[] = [];
-  playersWithMatches: { id: string; name: string }[] = [];
-  teamsWithMatches: { id: string; name: string }[] = [];
-  playerYearsList: number[];
-  teamYearsList: number[];
-  selectedYearPlayer: number;
-  selectedYearTeam: number;
-  doughnutDataPlayer: number[];
-  doughnutDataTeam: number[];
-  matchesChartDataPlayer: number[];
-  matchesChartDataTeam: number[];
+  // matchesDataAvailable = false;
+  // selectedPlayer: string;
+  // selectedTeam: string;
+  // playerIds: string[] = [];
+  // playersWithMatches: { id: string; name: string }[] = [];
+  // teamsWithMatches: { id: string; name: string }[] = [];
+  // playerYearsList: number[];
+  // teamYearsList: number[];
+  // selectedYearPlayer: number;
+  // selectedYearTeam: number;
+  // doughnutDataPlayer: number[];
+  // doughnutDataTeam: number[];
+  // matchesChartDataPlayer: number[];
+  // matchesChartDataTeam: number[];
 
   constructor(private authService: AuthService) {}
 
   createStatisticPlayerData(matches: IMatch[], playersMap) {
+    // let matchesDataAvailable = false;
+    let selectedPlayer: string;
+    let playerIds: string[] = [];
+    const playersWithMatches: { id: string; name: string }[] = [];
+    let playerYearsList: number[];
+    let selectedYearPlayer: number;
+    let doughnutDataPlayer: number[];
+    let matchesChartDataPlayer: number[];
     this.clearTimeline(playersMap);
     if (matches.length > 0) {
-      this.matchesDataAvailable = true;
-      this.selectedPlayer = undefined;
+      // matchesDataAvailable = true;
+      selectedPlayer = undefined;
       const loggedInUser = this.authService.user.uid;
       matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
 
@@ -52,9 +60,9 @@ export class ChartsService {
         const matchYear = match.date.toDate().getFullYear();
         const matchMonth = match.date.toDate().getMonth();
 
-        this.playerIds = Array.from(playersMap.keys());
-        const playersTeam1 = this.getPlayersOfTeam(team1);
-        const playersTeam2 = this.getPlayersOfTeam(team2);
+        playerIds = Array.from(playersMap.keys());
+        const playersTeam1 = this.getPlayersOfTeam(team1, playerIds);
+        const playersTeam2 = this.getPlayersOfTeam(team2, playerIds);
 
         playersTeam1.forEach((player) => {
           if (!playerIdsWithMatches.includes(player)) {
@@ -95,48 +103,52 @@ export class ChartsService {
       });
 
       if (playerIdsWithMatches.includes(loggedInUser)) {
-        this.selectedPlayer = loggedInUser;
+        selectedPlayer = loggedInUser;
       } else {
-        this.selectedPlayer = playerIdsWithMatches[0];
+        selectedPlayer = playerIdsWithMatches[0];
       }
 
       for (let i = 0; i < playerIdsWithMatches.length; i++) {
         const itemId = playerIdsWithMatches[i];
-        this.playersWithMatches[i] = {
+        playersWithMatches[i] = {
           id: itemId,
           name: playersMap.get(itemId)[name],
         };
       }
 
-      this.playerYearsList = this.setYearsList(this.selectedPlayer, playersMap);
+      playerYearsList = this.setYearsList(selectedPlayer, playersMap);
 
-      this.selectedYearPlayer =
-        this.playerYearsList[this.playerYearsList.length - 1];
+      selectedYearPlayer = playerYearsList[playerYearsList.length - 1];
 
-      this.doughnutDataPlayer = this.getDoughnutData(
-        playersMap.get(this.selectedPlayer)
-      );
-      this.matchesChartDataPlayer = this.getMatchesChartData(
-        playersMap.get(this.selectedPlayer),
-        this.selectedYearPlayer
+      doughnutDataPlayer = this.getDoughnutData(playersMap.get(selectedPlayer));
+      matchesChartDataPlayer = this.getMatchesChartData(
+        playersMap.get(selectedPlayer),
+        selectedYearPlayer
       );
     }
     return [
       playersMap,
-      this.selectedPlayer,
-      this.playersWithMatches,
-      this.selectedYearPlayer,
-      this.playerYearsList,
-      this.matchesChartDataPlayer,
-      this.doughnutDataPlayer,
+      selectedPlayer,
+      playersWithMatches,
+      selectedYearPlayer,
+      playerYearsList,
+      matchesChartDataPlayer,
+      doughnutDataPlayer,
     ];
   }
 
   createStatisticTeamData(matches: IMatch[], teamsMap) {
+    // let matchesDataAvailable = false;
+    let selectedTeam: string;
+    const teamsWithMatches: { id: string; name: string }[] = [];
+    let teamYearsList: number[];
+    let selectedYearTeam: number;
+    let doughnutDataTeam: number[];
+    let matchesChartDataTeam: number[];
     this.clearTimeline(teamsMap);
     if (matches.length > 0) {
-      this.matchesDataAvailable = true;
-      this.selectedTeam = undefined;
+      // matchesDataAvailable = true;
+      selectedTeam = undefined;
       const loggedInUser = this.authService.user.uid;
       matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
 
@@ -161,19 +173,19 @@ export class ChartsService {
             teamIdsWithMatches.push(team2);
           }
 
-          if (!this.selectedTeam) {
+          if (!selectedTeam) {
             if (
               (team1.startsWith(loggedInUser) ||
                 team1.endsWith(loggedInUser)) &&
               teamIdsWithMatches.includes(team1)
             ) {
-              this.selectedTeam = team1;
+              selectedTeam = team1;
             } else if (
               (team2.startsWith(loggedInUser) ||
                 team2.endsWith(loggedInUser)) &&
               teamIdsWithMatches.includes(team2)
             ) {
-              this.selectedTeam = team2;
+              selectedTeam = team2;
             }
           }
 
@@ -215,37 +227,35 @@ export class ChartsService {
         }
       });
 
-      if (!this.selectedTeam) {
-        this.selectedTeam = teamIdsWithMatches[0];
+      if (!selectedTeam) {
+        selectedTeam = teamIdsWithMatches[0];
       }
 
       for (let i = 0; i < teamIdsWithMatches.length; i++) {
         const itemId = teamIdsWithMatches[i];
-        this.teamsWithMatches[i] = {
+        teamsWithMatches[i] = {
           id: itemId,
           name: teamsMap.get(itemId)[name],
         };
       }
 
-      this.teamYearsList = this.setYearsList(this.selectedTeam, teamsMap);
+      teamYearsList = this.setYearsList(selectedTeam, teamsMap);
 
-      this.selectedYearTeam = this.teamYearsList[this.teamYearsList.length - 1];
-      this.doughnutDataTeam = this.getDoughnutData(
-        teamsMap.get(this.selectedTeam)
-      );
-      this.matchesChartDataTeam = this.getMatchesChartData(
-        teamsMap.get(this.selectedTeam),
-        this.selectedYearTeam
+      selectedYearTeam = teamYearsList[teamYearsList.length - 1];
+      doughnutDataTeam = this.getDoughnutData(teamsMap.get(selectedTeam));
+      matchesChartDataTeam = this.getMatchesChartData(
+        teamsMap.get(selectedTeam),
+        selectedYearTeam
       );
     }
     return [
       teamsMap,
-      this.selectedTeam,
-      this.teamsWithMatches,
-      this.selectedYearTeam,
-      this.teamYearsList,
-      this.matchesChartDataTeam,
-      this.doughnutDataTeam,
+      selectedTeam,
+      teamsWithMatches,
+      selectedYearTeam,
+      teamYearsList,
+      matchesChartDataTeam,
+      doughnutDataTeam,
     ];
   }
 
@@ -262,11 +272,11 @@ export class ChartsService {
     });
   }
 
-  getPlayersOfTeam(teamId: string): string[] {
+  getPlayersOfTeam(teamId: string, playerIds: string[]): string[] {
     let counter = 0;
     const teamPlayers: string[] = [];
 
-    for (const playerId of this.playerIds) {
+    for (const playerId of playerIds) {
       if (teamId.startsWith(playerId) || teamId.endsWith(playerId)) {
         teamPlayers.push(playerId);
         counter++;
