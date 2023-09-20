@@ -15,3 +15,8 @@ export interface ILeaderboard {
   winsTimeline: Map<number, number[]>;
   lossesTimeline: Map<number, number[]>;
 }
+
+export interface IPlaytime {
+  startTime: string;
+  endTime: string;
+}

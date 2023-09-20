@@ -1,6 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatchesService } from '../../services/matches.service';
-import { IMatch, LastMatches } from '../../interfaces/match.interface';
+import {
+  IMatch,
+  ISingleMatch,
+  LastMatches,
+} from '../../interfaces/match.interface';
 import { TeamsService } from '../../services/teams.service';
 import { combineLatestWith, Observable, Subscription } from 'rxjs';
 import { ITeam, IUser } from '../../interfaces/user.interface';
@@ -19,7 +23,7 @@ export class LastAddedMatchesComponent implements OnInit, OnDestroy {
   lastAddedMatches: LastMatches[] = [];
   subscription: Subscription;
   matchesAvailable = false;
-  currentObservable: Observable<[IMatch[], ITeam[] | IUser[]]>;
+  currentObservable: Observable<[IMatch[] | ISingleMatch[], ITeam[] | IUser[]]>;
 
   constructor(
     private matchesService: MatchesService,
@@ -37,13 +41,16 @@ export class LastAddedMatchesComponent implements OnInit, OnDestroy {
         );
 
     this.subscription = this.currentObservable.subscribe(
-      ([matches, entities]: [IMatch[], ITeam[] | IUser[]]) => {
+      ([matches, entities]: [IMatch[] | ISingleMatch[], ITeam[] | IUser[]]) => {
         this.createLastMatchesList(matches, entities);
       }
     );
   }
 
-  createLastMatchesList(matches: IMatch[], entities: ITeam[] | IUser[]) {
+  createLastMatchesList(
+    matches: IMatch[] | ISingleMatch[],
+    entities: ITeam[] | IUser[]
+  ) {
     const currentNumberOfMatches = Math.min(
       this.numberOfMatchesToShow,
       matches.length

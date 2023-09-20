@@ -4,83 +4,68 @@ import { TeamsService } from './teams.service';
 import { BehaviorSubject } from 'rxjs';
 import { ITeam, IUser } from '../interfaces/user.interface';
 import { ILeaderboard } from '../interfaces/statistic.interface';
-import {
-  winsTimeline,
-  lossesTimeline,
-  twoZero,
-  zeroTwo,
-  twoOne,
-  oneTwo,
-  rank,
-  totalMatches,
-  diff,
-  elo,
-} from '../global-variables';
+import { twoZero, zeroTwo, twoOne, oneTwo } from '../global-variables';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TableService {
-  receivedPlayersData = false;
-  receivedTeamsData = false;
-
-  playersMap = new Map<string, ILeaderboard>();
-  playersMapSM = new Map<string, ILeaderboard>();
-  teamsMap = new Map<string, ILeaderboard>();
-
-  playersTable: ILeaderboard[];
-  playersTableSM: ILeaderboard[];
-  teamsTable: ILeaderboard[];
-
-  playerData$ = new BehaviorSubject(undefined);
-  teamData$ = new BehaviorSubject(undefined);
+  playerData$ = new BehaviorSubject<
+    [
+      ILeaderboard[],
+      Map<string, ILeaderboard>,
+      ILeaderboard[],
+      Map<string, ILeaderboard>
+    ]
+  >(undefined);
+  teamData$ = new BehaviorSubject<[ILeaderboard[], Map<string, ILeaderboard>]>(
+    undefined
+  );
 
   constructor(usersService: UsersService, teamsService: TeamsService) {
     usersService.users$.subscribe((data) => {
-      this.receivedPlayersData = true;
-      const playersData = data;
-      if (playersData.length > 0) {
-        playersData.map((player: IUser) => {
+      const playersMap = new Map<string, ILeaderboard>();
+      const playersMapSM = new Map<string, ILeaderboard>();
+      let playersTable: ILeaderboard[] = [];
+      let playersTableSM: ILeaderboard[] = [];
+      if (data.length > 0) {
+        data.forEach((player: IUser) => {
           const res = this.createTableData(player, false);
-          this.playersMap.set(player.id, res);
+          playersMap.set(player.id, res);
           const resSM = this.createTableData(player, true);
-          this.playersMapSM.set(player.id, resSM);
+          playersMapSM.set(player.id, resSM);
         });
-        this.playersTable = Array.from(this.playersMap.values()).filter(
+        playersTable = Array.from(playersMap.values()).filter(
           (user) => user.totalMatches > 0
         );
-        this.addRanks(this.playersTable);
-        this.playersTableSM = Array.from(this.playersMapSM.values()).filter(
+        this.addRanks(playersTable);
+        playersTableSM = Array.from(playersMapSM.values()).filter(
           (user) => user.totalMatches > 0
         );
-        this.addRanks(this.playersTableSM);
-        this.playerData$.next([
-          this.playersTable,
-          this.playersMap,
-          this.playersTableSM,
-          this.playersMapSM,
-        ]);
-      } else {
-        this.playerData$.next([[], new Map(), [], new Map()]);
+        this.addRanks(playersTableSM);
       }
+      this.playerData$.next([
+        playersTable,
+        playersMap,
+        playersTableSM,
+        playersMapSM,
+      ]);
     });
 
     teamsService.teams$.subscribe((data) => {
-      this.receivedTeamsData = true;
-      const teamsData = data;
-      if (teamsData.length > 0) {
-        teamsData.map((team: IUser | ITeam) => {
+      const teamsMap = new Map<string, ILeaderboard>();
+      let teamsTable: ILeaderboard[] = [];
+      if (data.length > 0) {
+        data.forEach((team: IUser | ITeam) => {
           const res = this.createTableData(team, false);
-          this.teamsMap.set(team.id, res);
+          teamsMap.set(team.id, res);
         });
-        this.teamsTable = Array.from(this.teamsMap.values()).filter(
+        teamsTable = Array.from(teamsMap.values()).filter(
           (team) => team.totalMatches > 0
         );
-        this.addRanks(this.teamsTable);
-        this.teamData$.next([this.teamsTable, this.teamsMap]);
-      } else {
-        this.teamData$.next([[], new Map()]);
+        this.addRanks(teamsTable);
       }
+      this.teamData$.next([teamsTable, teamsMap]);
     });
   }
 
@@ -95,54 +80,43 @@ export class TableService {
       dominations: 0,
       elo: 0,
       losses: 0,
-      lossesTimeline: undefined,
+      lossesTimeline: new Map<number, number[]>(),
       name: '',
       rank: 0,
       totalMatches: 0,
       wins: 0,
-      winsTimeline: undefined,
+      winsTimeline: new Map<number, number[]>(),
     };
     if (!forSingleMode) {
-      // newData = (({ name, wins, losses, dominations, defeats }) => ({
-      //   name,
-      //   wins,
-      //   losses,
-      //   dominations,
-      //   defeats,
-      // }))(data);
-      newData['name'] = data.name;
-      newData['wins'] = data.wins;
-      newData['losses'] = data.losses;
-      newData['dominations'] = data.dominations;
-      newData['defeats'] = data.defeats;
-      newData[twoZero] = data.stats[twoZero];
-      newData[twoOne] = data.stats[twoOne];
-      newData[zeroTwo] = data.stats[zeroTwo];
-      newData[oneTwo] = data.stats[oneTwo];
-      newData[totalMatches] = data.wins + data.losses;
-      newData[diff] = data.wins - data.losses;
-      newData[elo] = 0;
-      newData[winsTimeline] = new Map<number, number[]>();
-      newData[lossesTimeline] = new Map<number, number[]>();
-      newData[rank] = 0;
+      Object.assign(newData, {
+        name: data.name,
+        wins: data.wins,
+        losses: data.losses,
+        dominations: data.dominations,
+        defeats: data.defeats,
+        [twoZero]: data.stats[twoZero],
+        [twoOne]: data.stats[twoOne],
+        [zeroTwo]: data.stats[zeroTwo],
+        [oneTwo]: data.stats[oneTwo],
+        totalMatches: data.wins + data.losses,
+        diff: data.wins - data.losses,
+      });
     } else {
       data = data as IUser;
       if (data.s_wins !== undefined) {
-        newData['name'] = data.name;
-        newData['wins'] = data.s_wins;
-        newData['losses'] = data.s_losses;
-        newData['dominations'] = data.s_dominations;
-        newData['defeats'] = data.s_defeats;
-        newData[twoZero] = data.s_stats[twoZero];
-        newData[twoOne] = data.s_stats[twoOne];
-        newData[zeroTwo] = data.s_stats[zeroTwo];
-        newData[oneTwo] = data.s_stats[oneTwo];
-        newData[totalMatches] = data.s_wins + data.s_losses;
-        newData[diff] = data.s_wins - data.s_losses;
-        newData[elo] = 0;
-        newData[winsTimeline] = new Map<number, number[]>();
-        newData[lossesTimeline] = new Map<number, number[]>();
-        newData[rank] = 0;
+        Object.assign(newData, {
+          name: data.name,
+          wins: data.s_wins,
+          losses: data.s_losses,
+          dominations: data.s_dominations,
+          defeats: data.s_defeats,
+          [twoZero]: data.s_stats[twoZero],
+          [twoOne]: data.s_stats[twoOne],
+          [zeroTwo]: data.s_stats[zeroTwo],
+          [oneTwo]: data.s_stats[oneTwo],
+          totalMatches: data.s_wins + data.s_losses,
+          diff: data.s_wins - data.s_losses,
+        });
       }
     }
     return newData;

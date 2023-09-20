@@ -18,6 +18,7 @@ import { FormGroup } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { IUser } from '../interfaces/user.interface';
+import { IPlaytime } from '../interfaces/statistic.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -29,19 +30,19 @@ export class MatchesService implements OnDestroy {
 
   closeText = '';
 
-  public matches$: Observable<any>;
+  public matches$: Observable<IMatch[]>;
 
-  public singeMatches$: Observable<any>;
+  public singeMatches$: Observable<ISingleMatch[]>;
 
-  public playtime$: Observable<any>;
+  public playtime$: Observable<IPlaytime[]>;
 
   protected collection: CollectionReference;
 
   protected singleMatchCollection: CollectionReference;
 
-  matchesSub$ = new BehaviorSubject(undefined);
+  matchesSub$ = new BehaviorSubject<IMatch[]>(undefined);
 
-  singleMatchesSub$ = new BehaviorSubject(undefined);
+  singleMatchesSub$ = new BehaviorSubject<ISingleMatch[]>(undefined);
 
   singleModeSub$ = new ReplaySubject<boolean>(1);
 
@@ -54,7 +55,9 @@ export class MatchesService implements OnDestroy {
       db,
       `${environment.prefix}Matches`
     ) as CollectionReference<IMatch>;
-    this.matches$ = collectionData(this.collection).pipe(shareReplay(1));
+    this.matches$ = collectionData(this.collection).pipe(
+      shareReplay(1)
+    ) as Observable<IMatch[]>;
 
     this.matches$.subscribe(this.matchesSub$);
 
@@ -64,7 +67,7 @@ export class MatchesService implements OnDestroy {
     ) as CollectionReference<ISingleMatch>;
     this.singeMatches$ = collectionData(this.singleMatchCollection).pipe(
       shareReplay(1)
-    );
+    ) as Observable<ISingleMatch[]>;
 
     this.singeMatches$.subscribe(this.singleMatchesSub$);
 
@@ -72,7 +75,9 @@ export class MatchesService implements OnDestroy {
       db,
       `${environment.prefix}Playtime`
     ) as CollectionReference<IMatch>;
-    this.playtime$ = collectionData(playtimeCol).pipe(shareReplay(1));
+    this.playtime$ = collectionData(playtimeCol).pipe(
+      shareReplay(1)
+    ) as Observable<IPlaytime[]>;
 
     this.getText();
 

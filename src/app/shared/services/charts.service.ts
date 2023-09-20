@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IMatch } from '../interfaces/match.interface';
+import { IMatch, ISingleMatch } from '../interfaces/match.interface';
 import { AuthService } from './auth.service';
 import { ILeaderboard } from '../interfaces/statistic.interface';
 import {
@@ -16,25 +16,20 @@ import {
   providedIn: 'root',
 })
 export class ChartsService {
-  // matchesDataAvailable = false;
-  // selectedPlayer: string;
-  // selectedTeam: string;
-  // playerIds: string[] = [];
-  // playersWithMatches: { id: string; name: string }[] = [];
-  // teamsWithMatches: { id: string; name: string }[] = [];
-  // playerYearsList: number[];
-  // teamYearsList: number[];
-  // selectedYearPlayer: number;
-  // selectedYearTeam: number;
-  // doughnutDataPlayer: number[];
-  // doughnutDataTeam: number[];
-  // matchesChartDataPlayer: number[];
-  // matchesChartDataTeam: number[];
-
   constructor(private authService: AuthService) {}
 
-  createStatisticPlayerData(matches: IMatch[], playersMap) {
-    // let matchesDataAvailable = false;
+  createStatisticPlayerData(
+    matches: IMatch[] | ISingleMatch[],
+    playersMap: Map<string, ILeaderboard>
+  ): [
+    Map<string, ILeaderboard>,
+    string,
+    { id: string; name: string }[],
+    number,
+    number[],
+    number[],
+    number[]
+  ] {
     let selectedPlayer: string;
     let playerIds: string[] = [];
     const playersWithMatches: { id: string; name: string }[] = [];
@@ -44,7 +39,6 @@ export class ChartsService {
     let matchesChartDataPlayer: number[];
     this.clearTimeline(playersMap);
     if (matches.length > 0) {
-      // matchesDataAvailable = true;
       selectedPlayer = undefined;
       const loggedInUser = this.authService.user.uid;
       matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
@@ -102,18 +96,20 @@ export class ChartsService {
         });
       });
 
-      if (playerIdsWithMatches.includes(loggedInUser)) {
-        selectedPlayer = loggedInUser;
-      } else {
-        selectedPlayer = playerIdsWithMatches[0];
-      }
-
       for (let i = 0; i < playerIdsWithMatches.length; i++) {
         const itemId = playerIdsWithMatches[i];
         playersWithMatches[i] = {
           id: itemId,
           name: playersMap.get(itemId)[name],
         };
+      }
+
+      this.sortByName(playersWithMatches);
+
+      if (playerIdsWithMatches.includes(loggedInUser)) {
+        selectedPlayer = loggedInUser;
+      } else {
+        selectedPlayer = playersWithMatches[0].id;
       }
 
       playerYearsList = this.setYearsList(selectedPlayer, playersMap);
@@ -137,8 +133,18 @@ export class ChartsService {
     ];
   }
 
-  createStatisticTeamData(matches: IMatch[], teamsMap) {
-    // let matchesDataAvailable = false;
+  createStatisticTeamData(
+    matches: IMatch[],
+    teamsMap: Map<string, ILeaderboard>
+  ): [
+    Map<string, ILeaderboard>,
+    string,
+    { id: string; name: string }[],
+    number,
+    number[],
+    number[],
+    number[]
+  ] {
     let selectedTeam: string;
     const teamsWithMatches: { id: string; name: string }[] = [];
     let teamYearsList: number[];
@@ -147,7 +153,6 @@ export class ChartsService {
     let matchesChartDataTeam: number[];
     this.clearTimeline(teamsMap);
     if (matches.length > 0) {
-      // matchesDataAvailable = true;
       selectedTeam = undefined;
       const loggedInUser = this.authService.user.uid;
       matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
@@ -227,16 +232,18 @@ export class ChartsService {
         }
       });
 
-      if (!selectedTeam) {
-        selectedTeam = teamIdsWithMatches[0];
-      }
-
       for (let i = 0; i < teamIdsWithMatches.length; i++) {
         const itemId = teamIdsWithMatches[i];
         teamsWithMatches[i] = {
           id: itemId,
           name: teamsMap.get(itemId)[name],
         };
+      }
+
+      this.sortByName(teamsWithMatches);
+
+      if (!selectedTeam) {
+        selectedTeam = teamsWithMatches[0].id;
       }
 
       teamYearsList = this.setYearsList(selectedTeam, teamsMap);
@@ -259,7 +266,11 @@ export class ChartsService {
     ];
   }
 
-  clearTimeline(currentMap) {
+  sortByName(list: { id: string; name: string }[]) {
+    list.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  clearTimeline(currentMap: Map<string, ILeaderboard>) {
     currentMap.forEach((item) => {
       const currentWinsTimeline = item[winsTimeline];
       if (currentWinsTimeline) {
