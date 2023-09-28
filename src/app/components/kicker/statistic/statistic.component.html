@@ -11,15 +11,13 @@
     <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
     <ng-container *ngIf="singleMode">
       <mat-card-content>
-        <app-spinner *ngIf="!receivedDataP || !receivedDataSM"></app-spinner>
-        <p
-          *ngIf="
+        <app-loading-data
+          [showSpinner]="!receivedDataP || !receivedDataSM"
+          [showNoData]="
             receivedDataP &&
             receivedDataSM &&
             (!playerDataAvailableSM || !matchesDataAvailableSM)
-          ">
-          {{ 'info.noData' | translate }}
-        </p>
+          "></app-loading-data>
         <app-leaderboard
           *ngIf="playerDataAvailableSM && matchesDataAvailableSM"
           [dataSubject$]="playerTableDataSM$"
@@ -37,16 +35,13 @@
       <mat-tab-group mat-align-tabs="start">
         <mat-tab label="{{ 'stats.players' | translate }}">
           <mat-card-content>
-            <app-spinner *ngIf="!receivedDataP || !receivedDataM"></app-spinner>
-            <p
-              class="info-class"
-              *ngIf="
+            <app-loading-data
+              [showSpinner]="!receivedDataP || !receivedDataM"
+              [showNoData]="
                 receivedDataP &&
                 receivedDataM &&
                 (!playerDataAvailable || !matchesDataAvailable)
-              ">
-              {{ 'info.noData' | translate }}
-            </p>
+              "></app-loading-data>
             <app-leaderboard
               *ngIf="playerDataAvailable && matchesDataAvailable"
               [dataSubject$]="playerTableData$"
@@ -62,15 +57,13 @@
         </mat-tab>
         <mat-tab label="{{ 'stats.teams' | translate }}">
           <mat-card-content>
-            <app-spinner *ngIf="!receivedDataT || !receivedDataM"></app-spinner>
-            <p
-              *ngIf="
+            <app-loading-data
+              [showSpinner]="!receivedDataT || !receivedDataM"
+              [showNoData]="
                 receivedDataT &&
                 receivedDataM &&
                 (!teamDataAvailable || !matchesDataAvailable)
-              ">
-              {{ 'info.noData' | translate }}
-            </p>
+              "></app-loading-data>
             <app-leaderboard
               *ngIf="teamDataAvailable && matchesDataAvailable"
               [dataSubject$]="teamsTableData$"
@@ -94,15 +87,13 @@
     }}</mat-card-title>
     <mat-card-content>
       <ng-container *ngIf="singleMode">
-        <app-spinner *ngIf="!receivedDataP || !receivedDataSM"></app-spinner>
-        <p
-          *ngIf="
+        <app-loading-data
+          [showSpinner]="!receivedDataP || !receivedDataSM"
+          [showNoData]="
             receivedDataP &&
             receivedDataSM &&
             (!playerDataAvailableSM || !matchesDataAvailableSM)
-          ">
-          {{ 'info.noData' | translate }}
-        </p>
+          "></app-loading-data>
         <div class="selections" *ngIf="allChartsReadyPSM">
           <mat-form-field appearance="fill">
             <mat-label>{{ 'common.player' | translate }}</mat-label>
@@ -171,15 +162,13 @@
       <ng-container *ngIf="!singleMode">
         <mat-tab-group mat-align-tabs="start">
           <mat-tab label="{{ 'stats.players' | translate }}">
-            <app-spinner *ngIf="!receivedDataP || !receivedDataM"></app-spinner>
-            <p
-              *ngIf="
+            <app-loading-data
+              [showSpinner]="!receivedDataP || !receivedDataM"
+              [showNoData]="
                 receivedDataP &&
                 receivedDataM &&
                 (!playerDataAvailable || !matchesDataAvailable)
-              ">
-              {{ 'info.noData' | translate }}
-            </p>
+              "></app-loading-data>
             <div class="selections" *ngIf="allChartsReadyP">
               <mat-form-field appearance="fill">
                 <mat-label>{{ 'common.player' | translate }}</mat-label>
@@ -246,15 +235,13 @@
             </div>
           </mat-tab>
           <mat-tab label="{{ 'stats.teams' | translate }}">
-            <app-spinner *ngIf="!receivedDataT || !receivedDataM"></app-spinner>
-            <p
-              *ngIf="
+            <app-loading-data
+              [showSpinner]="!receivedDataT || !receivedDataM"
+              [showNoData]="
                 receivedDataT &&
                 receivedDataM &&
                 (!teamDataAvailable || !matchesDataAvailable)
-              ">
-              {{ 'info.noData' | translate }}
-            </p>
+              "></app-loading-data>
             <div class="selections" *ngIf="allChartsReadyT">
               <mat-form-field appearance="fill">
                 <mat-label>{{ 'common.team' | translate }}</mat-label>

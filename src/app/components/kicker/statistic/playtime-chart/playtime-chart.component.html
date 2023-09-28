@@ -1,7 +1,6 @@
-<app-spinner *ngIf="waitingForData"></app-spinner>
-<p *ngIf="!waitingForData && !playtimeDataAvailable">
-  {{ 'info.noData' | translate }}
-</p>
+<app-loading-data
+  [showSpinner]="waitingForData"
+  [showNoData]="!waitingForData && !playtimeDataAvailable"></app-loading-data>
 <ng-container *ngIf="!waitingForData && playtimeDataAvailable">
   <div class="flex-box">
     <app-datepicker
