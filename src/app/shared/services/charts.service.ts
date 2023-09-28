@@ -37,22 +37,23 @@ export class ChartsService {
     let selectedYearPlayer: number;
     let doughnutDataPlayer: number[];
     let matchesChartDataPlayer: number[];
-    this.clearTimeline(playersMap);
+    this.clearTimelineAndElo(playersMap);
+
     if (matches.length > 0) {
-      selectedPlayer = undefined;
       const loggedInUser = this.authService.user.uid;
-      matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
+      this.sortByDate(matches);
 
       const playerIdsWithMatches: string[] = [];
 
       matches.forEach((match: IMatch) => {
-        const matchTeams = Object.keys(match.result);
-        const team1 = matchTeams[0];
-        const team2 = matchTeams[1];
-        const resultTeam1 = match.result[team1];
-
-        const matchYear = match.date.toDate().getFullYear();
-        const matchMonth = match.date.toDate().getMonth();
+        const {
+          team1,
+          team2,
+          resultTeam1,
+          resultTeam2,
+          matchYear,
+          matchMonth,
+        } = this.getMatchData(match);
 
         playerIds = Array.from(playersMap.keys());
         const playersTeam1 = this.getPlayersOfTeam(team1, playerIds);
@@ -94,6 +95,16 @@ export class ChartsService {
             winsTimeline
           );
         });
+
+        this.calculateElo(
+          playersTeam1,
+          playersTeam2,
+          playersMap,
+          match,
+          team1,
+          resultTeam1,
+          resultTeam2
+        );
       });
 
       for (let i = 0; i < playerIdsWithMatches.length; i++) {
@@ -151,22 +162,22 @@ export class ChartsService {
     let selectedYearTeam: number;
     let doughnutDataTeam: number[];
     let matchesChartDataTeam: number[];
-    this.clearTimeline(teamsMap);
+    this.clearTimelineAndElo(teamsMap);
     if (matches.length > 0) {
-      selectedTeam = undefined;
       const loggedInUser = this.authService.user.uid;
-      matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
+      this.sortByDate(matches);
 
       const teamIdsWithMatches: string[] = [];
 
       matches.forEach((match: IMatch) => {
-        const matchTeams = Object.keys(match.result);
-        const team1 = matchTeams[0];
-        const team2 = matchTeams[1];
-        const resultTeam1 = match.result[team1];
-
-        const matchYear = match.date.toDate().getFullYear();
-        const matchMonth = match.date.toDate().getMonth();
+        const {
+          team1,
+          team2,
+          resultTeam1,
+          resultTeam2,
+          matchYear,
+          matchMonth,
+        } = this.getMatchData(match);
         const teamIds = Array.from(teamsMap.keys());
 
         if (teamIds.includes(team1) || teamIds.includes(team2)) {
@@ -230,6 +241,16 @@ export class ChartsService {
             );
           }
         }
+
+        this.calculateElo(
+          [team1],
+          [team2],
+          teamsMap,
+          match,
+          team1,
+          resultTeam1,
+          resultTeam2
+        );
       });
 
       for (let i = 0; i < teamIdsWithMatches.length; i++) {
@@ -266,12 +287,143 @@ export class ChartsService {
     ];
   }
 
+  private getMatchData(match: IMatch) {
+    const matchTeams = Object.keys(match.result);
+    const team1 = matchTeams[0];
+    const team2 = matchTeams[1];
+    const resultTeam1 = match.result[team1];
+    const resultTeam2 = match.result[team2];
+
+    const matchYear = match.date.toDate().getFullYear();
+    const matchMonth = match.date.toDate().getMonth();
+    return { team1, team2, resultTeam1, resultTeam2, matchYear, matchMonth };
+  }
+
+  private calculateElo(
+    playersTeam1: string[],
+    playersTeam2: string[],
+    playersMap: Map<string, ILeaderboard>,
+    match: IMatch,
+    team1: string,
+    resultTeam1: number,
+    resultTeam2: number
+  ) {
+    const T1P1 = playersTeam1[0];
+    const T1P2 = playersTeam1[1];
+    const T2P1 = playersTeam2[0];
+    const T2P2 = playersTeam2[1];
+    const oldRatingT1P1 = playersMap.get(T1P1).elo;
+    const oldRatingT1P2 = playersMap.get(T1P2) ? playersMap.get(T1P2).elo : 0;
+    const oldRatingT2P1 = playersMap.get(T2P1).elo;
+    const oldRatingT2P2 = playersMap.get(T2P2) ? playersMap.get(T2P2).elo : 0;
+
+    const T1Rating = (oldRatingT1P1 + oldRatingT1P2) / 2;
+    const T2Rating = (oldRatingT2P1 + oldRatingT2P2) / 2;
+
+    const ET1 = this.getExpectedScore(T1Rating, T2Rating);
+    const ET2 = this.getExpectedScore(T2Rating, T1Rating);
+
+    let dominationsT1 = 0;
+    let dominationsT2 = 0;
+
+    match.dominations.forEach((domination) => {
+      if (domination.id === team1) {
+        dominationsT1++;
+      } else {
+        dominationsT2++;
+      }
+    });
+
+    let defeatsT1 = 0;
+    let defeatsT2 = 0;
+
+    match.defeats.forEach((defeat) => {
+      if (defeat.id === team1) {
+        defeatsT1++;
+      } else {
+        defeatsT2++;
+      }
+    });
+
+    const ST1 = resultTeam1 === 2 ? 1 : 0;
+    const ST2 = resultTeam2 === 2 ? 1 : 0;
+
+    const resultDifferenceT1 = this.convertValue(resultTeam1 - resultTeam2);
+    const resultDifferenceT2 = this.convertValue(resultTeam2 - resultTeam1);
+
+    const PT1 = Math.abs(
+      resultDifferenceT1 + dominationsT1 * 0.5 - defeatsT1 * 0.5
+    );
+    const PT2 = Math.abs(
+      resultDifferenceT2 + dominationsT2 * 0.5 - defeatsT2 * 0.5
+    );
+
+    playersMap.get(T1P1).elo = this.getNewRating(
+      playersMap.get(T1P1).elo,
+      PT1,
+      ST1,
+      ET1
+    );
+
+    if (playersMap.get(T1P2)) {
+      playersMap.get(T1P2).elo = this.getNewRating(
+        playersMap.get(T1P2).elo,
+        PT1,
+        ST1,
+        ET1
+      );
+    }
+
+    playersMap.get(T2P1).elo = this.getNewRating(
+      playersMap.get(T2P1).elo,
+      PT2,
+      ST2,
+      ET2
+    );
+
+    if (playersMap.get(T2P2)) {
+      playersMap.get(T2P2).elo = this.getNewRating(
+        playersMap.get(T2P2).elo,
+        PT2,
+        ST2,
+        ET2
+      );
+    }
+  }
+
+  getExpectedScore(currentPlayerOrTeamRating: number, opponentRating: number) {
+    return 1 / (1 + 10 ** ((opponentRating - currentPlayerOrTeamRating) / 500));
+  }
+
+  getNewRating(oldRating: number, P: number, S: number, E: number) {
+    return Math.round(oldRating + 32 * P * (S - E));
+  }
+
+  convertValue(inputValue: number) {
+    if (inputValue === 2) {
+      return 1.5;
+    } else if (inputValue === 1) {
+      return 1;
+    } else if (inputValue === -1) {
+      return -1;
+    } else if (inputValue === -2) {
+      return -1.5;
+    } else {
+      return 0;
+    }
+  }
+
   sortByName(list: { id: string; name: string }[]) {
     list.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  clearTimeline(currentMap: Map<string, ILeaderboard>) {
+  sortByDate(matches: IMatch[] | ISingleMatch[]) {
+    matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
+  }
+
+  clearTimelineAndElo(currentMap: Map<string, ILeaderboard>) {
     currentMap.forEach((item) => {
+      item.elo = 0;
       const currentWinsTimeline = item[winsTimeline];
       if (currentWinsTimeline) {
         currentWinsTimeline.clear();

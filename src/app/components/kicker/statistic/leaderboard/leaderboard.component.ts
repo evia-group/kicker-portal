@@ -39,8 +39,6 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
   @Input()
   pageSizeOptions = [];
 
-  receivedData = false;
-
   @ViewChild(MatPaginator) set boardPaginator(matPaginator) {
     if (this.boardData && matPaginator) {
       this.boardData.paginator = matPaginator;
@@ -63,16 +61,12 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
 
   dataSubscription: Subscription;
 
-  dataAvailable = false;
-
   ngOnInit(): void {
     try {
       this.dataSubscription = this.dataSubject$.subscribe(
         (tableData: never[]) => {
-          this.receivedData = true;
           if (tableData) {
             if (tableData.length > 0) {
-              this.dataAvailable = true;
               this.boardData.data = tableData;
             }
           }

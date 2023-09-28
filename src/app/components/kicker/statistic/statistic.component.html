@@ -11,7 +11,17 @@
     <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
     <ng-container *ngIf="singleMode">
       <mat-card-content>
+        <app-spinner *ngIf="!receivedDataP || !receivedDataSM"></app-spinner>
+        <p
+          *ngIf="
+            receivedDataP &&
+            receivedDataSM &&
+            (!playerDataAvailableSM || !matchesDataAvailableSM)
+          ">
+          {{ 'info.noData' | translate }}
+        </p>
         <app-leaderboard
+          *ngIf="playerDataAvailableSM && matchesDataAvailableSM"
           [dataSubject$]="playerTableDataSM$"
           [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
           [displayedColumns]="displayedColumns"
@@ -27,7 +37,18 @@
       <mat-tab-group mat-align-tabs="start">
         <mat-tab label="{{ 'stats.players' | translate }}">
           <mat-card-content>
+            <app-spinner *ngIf="!receivedDataP || !receivedDataM"></app-spinner>
+            <p
+              class="info-class"
+              *ngIf="
+                receivedDataP &&
+                receivedDataM &&
+                (!playerDataAvailable || !matchesDataAvailable)
+              ">
+              {{ 'info.noData' | translate }}
+            </p>
             <app-leaderboard
+              *ngIf="playerDataAvailable && matchesDataAvailable"
               [dataSubject$]="playerTableData$"
               [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
               [displayedColumns]="displayedColumns"
@@ -41,7 +62,17 @@
         </mat-tab>
         <mat-tab label="{{ 'stats.teams' | translate }}">
           <mat-card-content>
+            <app-spinner *ngIf="!receivedDataT || !receivedDataM"></app-spinner>
+            <p
+              *ngIf="
+                receivedDataT &&
+                receivedDataM &&
+                (!teamDataAvailable || !matchesDataAvailable)
+              ">
+              {{ 'info.noData' | translate }}
+            </p>
             <app-leaderboard
+              *ngIf="teamDataAvailable && matchesDataAvailable"
               [dataSubject$]="teamsTableData$"
               [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
               [displayedColumns]="displayedColumns"

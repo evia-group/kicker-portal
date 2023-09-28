@@ -11,23 +11,14 @@ import { twoZero, zeroTwo, twoOne, oneTwo } from '../global-variables';
 })
 export class TableService {
   playerData$ = new BehaviorSubject<
-    [
-      ILeaderboard[],
-      Map<string, ILeaderboard>,
-      ILeaderboard[],
-      Map<string, ILeaderboard>
-    ]
+    [Map<string, ILeaderboard>, Map<string, ILeaderboard>]
   >(undefined);
-  teamData$ = new BehaviorSubject<[ILeaderboard[], Map<string, ILeaderboard>]>(
-    undefined
-  );
+  teamData$ = new BehaviorSubject<Map<string, ILeaderboard>>(undefined);
 
   constructor(usersService: UsersService, teamsService: TeamsService) {
     usersService.users$.subscribe((data) => {
       const playersMap = new Map<string, ILeaderboard>();
       const playersMapSM = new Map<string, ILeaderboard>();
-      let playersTable: ILeaderboard[] = [];
-      let playersTableSM: ILeaderboard[] = [];
       if (data.length > 0) {
         data.forEach((player: IUser) => {
           const res = this.createTableData(player, false);
@@ -35,37 +26,19 @@ export class TableService {
           const resSM = this.createTableData(player, true);
           playersMapSM.set(player.id, resSM);
         });
-        playersTable = Array.from(playersMap.values()).filter(
-          (user) => user.totalMatches > 0
-        );
-        this.addRanks(playersTable);
-        playersTableSM = Array.from(playersMapSM.values()).filter(
-          (user) => user.totalMatches > 0
-        );
-        this.addRanks(playersTableSM);
       }
-      this.playerData$.next([
-        playersTable,
-        playersMap,
-        playersTableSM,
-        playersMapSM,
-      ]);
+      this.playerData$.next([playersMap, playersMapSM]);
     });
 
     teamsService.teams$.subscribe((data) => {
       const teamsMap = new Map<string, ILeaderboard>();
-      let teamsTable: ILeaderboard[] = [];
       if (data.length > 0) {
         data.forEach((team: IUser | ITeam) => {
           const res = this.createTableData(team, false);
           teamsMap.set(team.id, res);
         });
-        teamsTable = Array.from(teamsMap.values()).filter(
-          (team) => team.totalMatches > 0
-        );
-        this.addRanks(teamsTable);
       }
-      this.teamData$.next([teamsTable, teamsMap]);
+      this.teamData$.next(teamsMap);
     });
   }
 
@@ -120,12 +93,5 @@ export class TableService {
       }
     }
     return newData;
-  }
-
-  addRanks(table: ILeaderboard[]) {
-    table.sort((a, b) => b.diff - a.diff);
-    table.forEach((value, index) => {
-      value.rank = index + 1;
-    });
   }
 }

@@ -18,6 +18,7 @@ import {
   dominations,
   defeats,
   totalMatches,
+  elo,
 } from '../../../shared/global-variables';
 import {
   IMatch,
@@ -83,6 +84,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
     zeroTwo,
     oneTwo,
     totalMatches,
+    elo,
   ];
 
   playersTable: ILeaderboard[];
@@ -155,40 +157,29 @@ export class StatisticComponent implements OnInit, OnDestroy {
     ]).subscribe(
       (
         data: [
-          [
-            ILeaderboard[],
-            Map<string, ILeaderboard>,
-            ILeaderboard[],
-            Map<string, ILeaderboard>
-          ],
-          [ILeaderboard[], Map<string, ILeaderboard>],
+          [Map<string, ILeaderboard>, Map<string, ILeaderboard>],
+          Map<string, ILeaderboard>,
           IMatch[],
           ISingleMatch[]
         ]
       ) => {
         if (data[0]) {
           this.receivedDataP = true;
-          this.playerDataAvailable = data[0][0].length > 0;
-          this.playerDataAvailableSM = data[0][2].length > 0;
+          this.playerDataAvailable = data[0][0].size > 0;
+          this.playerDataAvailableSM = data[0][1].size > 0;
           if (this.playerDataAvailable) {
-            this.playersTable = data[0][0];
-            this.playersMap = data[0][1];
+            this.playersMap = data[0][0];
           }
-          this.playerTableData$.next(this.playersTable);
           if (this.playerDataAvailableSM) {
-            this.playersTableSM = data[0][2];
-            this.playersMapSM = data[0][3];
+            this.playersMapSM = data[0][1];
           }
-          this.playerTableDataSM$.next(this.playersTableSM);
         }
         if (data[1]) {
           this.receivedDataT = true;
-          this.teamDataAvailable = data[1][0].length > 0;
+          this.teamDataAvailable = data[1].size > 0;
           if (this.teamDataAvailable) {
-            this.teamsTable = data[1][0];
-            this.teamsMap = data[1][1];
+            this.teamsMap = data[1];
           }
-          this.teamsTableData$.next(this.teamsTable);
         }
         if (data[2]) {
           this.receivedDataM = true;
@@ -206,6 +197,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
               data[2],
               this.playersMap
             );
+            this.playersTable = this.getTable(this.playersMap);
+            this.playerTableData$.next(this.playersTable);
           }
           if (this.teamDataAvailable && this.matchesDataAvailable) {
             [
@@ -220,6 +213,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
               data[2],
               this.teamsMap
             );
+            this.teamsTable = this.getTable(this.teamsMap);
+            this.teamsTableData$.next(this.teamsTable);
           }
         }
         if (data[3]) {
@@ -238,6 +233,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
               data[3],
               this.playersMapSM
             );
+            this.playersTableSM = this.getTable(this.playersMapSM);
+            this.playerTableDataSM$.next(this.playersTableSM);
           }
         }
       }
@@ -251,6 +248,25 @@ export class StatisticComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.statisticsDataSub?.unsubscribe();
     this.singleModeSubscription?.unsubscribe();
+  }
+
+  getTable(currentMap: Map<string, ILeaderboard>) {
+    const newTable = Array.from(currentMap.values()).filter(
+      (entity) => entity.totalMatches > 0
+    );
+    newTable.sort((a, b) => b.elo - a.elo);
+
+    let currentElo = newTable[0].elo;
+    let lastRank = 1;
+    newTable.forEach((entity, index) => {
+      if (entity.elo !== currentElo) {
+        lastRank = index + 1;
+        currentElo = entity.elo;
+      }
+      entity.rank = lastRank;
+    });
+
+    return newTable;
   }
 
   getTranslationKeysForDisplayedColumns(forTeams: boolean) {
@@ -267,6 +283,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
       oneTwo,
       zeroTwo,
       'app.matches',
+      '',
     ];
   }
 
