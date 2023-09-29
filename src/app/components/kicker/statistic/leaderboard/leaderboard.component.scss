@@ -8,9 +8,25 @@ table {
 
 .mat-header-cell,
 .mat-cell {
-  padding: 8px 8px 8px 0;
+  padding: 8px;
 }
 
 .table-container {
   overflow: auto;
+}
+
+.sticky-column-left {
+  position: sticky;
+  left: 0;
+  background: #424242;
+  z-index: 1;
+  border-right: 1px solid #ffffff1f;
+}
+
+.sticky-column-right {
+  position: sticky;
+  right: 0;
+  background: #424242;
+  z-index: 1;
+  border-left: 1px solid #ffffff1f;
 }

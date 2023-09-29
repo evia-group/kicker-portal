@@ -62,7 +62,7 @@ export class TableService {
     };
     if (!forSingleMode) {
       Object.assign(newData, {
-        name: data.name,
+        name: data.name.replace(/ -/g, '\u00A0-'),
         wins: data.wins,
         losses: data.losses,
         dominations: data.dominations,
@@ -78,7 +78,7 @@ export class TableService {
       data = data as IUser;
       if (data.s_wins !== undefined) {
         Object.assign(newData, {
-          name: data.name,
+          name: data.name.replace(/ -/g, '\u00A0-'),
           wins: data.s_wins,
           losses: data.s_losses,
           dominations: data.s_dominations,
