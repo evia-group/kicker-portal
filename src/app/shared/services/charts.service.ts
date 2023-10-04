@@ -312,82 +312,96 @@ export class ChartsService {
     const T1P2 = playersTeam1[1];
     const T2P1 = playersTeam2[0];
     const T2P2 = playersTeam2[1];
-    const oldRatingT1P1 = playersMap.get(T1P1).elo;
-    const oldRatingT1P2 = playersMap.get(T1P2) ? playersMap.get(T1P2).elo : 0;
-    const oldRatingT2P1 = playersMap.get(T2P1).elo;
-    const oldRatingT2P2 = playersMap.get(T2P2) ? playersMap.get(T2P2).elo : 0;
 
-    const T1Rating = (oldRatingT1P1 + oldRatingT1P2) / 2;
-    const T2Rating = (oldRatingT2P1 + oldRatingT2P2) / 2;
+    let allAvailable: boolean;
+    if (T1P2) {
+      allAvailable =
+        playersMap.has(T1P1) &&
+        playersMap.has(T1P2) &&
+        playersMap.has(T2P1) &&
+        playersMap.has(T2P2);
+    } else {
+      allAvailable = playersMap.has(T1P1) && playersMap.has(T2P1);
+    }
 
-    const ET1 = this.getExpectedScore(T1Rating, T2Rating);
-    const ET2 = this.getExpectedScore(T2Rating, T1Rating);
+    if (allAvailable) {
+      const oldRatingT1P1 = playersMap.get(T1P1).elo;
+      const oldRatingT1P2 = playersMap.has(T1P2) ? playersMap.get(T1P2).elo : 0;
+      const oldRatingT2P1 = playersMap.get(T2P1).elo;
+      const oldRatingT2P2 = playersMap.has(T2P2) ? playersMap.get(T2P2).elo : 0;
 
-    let dominationsT1 = 0;
-    let dominationsT2 = 0;
+      const T1Rating = (oldRatingT1P1 + oldRatingT1P2) / 2;
+      const T2Rating = (oldRatingT2P1 + oldRatingT2P2) / 2;
 
-    match.dominations.forEach((domination) => {
-      if (domination.id === team1) {
-        dominationsT1++;
-      } else {
-        dominationsT2++;
-      }
-    });
+      const ET1 = this.getExpectedScore(T1Rating, T2Rating);
+      const ET2 = this.getExpectedScore(T2Rating, T1Rating);
 
-    let defeatsT1 = 0;
-    let defeatsT2 = 0;
+      let dominationsT1 = 0;
+      let dominationsT2 = 0;
 
-    match.defeats.forEach((defeat) => {
-      if (defeat.id === team1) {
-        defeatsT1++;
-      } else {
-        defeatsT2++;
-      }
-    });
+      match.dominations.forEach((domination) => {
+        if (domination.id === team1) {
+          dominationsT1++;
+        } else {
+          dominationsT2++;
+        }
+      });
 
-    const ST1 = resultTeam1 === 2 ? 1 : 0;
-    const ST2 = resultTeam2 === 2 ? 1 : 0;
+      let defeatsT1 = 0;
+      let defeatsT2 = 0;
 
-    const resultDifferenceT1 = this.convertValue(resultTeam1 - resultTeam2);
-    const resultDifferenceT2 = this.convertValue(resultTeam2 - resultTeam1);
+      match.defeats.forEach((defeat) => {
+        if (defeat.id === team1) {
+          defeatsT1++;
+        } else {
+          defeatsT2++;
+        }
+      });
 
-    const PT1 = Math.abs(
-      resultDifferenceT1 + dominationsT1 * 0.5 - defeatsT1 * 0.5
-    );
-    const PT2 = Math.abs(
-      resultDifferenceT2 + dominationsT2 * 0.5 - defeatsT2 * 0.5
-    );
+      const ST1 = resultTeam1 === 2 ? 1 : 0;
+      const ST2 = resultTeam2 === 2 ? 1 : 0;
 
-    playersMap.get(T1P1).elo = this.getNewRating(
-      playersMap.get(T1P1).elo,
-      PT1,
-      ST1,
-      ET1
-    );
+      const resultDifferenceT1 = this.convertValue(resultTeam1 - resultTeam2);
+      const resultDifferenceT2 = this.convertValue(resultTeam2 - resultTeam1);
 
-    if (playersMap.get(T1P2)) {
-      playersMap.get(T1P2).elo = this.getNewRating(
-        playersMap.get(T1P2).elo,
+      const PT1 = Math.abs(
+        resultDifferenceT1 + dominationsT1 * 0.5 - defeatsT1 * 0.5
+      );
+      const PT2 = Math.abs(
+        resultDifferenceT2 + dominationsT2 * 0.5 - defeatsT2 * 0.5
+      );
+
+      playersMap.get(T1P1).elo = this.getNewRating(
+        playersMap.get(T1P1).elo,
         PT1,
         ST1,
         ET1
       );
-    }
 
-    playersMap.get(T2P1).elo = this.getNewRating(
-      playersMap.get(T2P1).elo,
-      PT2,
-      ST2,
-      ET2
-    );
+      if (playersMap.has(T1P2)) {
+        playersMap.get(T1P2).elo = this.getNewRating(
+          playersMap.get(T1P2).elo,
+          PT1,
+          ST1,
+          ET1
+        );
+      }
 
-    if (playersMap.get(T2P2)) {
-      playersMap.get(T2P2).elo = this.getNewRating(
-        playersMap.get(T2P2).elo,
+      playersMap.get(T2P1).elo = this.getNewRating(
+        playersMap.get(T2P1).elo,
         PT2,
         ST2,
         ET2
       );
+
+      if (playersMap.has(T2P2)) {
+        playersMap.get(T2P2).elo = this.getNewRating(
+          playersMap.get(T2P2).elo,
+          PT2,
+          ST2,
+          ET2
+        );
+      }
     }
   }
 

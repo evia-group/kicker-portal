@@ -22,9 +22,13 @@ export class TableService {
       if (data.length > 0) {
         data.forEach((player: IUser) => {
           const res = this.createTableData(player, false);
-          playersMap.set(player.id, res);
+          if (res.totalMatches > 0) {
+            playersMap.set(player.id, res);
+          }
           const resSM = this.createTableData(player, true);
-          playersMapSM.set(player.id, resSM);
+          if (resSM.totalMatches > 0) {
+            playersMapSM.set(player.id, resSM);
+          }
         });
       }
       this.playerData$.next([playersMap, playersMapSM]);
@@ -35,7 +39,9 @@ export class TableService {
       if (data.length > 0) {
         data.forEach((team: IUser | ITeam) => {
           const res = this.createTableData(team, false);
-          teamsMap.set(team.id, res);
+          if (res.totalMatches > 0) {
+            teamsMap.set(team.id, res);
+          }
         });
       }
       this.teamData$.next(teamsMap);

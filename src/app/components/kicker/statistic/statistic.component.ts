@@ -251,20 +251,21 @@ export class StatisticComponent implements OnInit, OnDestroy {
   }
 
   getTable(currentMap: Map<string, ILeaderboard>) {
-    const newTable = Array.from(currentMap.values()).filter(
-      (entity) => entity.totalMatches > 0
-    );
-    newTable.sort((a, b) => b.elo - a.elo);
+    const newTable = Array.from(currentMap.values());
 
-    let currentElo = newTable[0].elo;
-    let lastRank = 1;
-    newTable.forEach((entity, index) => {
-      if (entity.elo !== currentElo) {
-        lastRank = index + 1;
-        currentElo = entity.elo;
-      }
-      entity.rank = lastRank;
-    });
+    if (newTable.length > 0) {
+      newTable.sort((a, b) => b.elo - a.elo);
+
+      let currentElo = newTable[0].elo;
+      let lastRank = 1;
+      newTable.forEach((entity, index) => {
+        if (entity.elo !== currentElo) {
+          lastRank = index + 1;
+          currentElo = entity.elo;
+        }
+        entity.rank = lastRank;
+      });
+    }
 
     return newTable;
   }
