@@ -1,4 +1,4 @@
-<div class="chart-container">
+<div class="chart-container" *ngIf="allChartsReady">
   <canvas
     baseChart
     [data]="barChartData"

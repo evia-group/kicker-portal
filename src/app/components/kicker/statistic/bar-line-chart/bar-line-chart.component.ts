@@ -39,6 +39,9 @@ export class BarLineChartComponent implements OnChanges {
   @Input()
   lineLegendLabel: string;
 
+  @Input()
+  allChartsReady = false;
+
   @Output()
   barLineChartIsReadyEvent = new EventEmitter<boolean>();
 

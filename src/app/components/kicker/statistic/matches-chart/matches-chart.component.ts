@@ -22,6 +22,9 @@ export class MatchesChartComponent implements OnChanges {
   @Input()
   legendLabel: string;
 
+  @Input()
+  allChartsReady = false;
+
   public barChartLegend = true;
   public barChartData: ChartConfiguration<'bar'>['data'];
 

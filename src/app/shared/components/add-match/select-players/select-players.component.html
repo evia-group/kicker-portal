@@ -1,5 +1,5 @@
 <div class="select-container" [formGroup]="matchForm">
-  <ng-container *ngIf="!showingTeams" formGroupName="players">
+  <ng-container formGroupName="players">
     <ng-container *ngFor="let team of teams">
       <app-responsive-selector
         [firstPlayerControl]="
@@ -18,42 +18,15 @@
         [placeholderText]="placeholderText"
         [labelText]="playerLabelText"
         [teamName]="
-          team === 0 ? 'common.team1' : 'common.team2'
-        "></app-responsive-selector>
-    </ng-container>
-  </ng-container>
-  <ng-container *ngIf="showingTeams" formGroupName="players">
-    <ng-container *ngFor="let team of teams">
-      <div
-        class="select-team-container"
-        [formGroupName]="team === 0 ? 'team1' : 'team2'">
-        <div class="team-selection-width">
-          <app-autocomplete-selection
-            [options]="team === 0 ? team1Options : team2Options"
-            [displayWithFunction]="displayWithFunction"
-            [selectionFormControl]="team === 0 ? team1Control : team2Control"
-            [hasError]="team === 0 ? team1HasError : team2HasError"
-            [errorText]="team === 0 ? team1ErrorText : team2ErrorText"
-            [placeholderText]="placeholderText"
-            [labelText]="teamLabelText"
-            (optionSelectedEvent)="
-              setPlayersForTeams($event, team)
-            "></app-autocomplete-selection>
-        </div>
-        <div class="button-width">
-          <mat-card-actions>
-            <button
-              *ngIf="showingTeams"
-              class="button-style"
-              type="button"
-              mat-mini-fab
-              color="primary"
-              (click)="openDialog(team)">
-              +
-            </button>
-          </mat-card-actions>
-        </div>
-      </div>
+          singleMode
+            ? team === 0
+              ? 'common.player1'
+              : 'common.player2'
+            : team === 0
+            ? 'common.team1'
+            : 'common.team2'
+        "
+        [singleMode]="singleMode"></app-responsive-selector>
     </ng-container>
   </ng-container>
 </div>

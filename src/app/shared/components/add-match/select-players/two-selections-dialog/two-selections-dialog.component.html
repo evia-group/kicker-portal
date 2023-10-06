@@ -1,6 +1,7 @@
 <h1 mat-dialog-title>{{ teamName | translate }}</h1>
 <mat-dialog-content>
   <app-two-selections
+    *ngIf="!singleMode"
     [firstPlayerControl]="firstPlayerControl"
     [secondPlayerControl]="secondPlayerControl"
     [firstPlayerOptions]="firstPlayerOptions"
@@ -8,6 +9,13 @@
     [displayWithFunction]="displayWithFunction"
     [placeholderText]="placeholderText"
     [labelText]="labelText"></app-two-selections>
+  <app-autocomplete-selection
+    *ngIf="singleMode"
+    [selectionFormControl]="firstPlayerControl"
+    [options]="firstPlayerOptions"
+    [displayWithFunction]="displayWithFunction"
+    [placeholderText]="placeholderText"
+    [labelText]="labelText"></app-autocomplete-selection>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button
@@ -21,8 +29,12 @@
     mat-raised-button
     color="primary"
     type="button"
-    [disabled]="firstPlayerControl.invalid || secondPlayerControl.invalid"
+    [disabled]="
+      singleMode
+        ? firstPlayerControl.invalid
+        : firstPlayerControl.invalid || secondPlayerControl.invalid
+    "
     (click)="saveTeam()">
-    {{ 'common.saveTeam' | translate }}
+    {{ (singleMode ? 'common.savePlayer' : 'common.saveTeam') | translate }}
   </button>
 </mat-dialog-actions>

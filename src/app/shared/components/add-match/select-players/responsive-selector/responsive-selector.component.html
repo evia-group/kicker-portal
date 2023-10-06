@@ -1,4 +1,4 @@
-<ng-container *ngIf="!showButton">
+<ng-container *ngIf="!showButton && !singleMode">
   <div>
     <app-two-selections
       [firstPlayerControl]="firstPlayerControl"
@@ -10,7 +10,37 @@
       [labelText]="labelText"></app-two-selections>
   </div>
 </ng-container>
-<ng-container *ngIf="showButton">
+<ng-container *ngIf="showButton && !singleMode">
+  <div class="selection-container">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      [disabled]="firstPlayerControl.disabled"
+      (click)="openDialog()">
+      {{ buttonText | translate }}
+    </button>
+    <mat-chip-list
+      *ngIf="firstPlayer || secondPlayer"
+      class="mat-chip-list-stacked">
+      <mat-chip *ngIf="firstPlayer">
+        {{ firstPlayer }}
+      </mat-chip>
+      <mat-chip *ngIf="secondPlayer">
+        {{ secondPlayer }}
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+</ng-container>
+<ng-container *ngIf="!showButton && singleMode">
+  <app-autocomplete-selection
+    [selectionFormControl]="firstPlayerControl"
+    [options]="firstPlayerOptions"
+    [displayWithFunction]="displayWithFunction"
+    [placeholderText]="placeholderText"
+    [labelText]="labelText"></app-autocomplete-selection>
+</ng-container>
+<ng-container *ngIf="showButton && singleMode">
   <div class="selection-container">
     <button
       mat-raised-button

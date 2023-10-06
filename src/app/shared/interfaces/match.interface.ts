@@ -35,6 +35,16 @@ export interface IMatch {
   date: Timestamp;
 }
 
+export interface ISingleMatch {
+  defeats: DocumentReference[];
+  dominations: DocumentReference[];
+  result: {
+    [playerId: string]: number;
+  };
+  type: string;
+  date: Timestamp;
+}
+
 export interface ISelectionsData {
   firstPlayerControl: FormControl;
   secondPlayerControl: FormControl;
@@ -44,4 +54,12 @@ export interface ISelectionsData {
   placeholderText: string;
   labelText: string;
   teamName: string;
+  singleMode: boolean;
+}
+
+export interface LastMatches {
+  team1: string;
+  team2: string;
+  result: string;
+  date: Date;
 }

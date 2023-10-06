@@ -16,9 +16,6 @@ export class RoundResultComponent implements OnInit {
   @Input()
   matchForm: FormGroup;
 
-  @Input()
-  showingTeams = false;
-
   ngOnInit() {
     this.matchForm
       .get(`rounds.${this.round}.${this.dominationTeamOne}`)

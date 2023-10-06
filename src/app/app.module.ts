@@ -68,7 +68,11 @@ import { AutocompleteSelectionComponent } from './shared/components/autocomplete
 import { TwoSelectionsComponent } from './shared/components/add-match/select-players/two-selections/two-selections.component';
 import { ResponsiveSelectorComponent } from './shared/components/add-match/select-players/responsive-selector/responsive-selector.component';
 import { TwoSelectionsDialogComponent } from './shared/components/add-match/select-players/two-selections-dialog/two-selections-dialog.component';
+import { LastAddedMatchesComponent } from './shared/components/last-added-matches/last-added-matches.component';
+import { LocalizedDatePipe } from './shared/pipes/localized-date.pipe';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 import { MatTabScrollDirective } from './shared/directives/mat-tab-scroll.directive';
+import { LoadingDataComponent } from './shared/components/loading-data/loading-data.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -104,7 +108,11 @@ export function createTranslateLoader(http: HttpClient) {
     TwoSelectionsComponent,
     ResponsiveSelectorComponent,
     TwoSelectionsDialogComponent,
+    LastAddedMatchesComponent,
+    LocalizedDatePipe,
+    SpinnerComponent,
     MatTabScrollDirective,
+    LoadingDataComponent,
   ],
   imports: [
     BrowserModule,

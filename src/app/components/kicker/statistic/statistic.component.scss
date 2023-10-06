@@ -20,40 +20,17 @@
   text-align: center;
 }
 
-//.mat-form-field {
-//  margin-top: 20px;
-//  margin-right: 20px;
-//}
-
 .flex-container {
-  // width: 100%;
   display: flex;
   flex-direction: column;
 
-  .bar-line-chart {
-    // width: 70%;
-  }
-
-  .doughnut-chart {
-    // height: 30%;
-    // margin: auto 0px;
-    // width: 30%;
-  }
-
   .matches-chart {
     margin-top: 20px;
-    // width: 70%;
   }
 }
 
 .mat-card {
-  //width: 80%;
   margin: 20px;
-}
-
-.mat-spinner {
-  margin-top: 20px;
-  margin-left: 20px;
 }
 
 .selections {
@@ -71,4 +48,17 @@
 .stats-container {
   max-width: 1240px;
   margin: auto;
+
+  .radio-container {
+    display: flex;
+    justify-content: center;
+
+    .mat-radio-group {
+      margin-top: 20px;
+
+      .mat-radio-button ~ .mat-radio-button {
+        margin-left: 25px;
+      }
+    }
+  }
 }

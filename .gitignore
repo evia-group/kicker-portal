@@ -55,3 +55,5 @@ Thumbs.db
 /src/environments/**
 /database.rules.json
 /emulator_data
+/firestore.indexes.json
+/firestore.rules

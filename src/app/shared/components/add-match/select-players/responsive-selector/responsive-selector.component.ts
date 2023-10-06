@@ -21,13 +21,13 @@ export class ResponsiveSelectorComponent
   secondPlayerControl: FormControl;
 
   @Input()
-  firstPlayerOptions;
+  firstPlayerOptions: any;
 
   @Input()
-  secondPlayerOptions;
+  secondPlayerOptions: any;
 
   @Input()
-  displayWithFunction;
+  displayWithFunction: any;
 
   @Input()
   placeholderText: string;
@@ -38,10 +38,13 @@ export class ResponsiveSelectorComponent
   @Input()
   teamName: string;
 
+  @Input()
+  singleMode = false;
+
   breakpointObserverSubscription: Subscription;
 
   showButton = false;
-  buttonText = 'common.choosePlayers';
+  buttonText = '';
 
   dataSubject = new ReplaySubject<ISelectionsData>(1);
 
@@ -54,10 +57,17 @@ export class ResponsiveSelectorComponent
   ) {}
 
   ngOnChanges(): void {
-    if (!this.firstPlayerControl.value && !this.secondPlayerControl.value) {
-      this.firstPlayer = '';
-      this.secondPlayer = '';
-      this.changeButtonText();
+    if (!this.singleMode) {
+      if (!this.firstPlayerControl.value && !this.secondPlayerControl.value) {
+        this.firstPlayer = '';
+        this.secondPlayer = '';
+        this.changeButtonText();
+      }
+    } else {
+      if (!this.firstPlayerControl.value) {
+        this.firstPlayer = '';
+        this.changeButtonText();
+      }
     }
     this.dataSubject.next({
       firstPlayerControl: this.firstPlayerControl,
@@ -68,10 +78,14 @@ export class ResponsiveSelectorComponent
       placeholderText: this.placeholderText,
       labelText: this.labelText,
       teamName: this.teamName,
+      singleMode: this.singleMode,
     });
   }
 
   ngOnInit(): void {
+    this.buttonText = this.singleMode
+      ? 'common.choosePlayer'
+      : 'common.choosePlayers';
     this.breakpointObserverSubscription = this.breakpointObserver
       .observe(Breakpoints.XSmall)
       .subscribe((result) => {
@@ -79,7 +93,10 @@ export class ResponsiveSelectorComponent
         if (typeof this.firstPlayerControl.value === 'string') {
           this.firstPlayerControl.setValue('');
         }
-        if (typeof this.secondPlayerControl.value === 'string') {
+        if (
+          !this.singleMode &&
+          typeof this.secondPlayerControl.value === 'string'
+        ) {
           this.secondPlayerControl.setValue('');
         }
         if (!result.matches) {
@@ -88,9 +105,11 @@ export class ResponsiveSelectorComponent
           this.firstPlayer = this.firstPlayerControl.value
             ? this.firstPlayerControl.value.name
             : '';
-          this.secondPlayer = this.secondPlayerControl.value
-            ? this.secondPlayerControl.value.name
-            : '';
+          if (!this.singleMode) {
+            this.secondPlayer = this.secondPlayerControl.value
+              ? this.secondPlayerControl.value.name
+              : '';
+          }
           this.changeButtonText();
         }
       });
@@ -103,10 +122,14 @@ export class ResponsiveSelectorComponent
   }
 
   changeButtonText() {
-    if (this.firstPlayer && this.secondPlayer) {
+    if (!this.singleMode && this.firstPlayer && this.secondPlayer) {
       this.buttonText = 'common.editPlayers';
+    } else if (this.singleMode && this.firstPlayer) {
+      this.buttonText = 'common.editPlayer';
     } else {
-      this.buttonText = 'common.choosePlayers';
+      this.buttonText = this.singleMode
+        ? 'common.choosePlayer'
+        : 'common.choosePlayers';
     }
   }
 
@@ -123,7 +146,7 @@ export class ResponsiveSelectorComponent
       if (this.firstPlayerControl.value) {
         this.firstPlayer = this.firstPlayerControl.value.name;
       }
-      if (this.secondPlayerControl.value) {
+      if (!this.singleMode && this.secondPlayerControl.value) {
         this.secondPlayer = this.secondPlayerControl.value.name;
       }
       this.changeButtonText();
