@@ -1,5 +1,5 @@
-export const winsTimeline = 'winsTimeLine';
-export const lossesTimeline = 'lossesTimeLine';
+export const winsTimeline = 'winsTimeline';
+export const lossesTimeline = 'lossesTimeline';
 export const zeroTwo = '0:2';
 export const oneTwo = '1:2';
 export const twoZero = '2:0';

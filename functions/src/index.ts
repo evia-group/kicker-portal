@@ -14,7 +14,9 @@ exports.updateUsersAndTeams = updateUsersAndTeamsI.updateUsersAndTeams;
 
 /* Update stats for Users and Teams when match is added to firestore in testing environment */
 exports.updateUsersAndTeamsT = updateUsersAndTeamsI.updateUsersAndTeamsT;
-// exports.updateUsersAndTeams = updateUsersAndTeams.updateUsersAndTeams;
+
+/* Update stats for Users when singe match (1vs1) is added to firestore */
+exports.updateUsers = updateUsersAndTeamsI.updateUsers;
 
 /* When a new user is added to firebase, this function gets triggered.
    It adds a new user to firestore. */

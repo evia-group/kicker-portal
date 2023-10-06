@@ -1,54 +1,73 @@
-<mat-card class="match-container">
-  <hr class="spacer" />
-  <div class="match-header">
-    <div>{{ 'common.team1' | translate }}</div>
-    <div>{{ winsTeam1 | async }}</div>
-    <div>{{ winsTeam2 | async }}</div>
-    <div>{{ 'common.team2' | translate }}</div>
-  </div>
-  <mat-divider></mat-divider>
-  <form
-    [formGroup]="showingTeams ? addTeamMatchForm : addMatchForm"
-    (ngSubmit)="saveMatch()">
-    <app-select-players
-      [players]="data"
-      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
-      [showingTeams]="showingTeams"></app-select-players>
-    <mat-divider></mat-divider>
+<mat-card>
+  <mat-card-title>{{ 'common.addMatch' | translate }}</mat-card-title>
+  <mat-card-content>
+    <div class="match-container">
+      <hr class="spacer" />
+      <div class="match-header">
+        <div>
+          {{ (singleMode ? 'common.player1' : 'common.team1') | translate }}
+        </div>
+        <div>{{ winsTeam1 | async }}</div>
+        <div>{{ winsTeam2 | async }}</div>
+        <div>
+          {{ (singleMode ? 'common.player2' : 'common.team2') | translate }}
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <form
+        [formGroup]="singleMode ? addSingleMatchForm : addMatchForm"
+        (ngSubmit)="saveMatch()">
+        <app-select-players
+          [players]="data"
+          [matchForm]="singleMode ? addSingleMatchForm : addMatchForm"
+          [singleMode]="singleMode"></app-select-players>
 
-    <app-round-result
-      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
-      [round]="'one'"
-      [showingTeams]="showingTeams">
-    </app-round-result>
+        <mat-divider></mat-divider>
 
-    <mat-divider></mat-divider>
+        <app-round-result
+          [matchForm]="singleMode ? addSingleMatchForm : addMatchForm"
+          [round]="'one'">
+        </app-round-result>
 
-    <app-round-result
-      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
-      [round]="'two'"
-      [showingTeams]="showingTeams">
-    </app-round-result>
+        <mat-divider></mat-divider>
 
-    <mat-divider></mat-divider>
+        <app-round-result
+          [matchForm]="singleMode ? addSingleMatchForm : addMatchForm"
+          [round]="'two'">
+        </app-round-result>
 
-    <app-round-result
-      *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
-      [matchForm]="showingTeams ? addTeamMatchForm : addMatchForm"
-      [round]="'three'"
-      [showingTeams]="showingTeams">
-    </app-round-result>
+        <mat-divider></mat-divider>
 
-    <mat-card-actions>
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="
-          showingTeams ? !addTeamMatchForm.valid : !addMatchForm.valid
-        ">
-        {{ 'common.save.match' | translate }}
-      </button>
-    </mat-card-actions>
-  </form>
+        <app-round-result
+          *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
+          [matchForm]="singleMode ? addSingleMatchForm : addMatchForm"
+          [round]="'three'">
+        </app-round-result>
+
+        <mat-card-actions>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="
+              singleMode
+                ? !addSingleMatchForm.valid || singleModeSaveButtonDisabled
+                : !addMatchForm.valid || playersSaveButtonDisabled
+            ">
+            <span class="button-content">
+              {{ 'common.save.match' | translate }}
+              <mat-icon
+                *ngIf="
+                  singleMode
+                    ? singleModeSaveButtonDisabled
+                    : playersSaveButtonDisabled
+                ">
+                <mat-spinner [diameter]="20"></mat-spinner>
+              </mat-icon>
+            </span>
+          </button>
+        </mat-card-actions>
+      </form>
+    </div>
+  </mat-card-content>
 </mat-card>

@@ -1,9 +1,12 @@
-.example-form {
-  min-width: 150px;
-  max-width: 500px;
+.selection-form {
+  min-width: 50px;
+  width: 100%;
+}
+.full-width {
   width: 100%;
 }
 
-.example-full-width {
+:host {
+  display: flex;
   width: 100%;
 }

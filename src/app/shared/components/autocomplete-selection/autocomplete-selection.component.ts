@@ -6,7 +6,6 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Observable, startWith } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -18,15 +17,13 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 })
 export class AutocompleteSelectionComponent implements OnInit, OnChanges {
   @Input()
-  options = [];
+  options: any[];
 
   @Input()
-  selectionFormControl = new FormControl();
+  selectionFormControl: any;
 
   @Input()
-  displayWithFunction(option) {
-    return option;
-  }
+  displayWithFunction: any;
 
   @Input()
   hasError = false;
@@ -63,7 +60,7 @@ export class AutocompleteSelectionComponent implements OnInit, OnChanges {
   }
 
   setFilteredOptions() {
-    if (this.options.length > 0) {
+    if (this.selectionFormControl && this.displayWithFunction && this.options) {
       const startValue = this.selectionFormControl.value
         ? this.selectionFormControl.value
         : '';

@@ -9,24 +9,17 @@ interface IKickerData {
 
 const db = admin.firestore();
 
-exports.updateTime = functions.database
-  .ref('/Kicker')
-  .onUpdate(async (change, _context) => {
-    try {
-      if (change.after.exists()) {
-        const prefix = process.env.PREFIX;
-        const valBefore: IKickerData = change.before.val();
-        const valAfter: IKickerData = change.after.val();
-        if (valBefore.endTime != valAfter.endTime) {
-          await db.collection(prefix + 'Playtime').add({
-            startTime: valAfter.startTime,
-            endTime: valAfter.endTime,
-          });
-        }
-      }
-      return null;
-    } catch (error) {
-      console.log(error);
-      return null;
+exports.updateTime = functions.database.ref('/Kicker').onUpdate((change) => {
+  if (change.after.exists()) {
+    const prefix = process.env.PREFIX || '';
+    const valBefore: IKickerData = change.before.val();
+    const valAfter: IKickerData = change.after.val();
+    if (valBefore.endTime !== valAfter.endTime) {
+      return db.collection(prefix + 'Playtime').add({
+        startTime: valAfter.startTime,
+        endTime: valAfter.endTime,
+      });
     }
-  });
+  }
+  return null;
+});

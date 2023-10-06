@@ -1,0 +1,22 @@
+<mat-card>
+  <mat-card-title>{{ 'common.lastMatches' | translate }}</mat-card-title>
+  <mat-card-content>
+    <app-loading-data
+      [showSpinner]="!matchesAvailable"
+      [showNoData]="
+        matchesAvailable && lastAddedMatches.length === 0
+      "></app-loading-data>
+    <ng-container *ngIf="matchesAvailable && lastAddedMatches.length > 0">
+      <div class="matches-container">
+        <div *ngFor="let match of lastAddedMatches">
+          <span class="date">{{ match.date | localizedDate }}</span>
+          <div class="match-row">
+            <span class="left-team">{{ match.team1 }}</span>
+            <span class="result">{{ match.result }}</span>
+            <span class="right-team">{{ match.team2 }}</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </mat-card-content>
+</mat-card>

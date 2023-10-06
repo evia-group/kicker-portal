@@ -1,4 +1,7 @@
-<ng-container *ngIf="chartIsReady">
+<app-loading-data
+  [showSpinner]="waitingForData"
+  [showNoData]="!waitingForData && !playtimeDataAvailable"></app-loading-data>
+<ng-container *ngIf="!waitingForData && playtimeDataAvailable">
   <div class="flex-box">
     <app-datepicker
       [localeId]="localeId"
@@ -24,7 +27,7 @@
       }}</mat-radio-button>
     </mat-radio-group>
   </div>
-  <div>
+  <div class="chart-container">
     <canvas
       baseChart
       [data]="barChartData"
@@ -32,4 +35,3 @@
       [legend]="barChartLegend"></canvas>
   </div>
 </ng-container>
-<mat-spinner *ngIf="!chartIsReady"></mat-spinner>

@@ -5,7 +5,7 @@ import {
   OnChanges,
   Output,
 } from '@angular/core';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { ChartConfiguration, ChartData } from 'chart.js';
 import {
   zeroTwo,
   oneTwo,
@@ -34,6 +34,9 @@ export class ResultDoughnutChartComponent implements OnChanges {
   @Input()
   defeatsLegendLabel: string;
 
+  @Input()
+  allChartsReady = false;
+
   showStats = false;
   showWL = false;
   showDD = false;
@@ -53,13 +56,15 @@ export class ResultDoughnutChartComponent implements OnChanges {
     labels: this.doughnutChartLabelsDD,
     datasets: [],
   };
-  doughnutChartType: ChartType = 'doughnut';
+  // doughnutChartType: ChartType = 'doughnut';
+  doughnutChartType: ChartConfiguration<'doughnut'>['type'] = 'doughnut';
   public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
     plugins: {
       legend: {
         labels: {
           color: 'rgb(199,199,199)',
+          boxWidth: 20,
         },
       },
     },

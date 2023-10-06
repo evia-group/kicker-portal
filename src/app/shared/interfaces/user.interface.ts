@@ -13,6 +13,16 @@ export interface IUser {
   };
   dominations: number;
   defeats: number;
+  s_wins: number;
+  s_losses: number;
+  s_stats: {
+    '0:2': number;
+    '2:0': number;
+    '1:2': number;
+    '2:1': number;
+  };
+  s_dominations: number;
+  s_defeats: number;
 }
 
 export interface ITeam {

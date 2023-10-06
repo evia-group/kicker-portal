@@ -22,10 +22,14 @@ export class MatchesChartComponent implements OnChanges {
   @Input()
   legendLabel: string;
 
+  @Input()
+  allChartsReady = false;
+
   public barChartLegend = true;
   public barChartData: ChartConfiguration<'bar'>['data'];
 
   public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    maintainAspectRatio: false,
     responsive: true,
     scales: {
       x: {
@@ -50,6 +54,7 @@ export class MatchesChartComponent implements OnChanges {
       legend: {
         labels: {
           color: 'rgb(199,199,199)',
+          boxWidth: 20,
         },
       },
     },

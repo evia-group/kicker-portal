@@ -39,13 +39,13 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
   @Input()
   pageSizeOptions = [];
 
-  @ViewChild(MatPaginator) set boardPaginator(matPaginator) {
+  @ViewChild(MatPaginator) set boardPaginator(matPaginator: MatPaginator) {
     if (this.boardData && matPaginator) {
       this.boardData.paginator = matPaginator;
     }
   }
 
-  @ViewChild(MatSort) set boardSort(matSort) {
+  @ViewChild(MatSort) set boardSort(matSort: MatSort) {
     if (this.boardData && matSort) {
       this.boardData.sort = matSort;
       const sortState: Sort = {
@@ -61,15 +61,12 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
 
   dataSubscription: Subscription;
 
-  receivedData = false;
-
   ngOnInit(): void {
     try {
       this.dataSubscription = this.dataSubject$.subscribe(
         (tableData: never[]) => {
           if (tableData) {
             if (tableData.length > 0) {
-              this.receivedData = true;
               this.boardData.data = tableData;
             }
           }

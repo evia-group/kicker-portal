@@ -43,15 +43,24 @@
       "": "save",
       "match": "save match"
     },
+    "addMatch": "Add match",
+    "lastMatches": "Last added matches",
     "team1": "Team 1",
     "team2": "Team 2",
     "team": "Team",
     "domination": "to Zero",
     "player": "Player",
+    "player1": "Player 1",
+    "player2": "Player 2",
     "saveTeam": "save team",
+    "savePlayer": "save player",
     "close": "close",
     "teamExists": "This team already exists!",
     "placeholder": "Pick one",
+    "choosePlayers": "Choose Players",
+    "choosePlayer": "Choose Player",
+    "editPlayers": "Edit Players",
+    "editPlayer": "Edit Player",
     "kickerStatus": {
       "available": {
         "title": "Kicker is available",
@@ -61,6 +70,12 @@
         "title": "Kicker is not available since",
         "subtitle": "Opps! You must wait to play a game"
       }
+    },
+    "toolbar": {
+      "bugs": "Bugs",
+      "github": "GitHub",
+      "language": "Language",
+      "user": "User"
     }
   },
   "info": {
@@ -98,6 +113,7 @@
     "defeats": "loos to 0",
     "elo": "ELO",
     "playerAndTeamStats": "Player and Team Statistics",
+    "playerStats": "Player Statistics",
     "year": "Year",
     "month": "Month",
     "day": "Day",
