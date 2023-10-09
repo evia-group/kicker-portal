@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { ISelectionsData } from '../../../../interfaces/match.interface';
@@ -14,9 +14,9 @@ export interface DialogData {
   styleUrls: ['./two-selections-dialog.component.scss'],
 })
 export class TwoSelectionsDialogComponent implements OnInit, OnDestroy {
-  firstPlayerControl = new FormControl();
+  firstPlayerControl = new UntypedFormControl();
 
-  secondPlayerControl = new FormControl();
+  secondPlayerControl = new UntypedFormControl();
 
   firstPlayerOptions;
 

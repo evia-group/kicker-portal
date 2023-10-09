@@ -178,6 +178,5 @@ export function createTranslateLoader(http: HttpClient) {
     },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [InfoBarComponent],
 })
 export class AppModule {}

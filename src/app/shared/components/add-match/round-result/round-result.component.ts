@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-round-result',
@@ -14,7 +14,7 @@ export class RoundResultComponent implements OnInit {
   round: string;
 
   @Input()
-  matchForm: FormGroup;
+  matchForm: UntypedFormGroup;
 
   ngOnInit() {
     this.matchForm

@@ -8,7 +8,7 @@ import {
   Output,
 } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import * as _moment from 'moment';
 
 import { default as _rollupMoment, Moment } from 'moment';
@@ -48,7 +48,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Output()
   newDateEvent = new EventEmitter();
 
-  dateFormControl = new FormControl(this.formControlMoment);
+  dateFormControl = new UntypedFormControl(this.formControlMoment);
 
   startView: 'month' | 'year' | 'multi-year' = 'month';
 
@@ -68,7 +68,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   updatePicker() {
     this.dateAdapter.setLocale(this.localeId);
     this.config.value = this.formatType;
-    this.dateFormControl = new FormControl(this.formControlMoment);
+    this.dateFormControl = new UntypedFormControl(this.formControlMoment);
     this.dateFormControl.markAllAsTouched();
 
     this.startView =

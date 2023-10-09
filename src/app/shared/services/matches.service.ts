@@ -14,7 +14,7 @@ import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
 import { shareReplay, take } from 'rxjs/operators';
 import { IMatch, ISingleMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { IUser } from '../interfaces/user.interface';
@@ -104,7 +104,7 @@ export class MatchesService implements OnDestroy {
 
   private static getRoundInfos(
     team: string,
-    form: FormGroup,
+    form: UntypedFormGroup,
     type: 'win' | 'dominationTeamOne' | 'dominationTeamTwo'
   ): number {
     const rounds = [
@@ -122,7 +122,7 @@ export class MatchesService implements OnDestroy {
     }).length;
   }
 
-  public async add(match: FormGroup): Promise<void> {
+  public async add(match: UntypedFormGroup): Promise<void> {
     const team1 = match.get('players.team1.teamId').value;
     const team2 = match.get('players.team2.teamId').value;
 
@@ -202,7 +202,7 @@ export class MatchesService implements OnDestroy {
       });
   }
 
-  public async addSingleMatch(match: FormGroup): Promise<void> {
+  public async addSingleMatch(match: UntypedFormGroup): Promise<void> {
     const player1 = (match.get('players.team1.one').value as IUser).id;
     const player2 = (match.get('players.team2.one').value as IUser).id;
 

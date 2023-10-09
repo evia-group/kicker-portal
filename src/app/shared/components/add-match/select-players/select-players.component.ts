@@ -3,9 +3,9 @@ import { ITeam, IUser } from '../../../interfaces/user.interface';
 import { Observable, Subscription } from 'rxjs';
 import {
   AbstractControl,
-  FormControl,
+  UntypedFormControl,
   FormControlStatus,
-  FormGroup,
+  UntypedFormGroup,
   ValidatorFn,
 } from '@angular/forms';
 import { UsersService } from 'src/app/shared/services/users.service';
@@ -20,7 +20,7 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
   players: Observable<IUser[]> | Observable<ITeam[]>;
 
   @Input()
-  matchForm: FormGroup;
+  matchForm: UntypedFormGroup;
 
   @Input()
   singleMode = false;
@@ -29,10 +29,10 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
 
   allOptions: (IUser | ITeam)[] = [];
 
-  team1player1Control = new FormControl();
-  team1player2Control = new FormControl();
-  team2player1Control = new FormControl();
-  team2player2Control = new FormControl();
+  team1player1Control = new UntypedFormControl();
+  team1player2Control = new UntypedFormControl();
+  team2player1Control = new UntypedFormControl();
+  team2player2Control = new UntypedFormControl();
 
   placeholderText = 'common.placeholder';
   playerLabelText = 'common.player';
@@ -55,16 +55,16 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.team1player1Control = this.matchForm.get(
       'players.team1.one'
-    ) as FormControl;
+    ) as UntypedFormControl;
     this.team1player2Control = this.matchForm.get(
       'players.team1.two'
-    ) as FormControl;
+    ) as UntypedFormControl;
     this.team2player1Control = this.matchForm.get(
       'players.team2.one'
-    ) as FormControl;
+    ) as UntypedFormControl;
     this.team2player2Control = this.matchForm.get(
       'players.team2.two'
-    ) as FormControl;
+    ) as UntypedFormControl;
 
     this.usersService.users$.subscribe((data: IUser[]) => {
       this.allOptions = data;
