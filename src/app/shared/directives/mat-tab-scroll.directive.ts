@@ -1,5 +1,5 @@
 import { AfterViewInit, Directive, OnInit, Renderer2 } from '@angular/core';
-import { MatTabNav } from '@angular/material/tabs';
+import { MatLegacyTabNav as MatTabNav } from '@angular/material/legacy-tabs';
 
 @Directive({
   selector: '[appMatTabScroll]',

@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { TwoSelectionsDialogComponent } from '../two-selections-dialog/two-selections-dialog.component';
 import { ISelectionsData } from '../../../../interfaces/match.interface';
 
