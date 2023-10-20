@@ -1,7 +1,8 @@
-.mat-card {
+.mat-mdc-card {
   min-width: 275px;
+  margin: 20px;
 
-  .mat-card-content {
+  .mat-mdc-card-content {
     margin-top: 10px;
 
     .match-container {
@@ -22,13 +23,10 @@
 
       .spacer {
         position: absolute;
-        border: none;
-        border-top: 1px dotted #333333;
+        top: 0;
         margin-left: 50%;
-        margin-bottom: 85px;
-        background-color: #333333;
-        width: 1px;
-        height: calc(100% - 70px);
+        border-left: 1px solid #ffffff1f;
+        height: calc(100% - 55px);
       }
 
       .mat-divider {
@@ -36,7 +34,7 @@
         margin: 10px 0;
       }
 
-      .mat-card-actions {
+      .mat-mdc-card-actions {
         display: flex;
         justify-content: center;
       }

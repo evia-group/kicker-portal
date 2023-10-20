@@ -1,5 +1,5 @@
 import { AfterViewInit, Directive, OnInit, Renderer2 } from '@angular/core';
-import { MatLegacyTabNav as MatTabNav } from '@angular/material/legacy-tabs';
+import { MatTabNav } from '@angular/material/tabs';
 
 @Directive({
   selector: '[appMatTabScroll]',
@@ -28,7 +28,7 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit {
     this.renderer.appendChild(
       style,
       this.renderer.createText(
-        '.mat-tab-link-container::-webkit-scrollbar { display: none; }'
+        '.mat-mdc-tab-link-container::-webkit-scrollbar { display: none; }'
       )
     );
     this.renderer.appendChild(this.tabListContainer, style);
@@ -41,7 +41,7 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit {
     window.addEventListener('resize', (event) =>
       this.handleWindowResize(event)
     );
-    const nav = document.querySelector('.mat-tab-nav-bar');
+    const nav = document.querySelector('.mat-mdc-tab-nav-bar');
     this.previousButton = this.createButton('before');
     this.previousButton.addEventListener('click', () => {
       const scrollX = Math.max(
@@ -68,7 +68,7 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit {
 
   createButton(className: string): HTMLButtonElement {
     const oldButton = document.querySelector(
-      `.mat-tab-header-pagination-${className}`
+      `.mat-mdc-tab-header-pagination-${className}`
     );
     const newButton = document.createElement('button');
     oldButton.classList.forEach((buttonClass) => {
@@ -77,7 +77,7 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit {
     oldButton.remove();
     newButton.setAttribute('type', 'button');
     const arrow = document.createElement('div');
-    arrow.classList.add('mat-tab-header-pagination-chevron');
+    arrow.classList.add('mat-mdc-tab-header-pagination-chevron');
     newButton.appendChild(arrow);
     return newButton;
   }
@@ -116,12 +116,12 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit {
 
   disableButton(button: HTMLButtonElement) {
     button.disabled = true;
-    button.classList.add('mat-tab-header-pagination-disabled');
+    button.classList.add('mat-mdc-tab-header-pagination-disabled');
   }
 
   enableButton(button: HTMLButtonElement) {
     button.disabled = false;
-    button.classList.remove('mat-tab-header-pagination-disabled');
+    button.classList.remove('mat-mdc-tab-header-pagination-disabled');
   }
 
   hideButtons() {
@@ -135,20 +135,22 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit {
   }
 
   handleWindowResize(_event?: UIEvent) {
-    const matTabNavWidth =
-      document.querySelector('.mat-tab-nav-bar').clientWidth;
-    const matTabLinks = this.tabList.querySelectorAll(
-      '.mat-tab-links .mat-tab-link'
-    );
-    let matTabLinksWidth = 0;
-    matTabLinks.forEach((matTabLink) => {
-      matTabLinksWidth += matTabLink.offsetWidth;
-    });
-    if (matTabLinksWidth <= matTabNavWidth) {
-      this.hideButtons();
-    } else {
-      this.showButtons();
-      this.toggleButtons();
+    const matTabNav = document.querySelector('.mat-mdc-tab-nav-bar');
+    if (matTabNav) {
+      const matTabNavWidth = matTabNav.clientWidth;
+      const matTabLinks = this.tabList.querySelectorAll(
+        '.mat-mdc-tab-links .mat-mdc-tab-link'
+      );
+      let matTabLinksWidth = 0;
+      matTabLinks.forEach((matTabLink) => {
+        matTabLinksWidth += matTabLink.offsetWidth;
+      });
+      if (matTabLinksWidth <= matTabNavWidth) {
+        this.hideButtons();
+      } else {
+        this.showButtons();
+        this.toggleButtons();
+      }
     }
   }
 }

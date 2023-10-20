@@ -15,12 +15,14 @@
     </nav>
   </div>
   <div class="content">
-    <router-outlet></router-outlet>
-  </div>
-  <div class="footer">
-    <mat-toolbar>
-      <span class="toolbar-spacer"></span>
-      <span>{{ versionNumber }}</span></mat-toolbar
-    >
+    <div class="router-container">
+      <router-outlet></router-outlet>
+    </div>
+    <div class="toolbar-container">
+      <mat-toolbar>
+        <span class="toolbar-spacer"></span>
+        <span>{{ versionNumber }}</span></mat-toolbar
+      >
+    </div>
   </div>
 </div>

@@ -56,7 +56,6 @@ export class ResultDoughnutChartComponent implements OnChanges {
     labels: this.doughnutChartLabelsDD,
     datasets: [],
   };
-  // doughnutChartType: ChartType = 'doughnut';
   doughnutChartType: ChartConfiguration<'doughnut'>['type'] = 'doughnut';
   public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,

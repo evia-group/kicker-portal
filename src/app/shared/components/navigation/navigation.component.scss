@@ -53,14 +53,17 @@ h1.app-name {
 .chip-container {
   color: transparent;
   border: 2px solid #000000;
+  --mdc-chip-elevated-container-color: #d4e157;
+  pointer-events: none;
 
   &.success {
     border-color: #11590a;
-    color: #11590a !important;
+    --mdc-chip-label-text-color: #11590a;
   }
+
   &.error {
     border-color: #b3362a;
-    color: #b3362a !important;
+    --mdc-chip-label-text-color: #b3362a;
   }
 }
 

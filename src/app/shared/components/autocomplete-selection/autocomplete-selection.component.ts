@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Observable, startWith } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-autocomplete-selection',

@@ -5,10 +5,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import {
-  MatLegacyDialogRef as MatDialogRef,
-  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-} from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { IPlayers } from 'src/app/shared/interfaces/match.interface';
 import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { UsersService } from './users.service';
 import { TeamsService } from './teams.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ITeam, IUser } from '../interfaces/user.interface';
 import { ILeaderboard } from '../interfaces/statistic.interface';
 import { twoZero, zeroTwo, twoOne, oneTwo } from '../global-variables';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,38 +15,63 @@ export class TableService {
     [Map<string, ILeaderboard>, Map<string, ILeaderboard>]
   >(undefined);
   teamData$ = new BehaviorSubject<Map<string, ILeaderboard>>(undefined);
+  subscriptions: Subscription[] = [];
 
-  constructor(usersService: UsersService, teamsService: TeamsService) {
-    usersService.users$.subscribe((data) => {
-      const playersMap = new Map<string, ILeaderboard>();
-      const playersMapSM = new Map<string, ILeaderboard>();
-      if (data.length > 0) {
-        data.forEach((player: IUser) => {
-          const res = this.createTableData(player, false);
-          if (res.totalMatches > 0) {
-            playersMap.set(player.id, res);
-          }
-          const resSM = this.createTableData(player, true);
-          if (resSM.totalMatches > 0) {
-            playersMapSM.set(player.id, resSM);
-          }
-        });
-      }
-      this.playerData$.next([playersMap, playersMapSM]);
+  constructor(
+    protected usersService: UsersService,
+    protected teamsService: TeamsService,
+    protected authService: AuthService
+  ) {
+    authService.isLoggedIn.subscribe((loggedIn) =>
+      loggedIn
+        ? this.subscribeToObservables()
+        : this.unsubscribeFromObservables()
+    );
+  }
+
+  subscribeToObservables() {
+    this.subscriptions[0] = this.usersService.users$.subscribe({
+      next: (data) => {
+        const playersMap = new Map<string, ILeaderboard>();
+        const playersMapSM = new Map<string, ILeaderboard>();
+        if (data.length > 0) {
+          data.forEach((player: IUser) => {
+            const res = this.createTableData(player, false);
+            if (res.totalMatches > 0) {
+              playersMap.set(player.id, res);
+            }
+            const resSM = this.createTableData(player, true);
+            if (resSM.totalMatches > 0) {
+              playersMapSM.set(player.id, resSM);
+            }
+          });
+        }
+        this.playerData$.next([playersMap, playersMapSM]);
+      },
+      error: (err) => {
+        console.log(err);
+      },
     });
 
-    teamsService.teams$.subscribe((data) => {
-      const teamsMap = new Map<string, ILeaderboard>();
-      if (data.length > 0) {
-        data.forEach((team: IUser | ITeam) => {
-          const res = this.createTableData(team, false);
-          if (res.totalMatches > 0) {
-            teamsMap.set(team.id, res);
-          }
-        });
-      }
-      this.teamData$.next(teamsMap);
+    this.subscriptions[1] = this.teamsService.teams$.subscribe({
+      next: (data) => {
+        const teamsMap = new Map<string, ILeaderboard>();
+        if (data.length > 0) {
+          data.forEach((team: IUser | ITeam) => {
+            const res = this.createTableData(team, false);
+            if (res.totalMatches > 0) {
+              teamsMap.set(team.id, res);
+            }
+          });
+        }
+        this.teamData$.next(teamsMap);
+      },
+      error: (err) => console.log(err),
     });
+  }
+
+  unsubscribeFromObservables() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   createTableData(data: IUser | ITeam, forSingleMode: boolean) {

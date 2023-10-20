@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-  Firestore,
-  collection,
-  CollectionReference,
-  doc,
-  collectionData,
   addDoc,
+  collection,
+  collectionData,
+  CollectionReference,
   deleteDoc,
+  doc,
   DocumentReference,
+  Firestore,
   Timestamp,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
@@ -19,6 +19,7 @@ import { environment } from '../../../environments/environment';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { IUser } from '../interfaces/user.interface';
 import { IPlaytime } from '../interfaces/statistic.interface';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,7 @@ export class MatchesService implements OnDestroy {
 
   public matches$: Observable<IMatch[]>;
 
-  public singeMatches$: Observable<ISingleMatch[]>;
+  public singleMatches$: Observable<ISingleMatch[]>;
 
   public playtime$: Observable<IPlaytime[]>;
 
@@ -46,10 +47,13 @@ export class MatchesService implements OnDestroy {
 
   singleModeSub$ = new ReplaySubject<boolean>(1);
 
+  subscribtions: Subscription[] = [];
+
   constructor(
     protected db: Firestore,
     protected infoBar: InfoBarService,
-    protected translateService: TranslateService
+    protected translateService: TranslateService,
+    protected authService: AuthService
   ) {
     this.collection = collection(
       db,
@@ -59,17 +63,22 @@ export class MatchesService implements OnDestroy {
       shareReplay(1)
     ) as Observable<IMatch[]>;
 
-    this.matches$.subscribe(this.matchesSub$);
-
     this.singleMatchCollection = collection(
       db,
       `${environment.prefix}Single-Matches`
     ) as CollectionReference<ISingleMatch>;
-    this.singeMatches$ = collectionData(this.singleMatchCollection).pipe(
+    this.singleMatches$ = collectionData(this.singleMatchCollection).pipe(
       shareReplay(1)
     ) as Observable<ISingleMatch[]>;
 
-    this.singeMatches$.subscribe(this.singleMatchesSub$);
+    authService.isLoggedIn.subscribe((loggedIn) => {
+      if (loggedIn) {
+        this.subscribeToObservables();
+        this.singleModeSub$.next(false);
+      } else {
+        this.unsubscribeFromObservables();
+      }
+    });
 
     const playtimeCol = collection(
       db,
@@ -86,6 +95,23 @@ export class MatchesService implements OnDestroy {
         this.getText();
       }
     );
+  }
+
+  subscribeToObservables() {
+    this.subscribtions[0] = this.matches$.subscribe({
+      next: (matches) => this.matchesSub$.next(matches),
+      error: (err) => console.log(err),
+    });
+    this.subscribtions[1] = this.singleMatches$.subscribe({
+      next: (singleMatches) => this.singleMatchesSub$.next(singleMatches),
+      error: (err) => console.log(err),
+    });
+  }
+
+  unsubscribeFromObservables() {
+    this.subscribtions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
   }
 
   ngOnDestroy(): void {

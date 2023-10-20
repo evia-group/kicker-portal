@@ -39,12 +39,12 @@ import {
   provideFunctions,
 } from '@angular/fire/functions';
 import { CreateTeamDialogComponent } from './shared/components/add-match/create-team-dialog/create-team-dialog.component';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
-import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
 import {
-  MatLegacyPaginatorIntl as MatPaginatorIntl,
-  MatLegacyPaginatorModule as MatPaginatorModule,
-} from '@angular/material/legacy-paginator';
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { NgChartsModule } from 'ng2-charts';
 import { LeaderboardComponent } from './components/kicker/statistic/leaderboard/leaderboard.component';
@@ -55,15 +55,15 @@ import { PlaytimeChartComponent } from './components/kicker/statistic/playtime-c
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorIntlService } from './shared/services/mat-paginator-intl.service';
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
-import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 import {
   connectDatabaseEmulator,
   getDatabase,
   provideDatabase,
 } from '@angular/fire/database';
 import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AutocompleteSelectionComponent } from './shared/components/autocomplete-selection/autocomplete-selection.component';
 import { TwoSelectionsComponent } from './shared/components/add-match/select-players/two-selections/two-selections.component';
 import { ResponsiveSelectorComponent } from './shared/components/add-match/select-players/responsive-selector/responsive-selector.component';

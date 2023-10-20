@@ -66,10 +66,14 @@ export class SelectPlayersComponent implements OnInit, OnDestroy {
       'players.team2.two'
     ) as UntypedFormControl;
 
-    this.usersService.users$.subscribe((data: IUser[]) => {
-      this.allOptions = data;
-      this.playersProcess();
+    const usersSub = this.usersService.users$.subscribe({
+      next: (data: IUser[]) => {
+        this.allOptions = data;
+        this.playersProcess();
+      },
+      error: (err) => console.log(err),
     });
+    this.subscriptionsList.push(usersSub);
   }
 
   ngOnDestroy(): void {

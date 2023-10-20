@@ -1,26 +1,24 @@
 <div class="grid-container">
-  <mat-radio-group
-    [(ngModel)]="singleMode"
-    (ngModelChange)="onSingleModeChange($event)">
-    <mat-radio-button [value]="false">2 vs 2</mat-radio-button>
-    <mat-radio-button [value]="true">1 vs 1</mat-radio-button>
-  </mat-radio-group>
+  <div class="radio-container">
+    <mat-radio-group
+      [(ngModel)]="singleMode"
+      (ngModelChange)="onSingleModeChange($event)">
+      <mat-radio-button [value]="false">2 vs 2</mat-radio-button>
+      <mat-radio-button [value]="true">1 vs 1</mat-radio-button>
+    </mat-radio-group>
+  </div>
   <app-add-match
     [ngStyle]="{ display: singleMode ? 'block' : 'none' }"
-    class="match-container"
     [data]="users$"
     [singleMode]="true"></app-add-match>
   <app-add-match
     [ngStyle]="{ display: !singleMode ? 'block' : 'none' }"
-    class="match-container"
     [data]="users$"
     [singleMode]="false"></app-add-match>
   <app-last-added-matches
     *ngIf="singleMode"
-    class="match-container"
     [singleMode]="true"></app-last-added-matches>
   <app-last-added-matches
-    class="match-container"
     *ngIf="!singleMode"
     [singleMode]="false"></app-last-added-matches>
 </div>

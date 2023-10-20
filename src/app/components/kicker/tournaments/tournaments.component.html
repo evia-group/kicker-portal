@@ -5,7 +5,7 @@
       *ngFor="let card of cards | async"
       [colspan]="card.cols"
       [rowspan]="card.rows">
-      <mat-card class="dashboard-card">
+      <mat-card appearance="outlined" class="dashboard-card">
         <mat-card-header>
           <mat-card-title>
             {{ card.title }}

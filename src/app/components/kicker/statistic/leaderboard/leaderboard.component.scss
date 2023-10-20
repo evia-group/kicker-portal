@@ -4,40 +4,44 @@ $column-background-color: #424242;
 .leaderboard-container {
   margin: 0 14px 10px;
 
-  .mat-form-field {
+  .mat-mdc-form-field {
     width: 100%;
   }
 
-  .table-container {
-    overflow: auto;
+  .mat-elevation-z8 {
+    padding-bottom: 10px;
 
-    table {
-      width: 100%;
+    .table-container {
+      overflow: auto;
 
-      .mat-header-cell,
-      .mat-cell {
-        padding: 8px;
-      }
+      table {
+        width: 100%;
 
-      .mat-header-cell:first-of-type,
-      .mat-cell:first-of-type {
-        padding-left: 24px;
-      }
+        .mat-mdc-header-cell,
+        .mat-mdc-cell {
+          padding: 8px;
+        }
 
-      .sticky-column-left {
-        position: sticky;
-        left: 0;
-        background: $column-background-color;
-        z-index: 1;
-        border-right: 1px solid $column-border-color;
-      }
+        .mat-mdc-header-cell:first-of-type,
+        .mat-mdc-cell:first-of-type {
+          padding-left: 24px;
+        }
 
-      .sticky-column-right {
-        position: sticky;
-        right: 0;
-        background: $column-background-color;
-        z-index: 1;
-        border-left: 1px solid $column-border-color;
+        .sticky-column-left {
+          position: sticky;
+          left: 0;
+          background: $column-background-color;
+          z-index: 1;
+          border-right: 1px solid $column-border-color;
+        }
+
+        .sticky-column-right {
+          position: sticky;
+          right: 0;
+          background: $column-background-color;
+          z-index: 1;
+          border-left: 1px solid $column-border-color;
+        }
       }
     }
   }

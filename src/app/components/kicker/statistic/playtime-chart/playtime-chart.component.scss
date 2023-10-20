@@ -4,19 +4,19 @@
   margin-top: 20px;
   margin-left: 10px;
 
-  .mat-radio-group,
-  .mat-radio-button {
+  .mat-mdc-radio-group,
+  .mat-mdc-radio-button {
     margin-left: 20px;
     margin-bottom: 10px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .flex-box {
     flex-flow: column-reverse;
     align-items: flex-start;
 
-    .mat-radio-group {
+    .mat-mdc-radio-group {
       margin-left: -20px;
     }
   }

@@ -1,21 +1,19 @@
 .grid-container {
-  margin: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin: auto;
+  max-width: 1200px;
+  min-width: 360px;
 
-  .mat-radio-group {
-    margin-bottom: 20px;
+  .radio-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -10px;
 
-    .mat-radio-button ~ .mat-radio-button {
-      margin-left: 25px;
+    .mat-mdc-radio-group {
+      margin-top: 10px;
+
+      .mat-mdc-radio-button ~ .mat-mdc-radio-button {
+        margin-left: 25px;
+      }
     }
-  }
-
-  .match-container {
-    width: 100%;
-    max-width: 1200px;
-    min-width: 275px;
-    margin-bottom: 20px;
   }
 }

@@ -5,16 +5,7 @@
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
-@include mat.all-legacy-component-typographies();
-@include mat.legacy-core();
+@include mat.core();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -25,33 +16,34 @@ $kicker-app-accent: mat.define-palette(mat.$lime-palette, A100);
 // The warn palette is optional (defaults to red).
 $kicker-app-warn: mat.define-palette(mat.$red-palette);
 
+$kicker-app-typography: mat.define-typography-config(
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+);
+
 // Create the theme object (a Sass map containing all of the palettes).
 $kicker-app-theme: mat.define-dark-theme(
-  $kicker-app-primary,
-  $kicker-app-accent,
-  $kicker-app-warn
+  (
+    color: (
+      primary: $kicker-app-primary,
+      accent: $kicker-app-accent,
+      warn: $kicker-app-warn,
+    ),
+    typography: $kicker-app-typography,
+    density: 0,
+  )
 );
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-legacy-component-themes($kicker-app-theme);
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-}
+@include mat.all-component-themes($kicker-app-theme);
 
 .alert-snackbar {
   background: #ef3f33;
   color: white;
 }
 
-.mat-snack-bar-container {
+.mat-mdc-snack-bar-container {
   margin-bottom: 100px !important;
 }
 
@@ -66,13 +58,13 @@ body {
   }
 }
 
-.result-radio-button .mat-radio-label-content {
-  padding-left: 0;
-}
+.result-radio-button {
+  .mdc-form-field > label {
+    padding-left: 0;
+  }
 
-.remove-margin {
-  .mat-card-header-text {
-    margin: 0;
+  .mdc-form-field .mdc-radio {
+    padding: 0;
   }
 }
 
@@ -82,4 +74,25 @@ body {
 
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.select-container {
+  .mat-mdc-chip-action-label {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .mdc-evolution-chip-set__chips {
+    justify-content: center;
+  }
+}
+
+.mdc-list-item__primary-text {
+  display: flex;
+}
+
+@media (max-width: 390px) {
+  .mat-mdc-paginator-range-label {
+    margin: 0 16px 0 8px !important;
+  }
 }
