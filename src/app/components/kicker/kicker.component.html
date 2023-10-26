@@ -1,6 +1,6 @@
 <div class="container">
-  <div class="header mat-tab-header-pagination-controls-enabled">
-    <nav mat-tab-nav-bar mat-align-tabs="center" appMatTabScroll>
+  <div class="header">
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" appMatTabScroll>
       <a
         mat-tab-link
         *ngFor="let link of navLinks"
@@ -13,6 +13,7 @@
         {{ link.label | translate }}
       </a>
     </nav>
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
   </div>
   <div class="content">
     <div class="router-container">
