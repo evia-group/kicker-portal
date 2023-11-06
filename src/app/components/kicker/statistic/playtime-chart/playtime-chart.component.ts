@@ -2,10 +2,6 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { take } from 'rxjs';
 import { MatchesService } from 'src/app/shared/services/matches.service';
-import * as _moment from 'moment';
-import { default as _rollupMoment, Moment } from 'moment';
-
-const moment = _rollupMoment || _moment;
 
 @Component({
   selector: 'app-playtime-chart',
@@ -36,18 +32,18 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   currentDatepickerLabel = '';
   currentDatepickerHint = '';
 
-  today = moment();
+  today = new Date();
 
-  yearMoment = moment();
-  monthMoment = moment();
-  dayMoment = moment();
+  yearDate = new Date();
+  monthDate = new Date();
+  dayDate = new Date();
 
-  currentMoment = this.yearMoment;
+  currentDate = this.yearDate;
 
   selectedOption = 'Year';
-  selectedYear = this.today.year();
-  selectedMonth = this.today.month();
-  selectedDay = this.today.date();
+  selectedYear = this.today.getFullYear();
+  selectedMonth = this.today.getMonth();
+  selectedDay = this.today.getDate();
 
   playtimeChartData = new Map<number, number[][][]>();
 
@@ -102,15 +98,15 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
 
   panelClass = 'year-picker';
 
-  dayFilter = (_d: Moment | null): boolean => {
+  dayFilter = (_d: Date | null): boolean => {
     return true;
   };
 
-  yearFilter = (_d: Moment | null): boolean => {
+  yearFilter = (_d: Date | null): boolean => {
     return true;
   };
 
-  monthFilter = (_d: Moment | null): boolean => {
+  monthFilter = (_d: Date | null): boolean => {
     return true;
   };
 
@@ -222,43 +218,45 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
             }
           });
           this.allYears = Array.from(this.playtimeChartData.keys());
-          this.yearFilter = (d: Moment | null): boolean => {
-            const year = (d || moment()).year();
-            return this.allYears.includes(year);
+          this.yearFilter = (d: Date | null): boolean => {
+            return d ? this.allYears.includes(d.getFullYear()) : false;
           };
-          this.monthFilter = (d: Moment | null): boolean => {
-            const year = (d || moment()).year();
-            if (!this.allYears.includes(year)) {
+          this.monthFilter = (d: Date | null): boolean => {
+            if (!d) {
               return false;
-            } else {
-              const month = (d || moment()).month();
-              return this.getYearData(year)[month] > 0;
             }
+            const year = d.getFullYear();
+            return (
+              this.allYears.includes(year) &&
+              this.getYearData(year)[d.getMonth()] > 0
+            );
           };
-          this.dayFilter = (d: Moment | null): boolean => {
-            const year = (d || moment()).year();
-            if (!this.allYears.includes(year)) {
+          this.dayFilter = (d: Date | null): boolean => {
+            if (!d) {
               return false;
-            } else {
-              const month = (d || moment()).month();
-              const day = (d || moment()).date() - 1;
-              return this.getMonthData(year, month)[day] > 0;
             }
+            const year = d.getFullYear();
+            return (
+              this.allYears.includes(year) &&
+              this.getMonthData(year, d.getMonth())[d.getDate() - 1] > 0
+            );
           };
 
           this.datePickerFilter = this.yearFilter;
 
-          this.yearMoment = moment(this.maxTime);
-          this.monthMoment = moment(this.maxTime);
-          this.dayMoment = moment(this.maxTime);
+          this.yearDate = new Date(this.maxTime);
+          this.monthDate = new Date(this.maxTime);
+          this.dayDate = new Date(this.maxTime);
 
-          this.setChartData(this.getYearData(moment(this.maxTime).year()));
+          this.setChartData(
+            this.getYearData(new Date(this.maxTime).getFullYear())
+          );
 
           this.playtimeDataAvailable = true;
 
-          this.selectedYear = moment(this.maxTime).year();
-          this.selectedMonth = moment(this.maxTime).month();
-          this.selectedDay = moment(this.maxTime).date();
+          this.selectedYear = new Date(this.maxTime).getFullYear();
+          this.selectedMonth = new Date(this.maxTime).getMonth();
+          this.selectedDay = new Date(this.maxTime).getDate();
         }
       });
   }
@@ -287,17 +285,17 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     }
   }
 
-  setDateOnInput(normalizedDate: Moment) {
+  setDateOnInput(normalizedDate: Date) {
     if (this.datePickerFormatType === 0) {
-      this.yearMoment = normalizedDate;
+      this.yearDate = normalizedDate;
     } else if (this.datePickerFormatType === 1) {
-      this.monthMoment = normalizedDate;
+      this.monthDate = normalizedDate;
     } else {
-      this.dayMoment = normalizedDate;
+      this.dayDate = normalizedDate;
     }
-    this.selectedYear = normalizedDate.year();
-    this.selectedMonth = normalizedDate.month();
-    this.selectedDay = normalizedDate.date();
+    this.selectedYear = normalizedDate.getFullYear();
+    this.selectedMonth = normalizedDate.getMonth();
+    this.selectedDay = normalizedDate.getDate();
 
     this.setChartOnOption(
       this.selectedYear,
@@ -321,23 +319,23 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     if (this.selectedOption === 'Year') {
       this.datePickerFormatType = 0;
       this.datePickerFilter = this.yearFilter;
-      this.currentMoment = this.yearMoment;
+      this.currentDate = this.yearDate;
       this.panelClass = 'year-picker';
     } else if (this.selectedOption === 'Month') {
       this.datePickerFormatType = 1;
       this.datePickerFilter = this.monthFilter;
-      this.currentMoment = this.monthMoment;
+      this.currentDate = this.monthDate;
       this.panelClass = 'year-month-picker';
     } else {
       this.datePickerFormatType = 2;
       this.datePickerFilter = this.dayFilter;
-      this.currentMoment = this.dayMoment;
+      this.currentDate = this.dayDate;
       this.panelClass = 'year-month-day-picker';
     }
     this.setDatepickerText();
-    this.selectedYear = this.currentMoment.year();
-    this.selectedMonth = this.currentMoment.month();
-    this.selectedDay = this.currentMoment.date();
+    this.selectedYear = this.currentDate.getFullYear();
+    this.selectedMonth = this.currentDate.getMonth();
+    this.selectedDay = this.currentDate.getDate();
     this.setChartOnOption(
       this.selectedYear,
       this.selectedMonth,
@@ -389,7 +387,7 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   setChartData(chartData: number[]) {
-    let labelData;
+    let labelData: number[] | string[];
     if (this.selectedOption === 'Day') {
       labelData = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,

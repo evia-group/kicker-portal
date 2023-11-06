@@ -52,7 +52,6 @@ import { BarLineChartComponent } from './components/kicker/statistic/bar-line-ch
 import { ResultDoughnutChartComponent } from './components/kicker/statistic/result-doughnut-chart/result-doughnut-chart.component';
 import { MatchesChartComponent } from './components/kicker/statistic/matches-chart/matches-chart.component';
 import { PlaytimeChartComponent } from './components/kicker/statistic/playtime-chart/playtime-chart.component';
-import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorIntlService } from './shared/services/mat-paginator-intl.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -73,6 +72,7 @@ import { LocalizedDatePipe } from './shared/pipes/localized-date.pipe';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 import { MatTabScrollDirective } from './shared/directives/mat-tab-scroll.directive';
 import { LoadingDataComponent } from './shared/components/loading-data/loading-data.component';
+import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -165,7 +165,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatPaginatorModule,
     MatSortModule,
     NgChartsModule,
-    MomentDateModule,
+    MatDateFnsModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
     MatChipsModule,
