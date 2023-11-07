@@ -20,17 +20,19 @@
             receivedDataSM &&
             (!playerDataAvailableSM || !matchesDataAvailableSM)
           "></app-loading-data>
-        <app-leaderboard
-          *ngIf="playerDataAvailableSM && matchesDataAvailableSM"
-          [dataSubject$]="playerTableDataSM$"
-          [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
-          [displayedColumns]="displayedColumns"
-          [activeColumn]="activeColumn"
-          [sortDirection]="sortDirection"
-          [disableClear]="disableClear"
-          [filterHintText]="filterHintTranslationKey"
-          [filterText]="filterTranslationKey"
-          [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+        <div class="single-content">
+          <app-leaderboard
+            *ngIf="playerDataAvailableSM && matchesDataAvailableSM"
+            [dataSubject$]="playerTableDataSM$"
+            [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
+            [displayedColumns]="displayedColumns"
+            [activeColumn]="activeColumn"
+            [sortDirection]="sortDirection"
+            [disableClear]="disableClear"
+            [filterHintText]="filterHintTranslationKey"
+            [filterText]="filterTranslationKey"
+            [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+        </div>
       </mat-card-content>
     </ng-container>
     <ng-container *ngIf="!singleMode">

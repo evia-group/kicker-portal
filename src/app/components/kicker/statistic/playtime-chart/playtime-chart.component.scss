@@ -1,4 +1,4 @@
-.flex-box {
+.playtime-flex-box {
   display: flex;
   align-items: center;
   margin-top: 20px;
@@ -12,12 +12,16 @@
 }
 
 @media (max-width: 650px) {
-  .flex-box {
+  .playtime-flex-box {
     flex-flow: column-reverse;
     align-items: flex-start;
 
     .mat-mdc-radio-group {
       margin-left: -20px;
+
+      .mat-mdc-radio-button .mdc-radio {
+        padding-left: 0;
+      }
     }
   }
 }

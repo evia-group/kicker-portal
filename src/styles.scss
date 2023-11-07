@@ -96,3 +96,9 @@ $kicker-app-theme: mat.define-dark-theme(
     margin: 0 16px 0 8px !important;
   }
 }
+
+@media (max-width: 650px) {
+  .playtime-flex-box .mdc-radio {
+    padding-left: 5px !important;
+  }
+}
