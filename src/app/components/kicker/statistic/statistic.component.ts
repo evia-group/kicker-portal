@@ -22,6 +22,7 @@ import {
 } from '../../../shared/global-variables';
 import {
   IMatch,
+  IPlayers,
   ISingleMatch,
 } from '../../../shared/interfaces/match.interface';
 
@@ -38,8 +39,11 @@ export class StatisticComponent implements OnInit, OnDestroy {
   teamsMap = new Map<string, ILeaderboard>();
 
   selectedPlayer: string;
+  selectedPlayerValue: IPlayers;
   selectedPlayerSM: string;
+  selectedPlayerValueSM: IPlayers;
   selectedTeam: string;
+  selectedTeamValue: IPlayers;
 
   playersWithMatches: { id: string; name: string }[] = [];
 
@@ -187,7 +191,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
           if (this.playerDataAvailable && this.matchesDataAvailable) {
             [
               this.playersMap,
-              this.selectedPlayer,
+              this.selectedPlayerValue,
               this.playersWithMatches,
               this.selectedYearPlayer,
               this.playerYearsList,
@@ -199,11 +203,12 @@ export class StatisticComponent implements OnInit, OnDestroy {
             );
             this.playersTable = this.getTable(this.playersMap);
             this.playerTableData$.next(this.playersTable);
+            this.selectedPlayer = this.selectedPlayerValue.id;
           }
           if (this.teamDataAvailable && this.matchesDataAvailable) {
             [
               this.teamsMap,
-              this.selectedTeam,
+              this.selectedTeamValue,
               this.teamsWithMatches,
               this.selectedYearTeam,
               this.teamYearsList,
@@ -215,6 +220,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
             );
             this.teamsTable = this.getTable(this.teamsMap);
             this.teamsTableData$.next(this.teamsTable);
+            this.selectedTeam = this.selectedTeamValue.id;
           }
         }
         if (data[3]) {
@@ -223,7 +229,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
           if (this.playerDataAvailableSM && this.matchesDataAvailableSM) {
             [
               this.playersMapSM,
-              this.selectedPlayerSM,
+              this.selectedPlayerValueSM,
               this.playersWithMatchesSM,
               this.selectedYearPlayerSM,
               this.playerYearsListSM,
@@ -235,6 +241,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
             );
             this.playersTableSM = this.getTable(this.playersMapSM);
             this.playerTableDataSM$.next(this.playersTableSM);
+            this.selectedPlayerSM = this.selectedPlayerValueSM.id;
           }
         }
       }
@@ -248,6 +255,22 @@ export class StatisticComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.statisticsDataSub?.unsubscribe();
     this.singleModeSubscription?.unsubscribe();
+  }
+
+  onOptionSelectedEvent(
+    val: IPlayers,
+    isTeamSelection: boolean,
+    forSingleMode: boolean
+  ) {
+    if (isTeamSelection) {
+      this.selectedTeam = val.id;
+    } else if (forSingleMode) {
+      this.selectedPlayerSM = val.id;
+    } else {
+      this.selectedPlayer = val.id;
+    }
+
+    this.updateYearsList(isTeamSelection, forSingleMode);
   }
 
   getTable(currentMap: Map<string, ILeaderboard>) {

@@ -73,6 +73,8 @@ import { SpinnerComponent } from './shared/components/spinner/spinner.component'
 import { MatTabScrollDirective } from './shared/directives/mat-tab-scroll.directive';
 import { LoadingDataComponent } from './shared/components/loading-data/loading-data.component';
 import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { SelectionWithSearchComponent } from './shared/components/selection-with-search/selection-with-search.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -113,6 +115,7 @@ export function createTranslateLoader(http: HttpClient) {
     SpinnerComponent,
     MatTabScrollDirective,
     LoadingDataComponent,
+    SelectionWithSearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -170,6 +173,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatProgressSpinnerModule,
     MatChipsModule,
     MatAutocompleteModule,
+    NgxMatSelectSearchModule,
   ],
   providers: [
     {

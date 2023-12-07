@@ -62,6 +62,7 @@
     "choosePlayer": "Wähle Spieler",
     "editPlayers": "Auswahl ändern",
     "editPlayer": "Auswahl ändern",
+    "noOptionsFound": "Keine Optionen gefunden",
     "kickerStatus": {
       "available": {
         "title": "Kicker ist frei",

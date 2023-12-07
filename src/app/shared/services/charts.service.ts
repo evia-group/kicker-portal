@@ -23,14 +23,14 @@ export class ChartsService {
     playersMap: Map<string, ILeaderboard>
   ): [
     Map<string, ILeaderboard>,
-    string,
+    { id: string; name: string },
     { id: string; name: string }[],
     number,
     number[],
     number[],
     number[]
   ] {
-    let selectedPlayer: string;
+    let selectedPlayer: { id: string; name: string };
     let playerIds: string[] = [];
     const playersWithMatches: { id: string; name: string }[] = [];
     let playerYearsList: number[];
@@ -118,18 +118,22 @@ export class ChartsService {
       this.sortByName(playersWithMatches);
 
       if (playerIdsWithMatches.includes(loggedInUser)) {
-        selectedPlayer = loggedInUser;
+        selectedPlayer = playersWithMatches.find(
+          (player) => player.id === loggedInUser
+        );
       } else {
-        selectedPlayer = playersWithMatches[0].id;
+        selectedPlayer = playersWithMatches[0];
       }
 
-      playerYearsList = this.setYearsList(selectedPlayer, playersMap);
+      playerYearsList = this.setYearsList(selectedPlayer.id, playersMap);
 
       selectedYearPlayer = playerYearsList[playerYearsList.length - 1];
 
-      doughnutDataPlayer = this.getDoughnutData(playersMap.get(selectedPlayer));
+      doughnutDataPlayer = this.getDoughnutData(
+        playersMap.get(selectedPlayer.id)
+      );
       matchesChartDataPlayer = this.getMatchesChartData(
-        playersMap.get(selectedPlayer),
+        playersMap.get(selectedPlayer.id),
         selectedYearPlayer
       );
     }
@@ -149,14 +153,15 @@ export class ChartsService {
     teamsMap: Map<string, ILeaderboard>
   ): [
     Map<string, ILeaderboard>,
-    string,
+    { id: string; name: string },
     { id: string; name: string }[],
     number,
     number[],
     number[],
     number[]
   ] {
-    let selectedTeam: string;
+    let selectedTeam: { id: string; name: string };
+    let selectedTeamId: string;
     const teamsWithMatches: { id: string; name: string }[] = [];
     let teamYearsList: number[];
     let selectedYearTeam: number;
@@ -189,19 +194,19 @@ export class ChartsService {
             teamIdsWithMatches.push(team2);
           }
 
-          if (!selectedTeam) {
+          if (!selectedTeamId) {
             if (
               (team1.startsWith(loggedInUser) ||
                 team1.endsWith(loggedInUser)) &&
               teamIdsWithMatches.includes(team1)
             ) {
-              selectedTeam = team1;
+              selectedTeamId = team1;
             } else if (
               (team2.startsWith(loggedInUser) ||
                 team2.endsWith(loggedInUser)) &&
               teamIdsWithMatches.includes(team2)
             ) {
-              selectedTeam = team2;
+              selectedTeamId = team2;
             }
           }
 
@@ -263,16 +268,20 @@ export class ChartsService {
 
       this.sortByName(teamsWithMatches);
 
-      if (!selectedTeam) {
-        selectedTeam = teamsWithMatches[0].id;
+      if (!selectedTeamId) {
+        selectedTeamId = teamsWithMatches[0].id;
       }
 
-      teamYearsList = this.setYearsList(selectedTeam, teamsMap);
+      selectedTeam = teamsWithMatches.find(
+        (team) => team.id === selectedTeamId
+      );
+
+      teamYearsList = this.setYearsList(selectedTeamId, teamsMap);
 
       selectedYearTeam = teamYearsList[teamYearsList.length - 1];
-      doughnutDataTeam = this.getDoughnutData(teamsMap.get(selectedTeam));
+      doughnutDataTeam = this.getDoughnutData(teamsMap.get(selectedTeamId));
       matchesChartDataTeam = this.getMatchesChartData(
-        teamsMap.get(selectedTeam),
+        teamsMap.get(selectedTeamId),
         selectedYearTeam
       );
     }

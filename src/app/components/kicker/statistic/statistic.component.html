@@ -107,18 +107,14 @@
           *ngIf="
             allChartsReadyPSM && playerDataAvailableSM && matchesDataAvailableSM
           ">
-          <mat-form-field appearance="fill">
-            <mat-label>{{ 'common.player' | translate }}</mat-label>
-            <mat-select
-              [(value)]="selectedPlayerSM"
-              (selectionChange)="updateYearsList(false, true)">
-              <mat-option
-                [value]="player.id"
-                *ngFor="let player of playersWithMatchesSM"
-                >{{ player.name }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
+          <app-selection-with-search
+            class="selection-search"
+            [values]="playersWithMatchesSM"
+            [selectedValue]="selectedPlayerValueSM"
+            [labelText]="'common.player' | translate"
+            (optionSelectedEvent)="
+              onOptionSelectedEvent($event, false, true)
+            "></app-selection-with-search>
           <mat-form-field appearance="fill">
             <mat-label>{{ 'stats.year' | translate }}</mat-label>
             <mat-select
@@ -195,18 +191,14 @@
               *ngIf="
                 allChartsReadyP && playerDataAvailable && matchesDataAvailable
               ">
-              <mat-form-field appearance="fill">
-                <mat-label>{{ 'common.player' | translate }}</mat-label>
-                <mat-select
-                  [(value)]="selectedPlayer"
-                  (selectionChange)="updateYearsList(false, false)">
-                  <mat-option
-                    [value]="player.id"
-                    *ngFor="let player of playersWithMatches"
-                    >{{ player.name }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
+              <app-selection-with-search
+                class="selection-search"
+                [values]="playersWithMatches"
+                [selectedValue]="selectedPlayerValue"
+                [labelText]="'common.player' | translate"
+                (optionSelectedEvent)="
+                  onOptionSelectedEvent($event, false, false)
+                "></app-selection-with-search>
               <mat-form-field appearance="fill">
                 <mat-label>{{ 'stats.year' | translate }}</mat-label>
                 <mat-select
@@ -281,18 +273,14 @@
               *ngIf="
                 allChartsReadyT && teamDataAvailable && matchesDataAvailable
               ">
-              <mat-form-field appearance="fill">
-                <mat-label>{{ 'common.team' | translate }}</mat-label>
-                <mat-select
-                  [(value)]="selectedTeam"
-                  (selectionChange)="updateYearsList(true, false)">
-                  <mat-option
-                    [value]="team.id"
-                    *ngFor="let team of teamsWithMatches"
-                    >{{ team.name }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
+              <app-selection-with-search
+                class="selection-search-team"
+                [values]="teamsWithMatches"
+                [selectedValue]="selectedTeamValue"
+                [labelText]="'common.team' | translate"
+                (optionSelectedEvent)="
+                  onOptionSelectedEvent($event, true, false)
+                "></app-selection-with-search>
               <mat-form-field appearance="fill">
                 <mat-label>{{ 'stats.year' | translate }}</mat-label>
                 <mat-select
