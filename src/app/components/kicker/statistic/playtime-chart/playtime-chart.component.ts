@@ -141,14 +141,14 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
           playtimeNumData.forEach((item) => {
             let startTime = item.startTime;
             const endTime = item.endTime;
-            this.maxTime = this.maxTime < endTime ? endTime : this.maxTime;
             const startDate = new Date(startTime);
             const endDate = new Date(endTime);
             let difference = Math.round((endTime - startTime) / 1000 / 60);
             const dataEndYear = endDate.getFullYear();
             const dataStartSeconds = startDate.getSeconds();
 
-            if (difference <= this.MAX_DIFFERENCE) {
+            if (0 < difference && difference <= this.MAX_DIFFERENCE) {
+              this.maxTime = this.maxTime < endTime ? endTime : this.maxTime;
               let dateForCalc: Date;
               if (dataStartSeconds >= 30) {
                 startTime += (60 - dataStartSeconds) * 1000;
