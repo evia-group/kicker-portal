@@ -40,7 +40,7 @@
   margin-left: 10px;
   flex-wrap: wrap;
 
-  .mat-mdc-form-field,
+  .year-selection,
   .selection-search {
     margin-right: 20px;
   }
@@ -48,6 +48,10 @@
   .selection-search-team {
     margin-right: 20px;
     width: 400px;
+  }
+
+  .year-selection {
+    width: 200px;
   }
 }
 

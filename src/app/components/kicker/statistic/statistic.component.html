@@ -115,18 +115,18 @@
             (optionSelectedEvent)="
               onOptionSelectedEvent($event, false, true)
             "></app-selection-with-search>
-          <mat-form-field appearance="fill">
-            <mat-label>{{ 'stats.year' | translate }}</mat-label>
-            <mat-select
-              [(value)]="selectedYearPlayerSM"
-              (selectionChange)="updateMatchesData(false, true)">
-              <mat-option
-                [value]="year"
-                *ngFor="let year of playerYearsListSM"
-                >{{ year }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
+          <app-datepicker
+            class="year-selection"
+            [dateFilter]="yearFilterPlayerSM"
+            [formatType]="0"
+            [localeId]="'app.language.id' | translate"
+            [textLabel]="datepickerLabelKeys[0]"
+            [textHint]="datepickerHintKeys[0]"
+            [panelClass]="'year-picker'"
+            [formControlDate]="yearDatePlayerSM"
+            (newDateEvent)="
+              updateMatchesData(false, true, $event)
+            "></app-datepicker>
         </div>
         <div>
           <div
@@ -199,18 +199,18 @@
                 (optionSelectedEvent)="
                   onOptionSelectedEvent($event, false, false)
                 "></app-selection-with-search>
-              <mat-form-field appearance="fill">
-                <mat-label>{{ 'stats.year' | translate }}</mat-label>
-                <mat-select
-                  [(value)]="selectedYearPlayer"
-                  (selectionChange)="updateMatchesData(false, false)">
-                  <mat-option
-                    [value]="year"
-                    *ngFor="let year of playerYearsList"
-                    >{{ year }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
+              <app-datepicker
+                class="year-selection"
+                [dateFilter]="yearFilterPlayer"
+                [formatType]="0"
+                [localeId]="'app.language.id' | translate"
+                [textLabel]="datepickerLabelKeys[0]"
+                [textHint]="datepickerHintKeys[0]"
+                [panelClass]="'year-picker'"
+                [formControlDate]="yearDatePlayer"
+                (newDateEvent)="
+                  updateMatchesData(false, false, $event)
+                "></app-datepicker>
             </div>
             <div>
               <div
@@ -281,18 +281,18 @@
                 (optionSelectedEvent)="
                   onOptionSelectedEvent($event, true, false)
                 "></app-selection-with-search>
-              <mat-form-field appearance="fill">
-                <mat-label>{{ 'stats.year' | translate }}</mat-label>
-                <mat-select
-                  [(value)]="selectedYearTeam"
-                  (selectionChange)="updateMatchesData(true, false)">
-                  <mat-option
-                    [value]="year"
-                    *ngFor="let year of teamYearsList"
-                    >{{ year }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
+              <app-datepicker
+                class="year-selection"
+                [dateFilter]="yearFilterTeam"
+                [formatType]="0"
+                [localeId]="'app.language.id' | translate"
+                [textLabel]="datepickerLabelKeys[0]"
+                [textHint]="datepickerHintKeys[0]"
+                [panelClass]="'year-picker'"
+                [formControlDate]="yearDateTeam"
+                (newDateEvent)="
+                  updateMatchesData(true, false, $event)
+                "></app-datepicker>
             </div>
             <div
               class="flex-container"
