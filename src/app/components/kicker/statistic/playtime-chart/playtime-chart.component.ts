@@ -248,6 +248,8 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
           this.monthDate = new Date(this.maxTime);
           this.dayDate = new Date(this.maxTime);
 
+          this.currentDate = this.yearDate;
+
           this.setChartData(
             this.getYearData(new Date(this.maxTime).getFullYear())
           );
