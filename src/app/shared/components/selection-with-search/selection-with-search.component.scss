@@ -1,0 +1,17 @@
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-option {
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  &:first-child {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}

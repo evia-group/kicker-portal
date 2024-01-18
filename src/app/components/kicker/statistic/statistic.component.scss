@@ -1,5 +1,5 @@
 .grid-container {
-  margin: 20px;
+  margin: 10px 20px 20px;
 }
 
 .dashboard-card {
@@ -29,7 +29,7 @@
   }
 }
 
-.mat-card {
+.mat-mdc-card {
   margin: 20px;
 }
 
@@ -40,25 +40,45 @@
   margin-left: 10px;
   flex-wrap: wrap;
 
-  .mat-form-field {
+  .year-selection,
+  .selection-search {
     margin-right: 20px;
+  }
+
+  .selection-search-team {
+    margin-right: 20px;
+    width: 400px;
+  }
+
+  .year-selection {
+    width: 200px;
   }
 }
 
 .stats-container {
+  min-width: 360px;
   max-width: 1240px;
   margin: auto;
 
   .radio-container {
     display: flex;
     justify-content: center;
+    margin-bottom: -10px;
 
-    .mat-radio-group {
-      margin-top: 20px;
+    .mat-mdc-radio-group {
+      margin-top: 10px;
 
-      .mat-radio-button ~ .mat-radio-button {
+      .mat-mdc-radio-button ~ .mat-mdc-radio-button {
         margin-left: 25px;
       }
     }
+  }
+
+  .content-container {
+    margin-top: 15px;
+  }
+
+  .single-content {
+    margin-top: 20px;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,10 +15,10 @@ export class ResponsiveSelectorComponent
   implements OnInit, OnDestroy, OnChanges
 {
   @Input()
-  firstPlayerControl: FormControl;
+  firstPlayerControl: UntypedFormControl;
 
   @Input()
-  secondPlayerControl: FormControl;
+  secondPlayerControl: UntypedFormControl;
 
   @Input()
   firstPlayerOptions: any;

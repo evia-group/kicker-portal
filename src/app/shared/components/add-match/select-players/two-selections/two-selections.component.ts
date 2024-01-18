@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-two-selections',
@@ -8,10 +8,10 @@ import { FormControl } from '@angular/forms';
 })
 export class TwoSelectionsComponent {
   @Input()
-  firstPlayerControl: FormControl;
+  firstPlayerControl: UntypedFormControl;
 
   @Input()
-  secondPlayerControl: FormControl;
+  secondPlayerControl: UntypedFormControl;
 
   @Input()
   firstPlayerOptions;

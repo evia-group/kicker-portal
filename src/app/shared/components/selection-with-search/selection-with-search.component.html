@@ -1,0 +1,19 @@
+<mat-form-field>
+  <mat-label>{{ labelText }}</mat-label>
+  <mat-select
+    [formControl]="selectionCtrl"
+    (selectionChange)="onSelectionChange($event)"
+    #valueSelect>
+    <mat-option>
+      <ngx-mat-select-search
+        [formControl]="selectionFilterCtrl"
+        placeholderLabel="{{ 'stats.filter' | translate }}"
+        noEntriesFoundLabel="{{
+          'common.noOptionsFound' | translate
+        }}"></ngx-mat-select-search>
+    </mat-option>
+    <mat-option [value]="value" *ngFor="let value of filteredValues | async">{{
+      value.name
+    }}</mat-option>
+  </mat-select>
+</mat-form-field>

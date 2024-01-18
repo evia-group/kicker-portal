@@ -1,23 +1,27 @@
-.flex-box {
+.playtime-flex-box {
   display: flex;
   align-items: center;
   margin-top: 20px;
   margin-left: 10px;
 
-  .mat-radio-group,
-  .mat-radio-button {
+  .mat-mdc-radio-group,
+  .mat-mdc-radio-button {
     margin-left: 20px;
     margin-bottom: 10px;
   }
 }
 
-@media (max-width: 600px) {
-  .flex-box {
+@media (max-width: 650px) {
+  .playtime-flex-box {
     flex-flow: column-reverse;
     align-items: flex-start;
 
-    .mat-radio-group {
+    .mat-mdc-radio-group {
       margin-left: -20px;
+
+      .mat-mdc-radio-button .mdc-radio {
+        padding-left: 0;
+      }
     }
   }
 }

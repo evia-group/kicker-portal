@@ -22,6 +22,7 @@ import {
 } from '../../../shared/global-variables';
 import {
   IMatch,
+  IPlayers,
   ISingleMatch,
 } from '../../../shared/interfaces/match.interface';
 
@@ -38,8 +39,11 @@ export class StatisticComponent implements OnInit, OnDestroy {
   teamsMap = new Map<string, ILeaderboard>();
 
   selectedPlayer: string;
+  selectedPlayerValue: IPlayers;
   selectedPlayerSM: string;
+  selectedPlayerValueSM: IPlayers;
   selectedTeam: string;
+  selectedTeamValue: IPlayers;
 
   playersWithMatches: { id: string; name: string }[] = [];
 
@@ -136,6 +140,25 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
   singleModeSubscription: Subscription;
 
+  yearFilter = (d: Date | null, yearsList: number[]): boolean => {
+    return d ? yearsList.includes(d.getFullYear()) : false;
+  };
+  yearFilterPlayer = (d: Date | null): boolean => {
+    return this.yearFilter(d, this.playerYearsList);
+  };
+
+  yearFilterPlayerSM = (d: Date | null): boolean => {
+    return this.yearFilter(d, this.playerYearsListSM);
+  };
+
+  yearFilterTeam = (d: Date | null): boolean => {
+    return this.yearFilter(d, this.teamYearsList);
+  };
+
+  yearDatePlayer = new Date();
+  yearDatePlayerSM = new Date();
+  yearDateTeam = new Date();
+
   constructor(
     private matchesService: MatchesService,
     private tableService: TableService,
@@ -187,7 +210,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
           if (this.playerDataAvailable && this.matchesDataAvailable) {
             [
               this.playersMap,
-              this.selectedPlayer,
+              this.selectedPlayerValue,
               this.playersWithMatches,
               this.selectedYearPlayer,
               this.playerYearsList,
@@ -199,11 +222,13 @@ export class StatisticComponent implements OnInit, OnDestroy {
             );
             this.playersTable = this.getTable(this.playersMap);
             this.playerTableData$.next(this.playersTable);
+            this.selectedPlayer = this.selectedPlayerValue.id;
+            this.yearDatePlayer = this.getDateFromYear(this.selectedYearPlayer);
           }
           if (this.teamDataAvailable && this.matchesDataAvailable) {
             [
               this.teamsMap,
-              this.selectedTeam,
+              this.selectedTeamValue,
               this.teamsWithMatches,
               this.selectedYearTeam,
               this.teamYearsList,
@@ -215,6 +240,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
             );
             this.teamsTable = this.getTable(this.teamsMap);
             this.teamsTableData$.next(this.teamsTable);
+            this.selectedTeam = this.selectedTeamValue.id;
+            this.yearDateTeam = this.getDateFromYear(this.selectedYearTeam);
           }
         }
         if (data[3]) {
@@ -223,7 +250,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
           if (this.playerDataAvailableSM && this.matchesDataAvailableSM) {
             [
               this.playersMapSM,
-              this.selectedPlayerSM,
+              this.selectedPlayerValueSM,
               this.playersWithMatchesSM,
               this.selectedYearPlayerSM,
               this.playerYearsListSM,
@@ -235,6 +262,10 @@ export class StatisticComponent implements OnInit, OnDestroy {
             );
             this.playersTableSM = this.getTable(this.playersMapSM);
             this.playerTableDataSM$.next(this.playersTableSM);
+            this.selectedPlayerSM = this.selectedPlayerValueSM.id;
+            this.yearDatePlayerSM = this.getDateFromYear(
+              this.selectedYearPlayerSM
+            );
           }
         }
       }
@@ -248,6 +279,26 @@ export class StatisticComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.statisticsDataSub?.unsubscribe();
     this.singleModeSubscription?.unsubscribe();
+  }
+
+  onOptionSelectedEvent(
+    val: IPlayers,
+    isTeamSelection: boolean,
+    forSingleMode: boolean
+  ) {
+    if (isTeamSelection) {
+      this.selectedTeam = val.id;
+    } else if (forSingleMode) {
+      this.selectedPlayerSM = val.id;
+    } else {
+      this.selectedPlayer = val.id;
+    }
+
+    this.updateYearsList(isTeamSelection, forSingleMode);
+  }
+
+  getDateFromYear(year: number) {
+    return new Date(year, 0, 1);
   }
 
   getTable(currentMap: Map<string, ILeaderboard>) {
@@ -297,6 +348,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
       if (!this.teamYearsList.includes(this.selectedYearTeam)) {
         this.selectedYearTeam =
           this.teamYearsList[this.teamYearsList.length - 1];
+        this.yearDateTeam = this.getDateFromYear(this.selectedYearTeam);
       }
       this.doughnutDataTeam = this.chartsService.getDoughnutData(
         this.teamsMap.get(this.selectedTeam)
@@ -313,6 +365,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
       if (!this.playerYearsList.includes(this.selectedYearPlayer)) {
         this.selectedYearPlayer =
           this.playerYearsList[this.playerYearsList.length - 1];
+        this.yearDatePlayer = this.getDateFromYear(this.selectedYearPlayer);
       }
       this.doughnutDataPlayer = this.chartsService.getDoughnutData(
         this.playersMap.get(this.selectedPlayer)
@@ -329,6 +382,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
       if (!this.playerYearsListSM.includes(this.selectedYearPlayerSM)) {
         this.selectedYearPlayerSM =
           this.playerYearsListSM[this.playerYearsListSM.length - 1];
+        this.yearDatePlayerSM = this.getDateFromYear(this.selectedYearPlayerSM);
       }
       this.doughnutDataPlayerSM = this.chartsService.getDoughnutData(
         this.playersMapSM.get(this.selectedPlayerSM)
@@ -340,18 +394,21 @@ export class StatisticComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateMatchesData(isTeam: boolean, forSingleMode: boolean) {
+  updateMatchesData(isTeam: boolean, forSingleMode: boolean, newDate: Date) {
     if (isTeam) {
+      this.selectedYearTeam = newDate.getFullYear();
       this.matchesChartDataTeam = this.chartsService.getMatchesChartData(
         this.teamsMap.get(this.selectedTeam),
         this.selectedYearTeam
       );
     } else if (!forSingleMode) {
+      this.selectedYearPlayer = newDate.getFullYear();
       this.matchesChartDataPlayer = this.chartsService.getMatchesChartData(
         this.playersMap.get(this.selectedPlayer),
         this.selectedYearPlayer
       );
     } else {
+      this.selectedYearPlayerSM = newDate.getFullYear();
       this.matchesChartDataPlayerSM = this.chartsService.getMatchesChartData(
         this.playersMapSM.get(this.selectedPlayerSM),
         this.selectedYearPlayerSM

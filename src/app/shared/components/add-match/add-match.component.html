@@ -1,8 +1,10 @@
 <mat-card>
-  <mat-card-title>{{ 'common.addMatch' | translate }}</mat-card-title>
+  <mat-card-header>
+    <mat-card-title>{{ 'common.addMatch' | translate }}</mat-card-title>
+  </mat-card-header>
   <mat-card-content>
     <div class="match-container">
-      <hr class="spacer" />
+      <div class="spacer"></div>
       <div class="match-header">
         <div>
           {{ (singleMode ? 'common.player1' : 'common.team1') | translate }}

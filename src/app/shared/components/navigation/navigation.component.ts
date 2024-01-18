@@ -47,7 +47,7 @@ export class NavigationComponent implements OnDestroy, OnInit {
       }
     });
     this.breakpointObserverSubscription = this.breakpointObserver
-      .observe('(max-width: 700px)')
+      .observe('(max-width: 740px)')
       .subscribe((result) => {
         this.showDropdown = result.matches;
       });
@@ -73,6 +73,6 @@ export class NavigationComponent implements OnDestroy, OnInit {
   }
 
   public goToGithub() {
-    window.open('https://github.com/Evia-Academy/kicker-portal', '_blank');
+    window.open('https://github.com/evia-group/kicker-portal', '_blank');
   }
 }

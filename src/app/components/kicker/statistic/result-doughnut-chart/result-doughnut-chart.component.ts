@@ -7,10 +7,10 @@ import {
 } from '@angular/core';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import {
-  zeroTwo,
   oneTwo,
   twoOne,
   twoZero,
+  zeroTwo,
 } from '../../../../shared/global-variables';
 
 @Component({
@@ -56,7 +56,6 @@ export class ResultDoughnutChartComponent implements OnChanges {
     labels: this.doughnutChartLabelsDD,
     datasets: [],
   };
-  // doughnutChartType: ChartType = 'doughnut';
   doughnutChartType: ChartConfiguration<'doughnut'>['type'] = 'doughnut';
   public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
@@ -108,10 +107,9 @@ export class ResultDoughnutChartComponent implements OnChanges {
   }
 
   sumArray(arr: number[]) {
-    const sum = arr.reduce((accumulator, value) => {
+    return arr.reduce((accumulator, value) => {
       return accumulator + value;
     }, 0);
-    return sum;
   }
 
   setDataset() {

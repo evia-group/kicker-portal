@@ -16,11 +16,21 @@ $kicker-app-accent: mat.define-palette(mat.$lime-palette, A100);
 // The warn palette is optional (defaults to red).
 $kicker-app-warn: mat.define-palette(mat.$red-palette);
 
+$kicker-app-typography: mat.define-typography-config(
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+);
+
 // Create the theme object (a Sass map containing all of the palettes).
 $kicker-app-theme: mat.define-dark-theme(
-  $kicker-app-primary,
-  $kicker-app-accent,
-  $kicker-app-warn
+  (
+    color: (
+      primary: $kicker-app-primary,
+      accent: $kicker-app-accent,
+      warn: $kicker-app-warn,
+    ),
+    typography: $kicker-app-typography,
+    density: 0,
+  )
 );
 
 // Include theme styles for core and each component used in your app.
@@ -28,21 +38,12 @@ $kicker-app-theme: mat.define-dark-theme(
 // that you are using.
 @include mat.all-component-themes($kicker-app-theme);
 
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-}
-
 .alert-snackbar {
   background: #ef3f33;
   color: white;
 }
 
-.mat-snack-bar-container {
+.mat-mdc-snack-bar-container {
   margin-bottom: 100px !important;
 }
 
@@ -57,13 +58,13 @@ body {
   }
 }
 
-.result-radio-button .mat-radio-label-content {
-  padding-left: 0;
-}
+.result-radio-button {
+  .mdc-form-field > label {
+    padding-left: 0;
+  }
 
-.remove-margin {
-  .mat-card-header-text {
-    margin: 0;
+  .mdc-form-field .mdc-radio {
+    padding: 0;
   }
 }
 
@@ -73,4 +74,31 @@ body {
 
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.select-container {
+  .mat-mdc-chip-action-label {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .mdc-evolution-chip-set__chips {
+    justify-content: center;
+  }
+}
+
+.mdc-list-item__primary-text {
+  display: flex;
+}
+
+@media (max-width: 390px) {
+  .mat-mdc-paginator-range-label {
+    margin: 0 16px 0 8px !important;
+  }
+}
+
+@media (max-width: 650px) {
+  .playtime-flex-box .mdc-radio {
+    padding-left: 5px !important;
+  }
 }

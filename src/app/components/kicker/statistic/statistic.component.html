@@ -8,7 +8,9 @@
     </mat-radio-group>
   </div>
   <mat-card>
-    <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
+    <mat-card-header>
+      <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
+    </mat-card-header>
     <ng-container *ngIf="singleMode">
       <mat-card-content>
         <app-loading-data
@@ -18,73 +20,79 @@
             receivedDataSM &&
             (!playerDataAvailableSM || !matchesDataAvailableSM)
           "></app-loading-data>
-        <app-leaderboard
-          *ngIf="playerDataAvailableSM && matchesDataAvailableSM"
-          [dataSubject$]="playerTableDataSM$"
-          [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
-          [displayedColumns]="displayedColumns"
-          [activeColumn]="activeColumn"
-          [sortDirection]="sortDirection"
-          [disableClear]="disableClear"
-          [filterHintText]="filterHintTranslationKey"
-          [filterText]="filterTranslationKey"
-          [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+        <div class="single-content">
+          <app-leaderboard
+            *ngIf="playerDataAvailableSM && matchesDataAvailableSM"
+            [dataSubject$]="playerTableDataSM$"
+            [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
+            [displayedColumns]="displayedColumns"
+            [activeColumn]="activeColumn"
+            [sortDirection]="sortDirection"
+            [disableClear]="disableClear"
+            [filterHintText]="filterHintTranslationKey"
+            [filterText]="filterTranslationKey"
+            [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+        </div>
       </mat-card-content>
     </ng-container>
     <ng-container *ngIf="!singleMode">
-      <mat-tab-group mat-align-tabs="start">
-        <mat-tab label="{{ 'stats.players' | translate }}">
-          <mat-card-content>
-            <app-loading-data
-              [showSpinner]="!receivedDataP || !receivedDataM"
-              [showNoData]="
-                receivedDataP &&
-                receivedDataM &&
-                (!playerDataAvailable || !matchesDataAvailable)
-              "></app-loading-data>
-            <app-leaderboard
-              *ngIf="playerDataAvailable && matchesDataAvailable"
-              [dataSubject$]="playerTableData$"
-              [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
-              [displayedColumns]="displayedColumns"
-              [activeColumn]="activeColumn"
-              [sortDirection]="sortDirection"
-              [disableClear]="disableClear"
-              [filterHintText]="filterHintTranslationKey"
-              [filterText]="filterTranslationKey"
-              [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
-          </mat-card-content>
-        </mat-tab>
-        <mat-tab label="{{ 'stats.teams' | translate }}">
-          <mat-card-content>
-            <app-loading-data
-              [showSpinner]="!receivedDataT || !receivedDataM"
-              [showNoData]="
-                receivedDataT &&
-                receivedDataM &&
-                (!teamDataAvailable || !matchesDataAvailable)
-              "></app-loading-data>
-            <app-leaderboard
-              *ngIf="teamDataAvailable && matchesDataAvailable"
-              [dataSubject$]="teamsTableData$"
-              [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
-              [displayedColumns]="displayedColumns"
-              [activeColumn]="activeColumn"
-              [sortDirection]="sortDirection"
-              [disableClear]="disableClear"
-              [filterHintText]="filterHintTranslationKey"
-              [filterText]="filterTranslationKey"
-              [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
-          </mat-card-content>
-        </mat-tab>
-      </mat-tab-group>
+      <mat-card-content>
+        <mat-tab-group>
+          <mat-tab label="{{ 'stats.players' | translate }}">
+            <div class="content-container">
+              <app-loading-data
+                [showSpinner]="!receivedDataP || !receivedDataM"
+                [showNoData]="
+                  receivedDataP &&
+                  receivedDataM &&
+                  (!playerDataAvailable || !matchesDataAvailable)
+                "></app-loading-data>
+              <app-leaderboard
+                *ngIf="playerDataAvailable && matchesDataAvailable"
+                [dataSubject$]="playerTableData$"
+                [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
+                [displayedColumns]="displayedColumns"
+                [activeColumn]="activeColumn"
+                [sortDirection]="sortDirection"
+                [disableClear]="disableClear"
+                [filterHintText]="filterHintTranslationKey"
+                [filterText]="filterTranslationKey"
+                [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+            </div>
+          </mat-tab>
+          <mat-tab label="{{ 'stats.teams' | translate }}">
+            <div class="content-container">
+              <app-loading-data
+                [showSpinner]="!receivedDataT || !receivedDataM"
+                [showNoData]="
+                  receivedDataT &&
+                  receivedDataM &&
+                  (!teamDataAvailable || !matchesDataAvailable)
+                "></app-loading-data>
+              <app-leaderboard
+                *ngIf="teamDataAvailable && matchesDataAvailable"
+                [dataSubject$]="teamsTableData$"
+                [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
+                [displayedColumns]="displayedColumns"
+                [activeColumn]="activeColumn"
+                [sortDirection]="sortDirection"
+                [disableClear]="disableClear"
+                [filterHintText]="filterHintTranslationKey"
+                [filterText]="filterTranslationKey"
+                [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
     </ng-container>
   </mat-card>
   <mat-card>
-    <mat-card-title>{{
-      (singleMode ? 'stats.playerStats' : 'stats.playerAndTeamStats')
-        | translate
-    }}</mat-card-title>
+    <mat-card-header>
+      <mat-card-title>{{
+        (singleMode ? 'stats.playerStats' : 'stats.playerAndTeamStats')
+          | translate
+      }}</mat-card-title>
+    </mat-card-header>
     <mat-card-content>
       <ng-container *ngIf="singleMode">
         <app-loading-data
@@ -94,36 +102,43 @@
             receivedDataSM &&
             (!playerDataAvailableSM || !matchesDataAvailableSM)
           "></app-loading-data>
-        <div class="selections" *ngIf="allChartsReadyPSM">
-          <mat-form-field appearance="fill">
-            <mat-label>{{ 'common.player' | translate }}</mat-label>
-            <mat-select
-              [(value)]="selectedPlayerSM"
-              (selectionChange)="updateYearsList(false, true)">
-              <mat-option
-                [value]="player.id"
-                *ngFor="let player of playersWithMatchesSM"
-                >{{ player.name }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>{{ 'stats.year' | translate }}</mat-label>
-            <mat-select
-              [(value)]="selectedYearPlayerSM"
-              (selectionChange)="updateMatchesData(false, true)">
-              <mat-option
-                [value]="year"
-                *ngFor="let year of playerYearsListSM"
-                >{{ year }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
+        <div
+          class="selections"
+          *ngIf="
+            allChartsReadyPSM && playerDataAvailableSM && matchesDataAvailableSM
+          ">
+          <app-selection-with-search
+            class="selection-search"
+            [values]="playersWithMatchesSM"
+            [selectedValue]="selectedPlayerValueSM"
+            [labelText]="'common.player' | translate"
+            (optionSelectedEvent)="
+              onOptionSelectedEvent($event, false, true)
+            "></app-selection-with-search>
+          <app-datepicker
+            class="year-selection"
+            [dateFilter]="yearFilterPlayerSM"
+            [formatType]="0"
+            [localeId]="'app.language.id' | translate"
+            [textLabel]="datepickerLabelKeys[0]"
+            [textHint]="datepickerHintKeys[0]"
+            [panelClass]="'year-picker'"
+            [formControlDate]="yearDatePlayerSM"
+            (newDateEvent)="
+              updateMatchesData(false, true, $event)
+            "></app-datepicker>
         </div>
         <div>
           <div
             class="flex-container"
-            [ngStyle]="{ display: allChartsReadyPSM ? 'block' : 'none' }">
+            [ngStyle]="{
+              display:
+                allChartsReadyPSM &&
+                playerDataAvailableSM &&
+                matchesDataAvailableSM
+                  ? 'block'
+                  : 'none'
+            }">
             <div>
               <app-bar-line-chart
                 (barLineChartIsReadyEvent)="checkIfChartsReady(6, $event)"
@@ -162,43 +177,52 @@
       <ng-container *ngIf="!singleMode">
         <mat-tab-group mat-align-tabs="start">
           <mat-tab label="{{ 'stats.players' | translate }}">
-            <app-loading-data
-              [showSpinner]="!receivedDataP || !receivedDataM"
-              [showNoData]="
-                receivedDataP &&
-                receivedDataM &&
-                (!playerDataAvailable || !matchesDataAvailable)
-              "></app-loading-data>
-            <div class="selections" *ngIf="allChartsReadyP">
-              <mat-form-field appearance="fill">
-                <mat-label>{{ 'common.player' | translate }}</mat-label>
-                <mat-select
-                  [(value)]="selectedPlayer"
-                  (selectionChange)="updateYearsList(false, false)">
-                  <mat-option
-                    [value]="player.id"
-                    *ngFor="let player of playersWithMatches"
-                    >{{ player.name }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field appearance="fill">
-                <mat-label>{{ 'stats.year' | translate }}</mat-label>
-                <mat-select
-                  [(value)]="selectedYearPlayer"
-                  (selectionChange)="updateMatchesData(false, false)">
-                  <mat-option
-                    [value]="year"
-                    *ngFor="let year of playerYearsList"
-                    >{{ year }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
+            <div class="content-container">
+              <app-loading-data
+                [showSpinner]="!receivedDataP || !receivedDataM"
+                [showNoData]="
+                  receivedDataP &&
+                  receivedDataM &&
+                  (!playerDataAvailable || !matchesDataAvailable)
+                "></app-loading-data>
+            </div>
+            <div
+              class="selections"
+              *ngIf="
+                allChartsReadyP && playerDataAvailable && matchesDataAvailable
+              ">
+              <app-selection-with-search
+                class="selection-search"
+                [values]="playersWithMatches"
+                [selectedValue]="selectedPlayerValue"
+                [labelText]="'common.player' | translate"
+                (optionSelectedEvent)="
+                  onOptionSelectedEvent($event, false, false)
+                "></app-selection-with-search>
+              <app-datepicker
+                class="year-selection"
+                [dateFilter]="yearFilterPlayer"
+                [formatType]="0"
+                [localeId]="'app.language.id' | translate"
+                [textLabel]="datepickerLabelKeys[0]"
+                [textHint]="datepickerHintKeys[0]"
+                [panelClass]="'year-picker'"
+                [formControlDate]="yearDatePlayer"
+                (newDateEvent)="
+                  updateMatchesData(false, false, $event)
+                "></app-datepicker>
             </div>
             <div>
               <div
                 class="flex-container"
-                [ngStyle]="{ display: allChartsReadyP ? 'block' : 'none' }">
+                [ngStyle]="{
+                  display:
+                    allChartsReadyP &&
+                    playerDataAvailable &&
+                    matchesDataAvailable
+                      ? 'block'
+                      : 'none'
+                }">
                 <div>
                   <app-bar-line-chart
                     (barLineChartIsReadyEvent)="checkIfChartsReady(0, $event)"
@@ -235,42 +259,49 @@
             </div>
           </mat-tab>
           <mat-tab label="{{ 'stats.teams' | translate }}">
-            <app-loading-data
-              [showSpinner]="!receivedDataT || !receivedDataM"
-              [showNoData]="
-                receivedDataT &&
-                receivedDataM &&
-                (!teamDataAvailable || !matchesDataAvailable)
-              "></app-loading-data>
-            <div class="selections" *ngIf="allChartsReadyT">
-              <mat-form-field appearance="fill">
-                <mat-label>{{ 'common.team' | translate }}</mat-label>
-                <mat-select
-                  [(value)]="selectedTeam"
-                  (selectionChange)="updateYearsList(true, false)">
-                  <mat-option
-                    [value]="team.id"
-                    *ngFor="let team of teamsWithMatches"
-                    >{{ team.name }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field appearance="fill">
-                <mat-label>{{ 'stats.year' | translate }}</mat-label>
-                <mat-select
-                  [(value)]="selectedYearTeam"
-                  (selectionChange)="updateMatchesData(true, false)">
-                  <mat-option
-                    [value]="year"
-                    *ngFor="let year of teamYearsList"
-                    >{{ year }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
+            <div class="content-container">
+              <app-loading-data
+                [showSpinner]="!receivedDataT || !receivedDataM"
+                [showNoData]="
+                  receivedDataT &&
+                  receivedDataM &&
+                  (!teamDataAvailable || !matchesDataAvailable)
+                "></app-loading-data>
+            </div>
+            <div
+              class="selections"
+              *ngIf="
+                allChartsReadyT && teamDataAvailable && matchesDataAvailable
+              ">
+              <app-selection-with-search
+                class="selection-search-team"
+                [values]="teamsWithMatches"
+                [selectedValue]="selectedTeamValue"
+                [labelText]="'common.team' | translate"
+                (optionSelectedEvent)="
+                  onOptionSelectedEvent($event, true, false)
+                "></app-selection-with-search>
+              <app-datepicker
+                class="year-selection"
+                [dateFilter]="yearFilterTeam"
+                [formatType]="0"
+                [localeId]="'app.language.id' | translate"
+                [textLabel]="datepickerLabelKeys[0]"
+                [textHint]="datepickerHintKeys[0]"
+                [panelClass]="'year-picker'"
+                [formControlDate]="yearDateTeam"
+                (newDateEvent)="
+                  updateMatchesData(true, false, $event)
+                "></app-datepicker>
             </div>
             <div
               class="flex-container"
-              [ngStyle]="{ display: allChartsReadyT ? 'block' : 'none' }">
+              [ngStyle]="{
+                display:
+                  allChartsReadyT && teamDataAvailable && matchesDataAvailable
+                    ? 'block'
+                    : 'none'
+              }">
               <div>
                 <app-bar-line-chart
                   (barLineChartIsReadyEvent)="checkIfChartsReady(3, $event)"
@@ -310,7 +341,9 @@
     </mat-card-content>
   </mat-card>
   <mat-card>
-    <mat-card-title>{{ 'stats.playtime' | translate }}</mat-card-title>
+    <mat-card-header>
+      <mat-card-title>{{ 'stats.playtime' | translate }}</mat-card-title>
+    </mat-card-header>
     <mat-card-content>
       <app-playtime-chart
         [months]="'months' | translate"

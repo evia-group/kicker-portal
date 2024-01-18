@@ -13,6 +13,7 @@
 <ng-container *ngIf="showButton && !singleMode">
   <div class="selection-container">
     <button
+      class="select-button"
       mat-raised-button
       color="primary"
       type="button"
@@ -20,16 +21,16 @@
       (click)="openDialog()">
       {{ buttonText | translate }}
     </button>
-    <mat-chip-list
+    <mat-chip-listbox
       *ngIf="firstPlayer || secondPlayer"
       class="mat-chip-list-stacked">
-      <mat-chip *ngIf="firstPlayer">
+      <mat-chip-option *ngIf="firstPlayer">
         {{ firstPlayer }}
-      </mat-chip>
-      <mat-chip *ngIf="secondPlayer">
+      </mat-chip-option>
+      <mat-chip-option *ngIf="secondPlayer">
         {{ secondPlayer }}
-      </mat-chip>
-    </mat-chip-list>
+      </mat-chip-option>
+    </mat-chip-listbox>
   </div>
 </ng-container>
 <ng-container *ngIf="!showButton && singleMode">
@@ -43,6 +44,7 @@
 <ng-container *ngIf="showButton && singleMode">
   <div class="selection-container">
     <button
+      class="select-button"
       mat-raised-button
       color="primary"
       type="button"
@@ -50,15 +52,15 @@
       (click)="openDialog()">
       {{ buttonText | translate }}
     </button>
-    <mat-chip-list
+    <mat-chip-listbox
       *ngIf="firstPlayer || secondPlayer"
-      class="mat-chip-list-stacked">
-      <mat-chip *ngIf="firstPlayer">
+      class="mat-mdc-chip-set-stacked">
+      <mat-chip-option *ngIf="firstPlayer">
         {{ firstPlayer }}
-      </mat-chip>
-      <mat-chip *ngIf="secondPlayer">
+      </mat-chip-option>
+      <mat-chip-option *ngIf="secondPlayer">
         {{ secondPlayer }}
-      </mat-chip>
-    </mat-chip-list>
+      </mat-chip-option>
+    </mat-chip-listbox>
   </div>
 </ng-container>

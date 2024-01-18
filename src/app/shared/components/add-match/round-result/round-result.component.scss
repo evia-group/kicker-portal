@@ -1,27 +1,12 @@
-/*.win-round-container {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-
-  .mat-radio-button {
-    padding: 0 80px;
-  }
-}*/
-
 .win-round-container {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
 
-  .mat-radio-button {
-    padding: 0 20px;
-  }
-}
-
-@media (max-width: 370px) {
-  .win-round-container {
-    .mat-radio-button {
-      padding: 0 15px;
+  .mat-mdc-radio-group {
+    display: flex;
+    .radio-spacer {
+      width: 40px;
     }
   }
 }

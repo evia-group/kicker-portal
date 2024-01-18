@@ -3,7 +3,11 @@ import { ITeam, IUser } from '../../interfaces/user.interface';
 import { BehaviorSubject, combineLatestWith, Observable } from 'rxjs';
 import { MatchesService } from '../../services/matches.service';
 import { TeamsService } from '../../services/teams.service';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  Validators,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-add-match',
@@ -20,7 +24,7 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
   winsTeam1 = new BehaviorSubject<number>(0);
   winsTeam2 = new BehaviorSubject<number>(0);
 
-  currentForm: FormGroup;
+  currentForm: UntypedFormGroup;
 
   playersSaveButtonDisabled = false;
   singleModeSaveButtonDisabled = false;
@@ -106,7 +110,7 @@ export class AddMatchComponent implements AfterContentChecked, OnInit {
   constructor(
     private teamsService: TeamsService,
     private matchesService: MatchesService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {}
 
   ngOnInit(): void {

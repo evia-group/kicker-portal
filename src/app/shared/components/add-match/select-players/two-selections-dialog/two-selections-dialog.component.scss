@@ -1,14 +1,15 @@
-.mat-dialog-actions {
-  display: flex;
-  justify-content: center;
+.mat-mdc-dialog-content {
+  padding-bottom: 0;
 }
 
-@media (max-width: 410px) {
-  .mat-dialog-actions {
+button {
+  margin-bottom: 15px;
+}
+
+@media (max-width: 440px) {
+  .mat-mdc-dialog-actions {
     flex-direction: column;
-    gap: 10px;
-    padding-bottom: 15px;
-    .mat-button-base {
+    button:nth-child(2) {
       margin-left: 0;
     }
   }

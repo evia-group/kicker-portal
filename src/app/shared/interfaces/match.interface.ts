@@ -1,5 +1,5 @@
 import { DocumentReference, Timestamp } from '@angular/fire/firestore';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 export interface IRounds {
   win: boolean;
@@ -46,8 +46,8 @@ export interface ISingleMatch {
 }
 
 export interface ISelectionsData {
-  firstPlayerControl: FormControl;
-  secondPlayerControl: FormControl;
+  firstPlayerControl: UntypedFormControl;
+  secondPlayerControl: UntypedFormControl;
   firstPlayerOptions: any[];
   secondPlayerOptions: any[];
   displayWithFunction;

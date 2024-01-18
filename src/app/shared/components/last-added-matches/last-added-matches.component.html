@@ -1,5 +1,7 @@
 <mat-card>
-  <mat-card-title>{{ 'common.lastMatches' | translate }}</mat-card-title>
+  <mat-card-header>
+    <mat-card-title>{{ 'common.lastMatches' | translate }}</mat-card-title>
+  </mat-card-header>
   <mat-card-content>
     <app-loading-data
       [showSpinner]="!matchesAvailable"

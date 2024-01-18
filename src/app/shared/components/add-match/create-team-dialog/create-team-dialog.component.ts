@@ -1,8 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -22,7 +22,9 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./create-team-dialog.component.scss'],
 })
 export class CreateTeamDialogComponent implements OnInit, OnDestroy {
-  addTeamForm: FormGroup = this.fb.group({ validators: Validators.required });
+  addTeamForm: UntypedFormGroup = this.fb.group({
+    validators: Validators.required,
+  });
 
   dataSubscription: Subscription;
 
@@ -49,13 +51,13 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
       id: number;
       dataSub: ReplaySubject<any>;
       resultSub: Subject<any>;
-      control1: FormControl;
-      control2: FormControl;
+      control1: UntypedFormControl;
+      control2: UntypedFormControl;
       options1: any[];
       options2: any[];
       displayWithFunction: (option: any) => any;
     },
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     protected db: Firestore,
     protected infoBar: InfoBarService,
     private teamsService: TeamsService,

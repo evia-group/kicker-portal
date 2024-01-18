@@ -1,24 +1,25 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-  Firestore,
-  collection,
-  CollectionReference,
-  doc,
-  collectionData,
   addDoc,
+  collection,
+  collectionData,
+  CollectionReference,
   deleteDoc,
+  doc,
   DocumentReference,
+  Firestore,
   Timestamp,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
 import { shareReplay, take } from 'rxjs/operators';
 import { IMatch, ISingleMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { IUser } from '../interfaces/user.interface';
 import { IPlaytime } from '../interfaces/statistic.interface';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,7 @@ export class MatchesService implements OnDestroy {
 
   public matches$: Observable<IMatch[]>;
 
-  public singeMatches$: Observable<ISingleMatch[]>;
+  public singleMatches$: Observable<ISingleMatch[]>;
 
   public playtime$: Observable<IPlaytime[]>;
 
@@ -46,10 +47,13 @@ export class MatchesService implements OnDestroy {
 
   singleModeSub$ = new ReplaySubject<boolean>(1);
 
+  subscribtions: Subscription[] = [];
+
   constructor(
     protected db: Firestore,
     protected infoBar: InfoBarService,
-    protected translateService: TranslateService
+    protected translateService: TranslateService,
+    protected authService: AuthService
   ) {
     this.collection = collection(
       db,
@@ -59,17 +63,22 @@ export class MatchesService implements OnDestroy {
       shareReplay(1)
     ) as Observable<IMatch[]>;
 
-    this.matches$.subscribe(this.matchesSub$);
-
     this.singleMatchCollection = collection(
       db,
       `${environment.prefix}Single-Matches`
     ) as CollectionReference<ISingleMatch>;
-    this.singeMatches$ = collectionData(this.singleMatchCollection).pipe(
+    this.singleMatches$ = collectionData(this.singleMatchCollection).pipe(
       shareReplay(1)
     ) as Observable<ISingleMatch[]>;
 
-    this.singeMatches$.subscribe(this.singleMatchesSub$);
+    authService.isLoggedIn.subscribe((loggedIn) => {
+      if (loggedIn) {
+        this.subscribeToObservables();
+        this.singleModeSub$.next(false);
+      } else {
+        this.unsubscribeFromObservables();
+      }
+    });
 
     const playtimeCol = collection(
       db,
@@ -88,6 +97,23 @@ export class MatchesService implements OnDestroy {
     );
   }
 
+  subscribeToObservables() {
+    this.subscribtions[0] = this.matches$.subscribe({
+      next: (matches) => this.matchesSub$.next(matches),
+      error: (err) => console.log(err),
+    });
+    this.subscribtions[1] = this.singleMatches$.subscribe({
+      next: (singleMatches) => this.singleMatchesSub$.next(singleMatches),
+      error: (err) => console.log(err),
+    });
+  }
+
+  unsubscribeFromObservables() {
+    this.subscribtions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
   ngOnDestroy(): void {
     this.translateSub.unsubscribe();
   }
@@ -104,7 +130,7 @@ export class MatchesService implements OnDestroy {
 
   private static getRoundInfos(
     team: string,
-    form: FormGroup,
+    form: UntypedFormGroup,
     type: 'win' | 'dominationTeamOne' | 'dominationTeamTwo'
   ): number {
     const rounds = [
@@ -122,7 +148,7 @@ export class MatchesService implements OnDestroy {
     }).length;
   }
 
-  public async add(match: FormGroup): Promise<void> {
+  public async add(match: UntypedFormGroup): Promise<void> {
     const team1 = match.get('players.team1.teamId').value;
     const team2 = match.get('players.team2.teamId').value;
 
@@ -202,7 +228,7 @@ export class MatchesService implements OnDestroy {
       });
   }
 
-  public async addSingleMatch(match: FormGroup): Promise<void> {
+  public async addSingleMatch(match: UntypedFormGroup): Promise<void> {
     const player1 = (match.get('players.team1.one').value as IUser).id;
     const player2 = (match.get('players.team2.one').value as IUser).id;
 

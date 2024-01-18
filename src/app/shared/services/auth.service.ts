@@ -9,7 +9,6 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { UsersService } from './users.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -26,11 +25,7 @@ export class AuthService {
   }
   private loggedIn = new BehaviorSubject<boolean>(false);
 
-  constructor(
-    private afAuth: Auth,
-    public usersService: UsersService,
-    public router: Router
-  ) {
+  constructor(private afAuth: Auth, public router: Router) {
     authState(afAuth).subscribe((user) => {
       if (user) {
         this.user = user;
@@ -51,9 +46,6 @@ export class AuthService {
 
   async logout() {
     await signOut(this.afAuth);
-    localStorage.removeItem('user');
-    this.loggedIn.next(false);
-    await this.router.navigate(['/login']);
   }
 
   async loginWithMicrosoft() {
@@ -62,7 +54,5 @@ export class AuthService {
       tenant: environment.ms.tenant,
     });
     await signInWithPopup(this.afAuth, provider);
-    this.loggedIn.next(true);
-    await this.router.navigate(['/kicker']);
   }
 }
