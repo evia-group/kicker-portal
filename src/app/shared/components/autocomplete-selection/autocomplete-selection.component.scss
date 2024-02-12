@@ -1,7 +1,12 @@
 .selection-form {
   min-width: 50px;
   width: 100%;
+
+  .mdc-text-field__input {
+    text-overflow: ellipsis;
+  }
 }
+
 .full-width {
   width: 100%;
 }

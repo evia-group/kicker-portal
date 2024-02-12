@@ -77,18 +77,51 @@ $kicker-app-theme: mat.define-dark-theme(
 }
 
 .select-container {
-  .mat-mdc-chip-action-label {
+  .mat-mdc-standard-chip .mdc-evolution-chip__cell--primary,
+  .mat-mdc-standard-chip .mdc-evolution-chip__action--primary,
+  .mat-mdc-standard-chip .mat-mdc-chip-action-label {
     white-space: normal;
     text-align: center;
+    overflow: hidden;
   }
 
   .mdc-evolution-chip-set__chips {
     justify-content: center;
   }
+
+  .mat-mdc-standard-chip .mdc-evolution-chip__cell--primary {
+    pointer-events: none;
+  }
 }
 
-.mdc-list-item__primary-text {
+.mat-mdc-menu-content .mat-mdc-menu-item-text {
   display: flex;
+}
+
+app-selection-with-search,
+app-responsive-selector {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}
+
+.mat-mdc-option .mdc-list-item__primary-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.chip-option {
+  &.mdc-list-item--selected {
+    background-color: inherit !important;
+  }
+
+  .mdc-list-item__primary-text {
+    color: inherit !important;
+  }
+  .mat-pseudo-checkbox {
+    display: none;
+  }
 }
 
 @media (max-width: 390px) {

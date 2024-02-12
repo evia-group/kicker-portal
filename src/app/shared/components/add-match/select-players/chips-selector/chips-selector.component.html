@@ -1,0 +1,40 @@
+<div class="chips-container">
+  <mat-chip-listbox
+    *ngIf="firstPlayerCtrl.value || secondPlayerCtrl.value"
+    class="mat-chip-list-stacked">
+    <mat-chip-option *ngIf="firstPlayerCtrl.value" (removed)="remove(0)">
+      {{ firstPlayerCtrl.value.name }}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-option>
+    <mat-chip-option *ngIf="secondPlayerCtrl.value" (removed)="remove(1)">
+      {{ secondPlayerCtrl.value.name }}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-option>
+  </mat-chip-listbox>
+  <form>
+    <mat-form-field>
+      <mat-label>Players</mat-label>
+      <input
+        matInput
+        placeholder="Select Player..."
+        [formControl]="valueCtrl"
+        [matAutocomplete]="auto" />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="selected($event)">
+        <mat-option
+          [ngClass]="{ 'mdc-list-item--selected': false }"
+          class="chip-option"
+          *ngFor="let option of filteredOptions | async"
+          [value]="option">
+          {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div>

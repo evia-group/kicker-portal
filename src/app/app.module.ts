@@ -75,6 +75,8 @@ import { LoadingDataComponent } from './shared/components/loading-data/loading-d
 import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { SelectionWithSearchComponent } from './shared/components/selection-with-search/selection-with-search.component';
+import { ChipsSelectorComponent } from './shared/components/add-match/select-players/chips-selector/chips-selector.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -116,6 +118,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatTabScrollDirective,
     LoadingDataComponent,
     SelectionWithSearchComponent,
+    ChipsSelectorComponent,
   ],
   imports: [
     BrowserModule,
@@ -174,6 +177,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatChipsModule,
     MatAutocompleteModule,
     NgxMatSelectSearchModule,
+    ScrollingModule,
   ],
   providers: [
     {

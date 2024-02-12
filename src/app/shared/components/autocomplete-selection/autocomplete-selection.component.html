@@ -12,6 +12,7 @@
       [displayWith]="displayWithFunction"
       (optionSelected)="emitWhenOptionSelected($event)">
       <mat-option
+        class="selection-option"
         *ngFor="let option of filteredOptions | async"
         [value]="option">
         {{ displayWithFunction(option) }}

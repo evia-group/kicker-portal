@@ -3,17 +3,22 @@
   flex-direction: row;
   align-items: stretch;
   justify-content: space-around;
+
   .selection-width {
-    display: flex;
     width: 48%;
   }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .select-player-team-container {
     flex-direction: column;
+
     .selection-width {
       width: 100%;
+
+      &:first-child {
+        margin-bottom: 10px;
+      }
     }
   }
 }

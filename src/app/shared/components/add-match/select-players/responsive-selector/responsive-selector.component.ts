@@ -152,4 +152,8 @@ export class ResponsiveSelectorComponent
       this.changeButtonText();
     });
   }
+
+  remove(id: number) {
+    console.log(id);
+  }
 }

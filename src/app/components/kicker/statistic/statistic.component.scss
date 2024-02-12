@@ -39,6 +39,7 @@
   margin-top: 20px;
   margin-left: 10px;
   flex-wrap: wrap;
+  row-gap: 15px;
 
   .year-selection,
   .selection-search {
@@ -57,7 +58,7 @@
 
 .stats-container {
   min-width: 360px;
-  max-width: 1240px;
+  max-width: 1400px;
   margin: auto;
 
   .radio-container {
