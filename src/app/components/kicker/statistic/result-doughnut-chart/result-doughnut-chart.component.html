@@ -1,5 +1,7 @@
-<div class="flex-container" *ngIf="allChartsReady">
-  <div *ngIf="showWL">
+@if (allChartsReady) {
+<div class="flex-container">
+  @if (showWL) {
+  <div>
     <canvas
       baseChart
       [data]="doughnutChartDataWL"
@@ -7,7 +9,8 @@
       [options]="doughnutChartOptions">
     </canvas>
   </div>
-  <div *ngIf="showDD">
+  } @if (showDD) {
+  <div>
     <canvas
       baseChart
       [data]="doughnutChartDataDD"
@@ -15,7 +18,8 @@
       [options]="doughnutChartOptions">
     </canvas>
   </div>
-  <div *ngIf="showStats">
+  } @if (showStats) {
+  <div>
     <canvas
       baseChart
       [data]="doughnutChartDataStats"
@@ -23,4 +27,6 @@
       [options]="doughnutChartOptions">
     </canvas>
   </div>
+  }
 </div>
+}

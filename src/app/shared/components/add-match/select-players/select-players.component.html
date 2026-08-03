@@ -1,32 +1,32 @@
 <div class="select-container" [formGroup]="matchForm">
   <ng-container formGroupName="players">
-    <ng-container *ngFor="let team of teams">
-      <app-responsive-selector
-        [firstPlayerControl]="
-          team === 0 ? team1player1Control : team2player1Control
-        "
-        [secondPlayerControl]="
-          team === 0 ? team1player2Control : team2player2Control
-        "
-        [firstPlayerOptions]="
-          team === 0 ? team1player1Options : team2player1Options
-        "
-        [secondPlayerOptions]="
-          team === 0 ? team1player2Options : team2player2Options
-        "
-        [displayWithFunction]="displayWithFunction"
-        [placeholderText]="placeholderText"
-        [labelText]="playerLabelText"
-        [teamName]="
-          singleMode
-            ? team === 0
-              ? 'common.player1'
-              : 'common.player2'
-            : team === 0
-            ? 'common.team1'
-            : 'common.team2'
-        "
-        [singleMode]="singleMode"></app-responsive-selector>
-    </ng-container>
+    @for (team of teams; track team) {
+    <app-responsive-selector
+      [firstPlayerControl]="
+        team === 0 ? team1player1Control : team2player1Control
+      "
+      [secondPlayerControl]="
+        team === 0 ? team1player2Control : team2player2Control
+      "
+      [firstPlayerOptions]="
+        team === 0 ? team1player1Options : team2player1Options
+      "
+      [secondPlayerOptions]="
+        team === 0 ? team1player2Options : team2player2Options
+      "
+      [displayWithFunction]="displayWithFunction"
+      [placeholderText]="placeholderText"
+      [labelText]="playerLabelText"
+      [teamName]="
+        singleMode
+          ? team === 0
+            ? 'common.player1'
+            : 'common.player2'
+          : team === 0
+          ? 'common.team1'
+          : 'common.team2'
+      "
+      [singleMode]="singleMode"></app-responsive-selector>
+    }
   </ng-container>
 </div>

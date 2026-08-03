@@ -1,4 +1,5 @@
-<div class="chart-container" *ngIf="allChartsReady">
+@if (allChartsReady) {
+<div class="chart-container">
   <canvas
     baseChart
     [data]="barChartData"
@@ -6,3 +7,4 @@
     [legend]="barChartLegend">
   </canvas>
 </div>
+}

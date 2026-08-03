@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>{{ teamName | translate }}</h1>
 <mat-dialog-content>
+  @if (!singleMode) {
   <app-two-selections
-    *ngIf="!singleMode"
     [firstPlayerControl]="firstPlayerControl"
     [secondPlayerControl]="secondPlayerControl"
     [firstPlayerOptions]="firstPlayerOptions"
@@ -9,13 +9,14 @@
     [displayWithFunction]="displayWithFunction"
     [placeholderText]="placeholderText"
     [labelText]="labelText"></app-two-selections>
+  } @if (singleMode) {
   <app-autocomplete-selection
-    *ngIf="singleMode"
     [selectionFormControl]="firstPlayerControl"
     [options]="firstPlayerOptions"
     [displayWithFunction]="displayWithFunction"
     [placeholderText]="placeholderText"
     [labelText]="labelText"></app-autocomplete-selection>
+  }
 </mat-dialog-content>
 <mat-dialog-actions align="center">
   <button

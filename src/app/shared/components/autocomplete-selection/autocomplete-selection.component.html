@@ -11,14 +11,14 @@
       #auto="matAutocomplete"
       [displayWith]="displayWithFunction"
       (optionSelected)="emitWhenOptionSelected($event)">
-      <mat-option
-        *ngFor="let option of filteredOptions | async"
-        [value]="option">
+      @for (option of filteredOptions | async; track option) {
+      <mat-option [value]="option">
         {{ displayWithFunction(option) }}
       </mat-option>
+      }
     </mat-autocomplete>
+    @if (selectionFormControl.value) {
     <button
-      *ngIf="selectionFormControl.value"
       matSuffix
       mat-icon-button
       aria-label="Clear"
@@ -26,6 +26,8 @@
       (click)="clearValue()">
       <mat-icon>close</mat-icon>
     </button>
-    <mat-error *ngIf="hasError">{{ errorText | translate }}</mat-error>
+    } @if (hasError) {
+    <mat-error>{{ errorText | translate }}</mat-error>
+    }
   </mat-form-field>
 </form>

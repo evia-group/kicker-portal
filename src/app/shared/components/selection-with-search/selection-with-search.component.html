@@ -12,8 +12,8 @@
           'common.noOptionsFound' | translate
         }}"></ngx-mat-select-search>
     </mat-option>
-    <mat-option [value]="value" *ngFor="let value of filteredValues | async">{{
-      value.name
-    }}</mat-option>
+    @for (value of filteredValues | async; track value) {
+    <mat-option [value]="value">{{ value.name }}</mat-option>
+    }
   </mat-select>
 </mat-form-field>

@@ -1,37 +1,37 @@
 <app-loading-data
   [showSpinner]="waitingForData"
   [showNoData]="!waitingForData && !playtimeDataAvailable"></app-loading-data>
-<ng-container *ngIf="!waitingForData && playtimeDataAvailable">
-  <div class="playtime-flex-box">
-    <app-datepicker
-      [localeId]="localeId"
-      [formatType]="datePickerFormatType"
-      [dateFilter]="datePickerFilter"
-      [formControlDate]="currentDate"
-      [panelClass]="panelClass"
-      [textLabel]="currentDatepickerLabel"
-      [textHint]="currentDatepickerHint"
-      (newDateEvent)="setDateOnInput($event)"></app-datepicker>
-    <mat-radio-group
-      aria-label="Select an option"
-      [(ngModel)]="selectedOption"
-      (ngModelChange)="onChange()">
-      <mat-radio-button value="Year">{{
-        'stats.year' | translate
-      }}</mat-radio-button>
-      <mat-radio-button value="Month">{{
-        'stats.month' | translate
-      }}</mat-radio-button>
-      <mat-radio-button value="Day">{{
-        'stats.day' | translate
-      }}</mat-radio-button>
-    </mat-radio-group>
-  </div>
-  <div class="chart-container">
-    <canvas
-      baseChart
-      [data]="barChartData"
-      [options]="barChartOptions"
-      [legend]="barChartLegend"></canvas>
-  </div>
-</ng-container>
+@if (!waitingForData && playtimeDataAvailable) {
+<div class="playtime-flex-box">
+  <app-datepicker
+    [localeId]="localeId"
+    [formatType]="datePickerFormatType"
+    [dateFilter]="datePickerFilter"
+    [formControlDate]="currentDate"
+    [panelClass]="panelClass"
+    [textLabel]="currentDatepickerLabel"
+    [textHint]="currentDatepickerHint"
+    (newDateEvent)="setDateOnInput($event)"></app-datepicker>
+  <mat-radio-group
+    aria-label="Select an option"
+    [(ngModel)]="selectedOption"
+    (ngModelChange)="onChange()">
+    <mat-radio-button value="Year">{{
+      'stats.year' | translate
+    }}</mat-radio-button>
+    <mat-radio-button value="Month">{{
+      'stats.month' | translate
+    }}</mat-radio-button>
+    <mat-radio-button value="Day">{{
+      'stats.day' | translate
+    }}</mat-radio-button>
+  </mat-radio-group>
+</div>
+<div class="chart-container">
+  <canvas
+    baseChart
+    [data]="barChartData"
+    [options]="barChartOptions"
+    [legend]="barChartLegend"></canvas>
+</div>
+}
