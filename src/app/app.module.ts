@@ -11,7 +11,11 @@ import { StatisticComponent } from './components/kicker/statistic/statistic.comp
 import { MatchesComponent } from './components/kicker/matches/matches.component';
 import { TournamentsComponent } from './components/kicker/tournaments/tournaments.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AddMatchComponent } from './shared/components/add-match/add-match.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -117,9 +121,9 @@ export function createTranslateLoader(http: HttpClient) {
     LoadingDataComponent,
     SelectionWithSearchComponent,
   ],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
-    HttpClientModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -180,7 +184,7 @@ export function createTranslateLoader(http: HttpClient) {
       }
       return database;
     }),
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}
