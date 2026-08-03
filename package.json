@@ -46,12 +46,12 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.3.32",
     "@angular-eslint/builder": "20.7.0",
     "@angular-eslint/eslint-plugin": "20.7.0",
     "@angular-eslint/eslint-plugin-template": "20.7.0",
     "@angular-eslint/schematics": "20.7.0",
     "@angular-eslint/template-parser": "20.7.0",
+    "@angular/build": "^20.3.32",
     "@angular/cli": "^20.3.32",
     "@angular/compiler-cli": "^20.3.27",
     "@angular/language-service": "^20.3.27",
@@ -64,7 +64,7 @@
     "husky": "^8.0.0",
     "jasmine-core": "~4.1.0",
     "jasmine-spec-reporter": "~7.0.0",
-    "karma": "~6.3.18",
+    "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.1.1",
     "karma-coverage-istanbul-reporter": "~3.0.3",
     "karma-jasmine": "~5.0.0",
