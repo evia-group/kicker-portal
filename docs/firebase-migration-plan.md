@@ -11,7 +11,7 @@
 | 4 Datenmigration           | Fertig, gegen echte `T-`-Testdaten in `evia-desk` verifiziert                                                                                                                                              | `migration/phase-4-data-migration`  |
 | 5 Frontend umschalten      | Fertig. Direkt gegen die neue API umgestellt (kein Feature-Flag-Rollback auf Firestore, siehe Abweichung unten)                                                                                            | `migration/phase-4-data-migration`  |
 | 6 Auth auf Entra ID        | Code fertig, direkter Cutover (kein Dual-Issuer-Zwischenschritt, siehe unten). App-Registrierung, `entra_oid`-Backfill für Bestandsnutzer und `is_admin`-Seeding stehen noch aus                           | `migration/phase-4-data-migration`  |
-| 7 Angular 21 und 22        | Offen                                                                                                                                                                                                      | —                                   |
+| 7 Angular 21 und 22        | Fertig, in zwei Commits (20→21, 21→22)                                                                                                                                                                     | `migration/phase-4-data-migration`  |
 | 8 Containerisierung und CI | Offen                                                                                                                                                                                                      | —                                   |
 
 **Abweichungen von Phase 5/6 gegenüber diesem Plan:** Phase 5 hat Firestore
@@ -20,6 +20,12 @@ Feature-Flag mit Rollback-Option zu isolieren. Phase 6 validiert deshalb
 ausschließlich Entra-ID-Tokens (kein Dual-Issuer-Zwischenschritt mit
 Firebase) - beide Entscheidungen wurden bewusst getroffen, da die im Plan
 vorgesehene Rollback-Option ohnehin entfallen war.
+
+**Unerwarteter Fund in Phase 7:** TypeScript 6.0 (von `@angular/compiler-cli@22`
+verlangt) ändert den Default von `strict` auf `true`. Dieses Projekt lief nie
+unter Strict Mode, daher jetzt explizit `"strict": false` in `tsconfig.json`
+gesetzt, um das bisherige Verhalten zu erhalten - eine echte Strict-Mode-
+Einführung wäre ein eigenes, deutlich größeres Vorhaben.
 
 **Zugriff auf `evia-desk` eingerichtet:** Ein Firebase-Service-Account-Schlüssel liegt lokal
 unter `~/secrets/evia-desk-adminsdk.json` (nicht im Repo, gitignored referenziert über
@@ -286,7 +292,7 @@ entfernt.
 **Risiko: hoch.** Das ID-Mapping ist der heikelste Punkt der Migration. Es wird deshalb schon
 in Phase 0 verifiziert und in Phase 4 in die Datenbank geschrieben, nicht erst hier.
 
-### Phase 7: Angular 21 und 22 (3 bis 5 PT) — offen
+### Phase 7: Angular 21 und 22 (3 bis 5 PT) — erledigt
 
 Jetzt ohne die `@angular/fire`-Deckelung möglich.
 
@@ -332,7 +338,7 @@ inklusive Login und Live-Kickerstatus.
 | 4 Datenmigration           | 3 bis 5           | ✅                      |
 | 5 Frontend umschalten      | 3 bis 5           | ✅                      |
 | 6 Auth auf Entra ID        | 3 bis 4           | Code ✅, Rollout offen  |
-| 7 Angular 21 und 22        | 3 bis 5           | offen                   |
+| 7 Angular 21 und 22        | 3 bis 5           | ✅                      |
 | 8 Containerisierung und CI | 3 bis 4           | offen                   |
 | **Summe**                  | **29,5 bis 45,5** | ~17,5 bis 26,5 erledigt |
 
