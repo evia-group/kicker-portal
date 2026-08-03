@@ -1,9 +1,9 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
+import { EntraAuthGuard } from '../auth/entra-auth.guard';
 import { PlaytimeService } from './playtime.service';
 
 @Controller('playtime')
-@UseGuards(FirebaseAuthGuard)
+@UseGuards(EntraAuthGuard)
 export class PlaytimeController {
   constructor(private readonly playtimeService: PlaytimeService) {}
 

@@ -1,11 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { firebaseAdminProvider } from './firebase-admin.provider';
-import { FirebaseAuthGuard } from './firebase-auth.guard';
+import { EntraAuthGuard } from './entra-auth.guard';
 import { AdminGuard } from './admin.guard';
 
 @Global()
 @Module({
-  providers: [firebaseAdminProvider, FirebaseAuthGuard, AdminGuard],
-  exports: [firebaseAdminProvider, FirebaseAuthGuard, AdminGuard],
+  providers: [EntraAuthGuard, AdminGuard],
+  exports: [EntraAuthGuard, AdminGuard],
 })
 export class AuthModule {}

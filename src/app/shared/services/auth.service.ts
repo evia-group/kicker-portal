@@ -1,43 +1,23 @@
-import { Inject, Injectable } from '@angular/core';
-import {
-  User,
-  Auth,
-  authState,
-  signOut,
-  signInWithPopup,
-  OAuthProvider,
-} from '@angular/fire/auth';
+import { Injectable } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { APP_CONFIG, AppConfig } from '../../core/app-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private _user: User;
-
-  public get user(): User {
-    return this._user;
-  }
-  public set user(value: User) {
-    this._user = value;
-  }
   private loggedIn = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private afAuth: Auth,
-    public router: Router,
-    @Inject(APP_CONFIG) private config: AppConfig
+    private oidcSecurityService: OidcSecurityService,
+    public router: Router
   ) {
-    authState(afAuth).subscribe((user) => {
-      if (user) {
-        this.user = user;
-        localStorage.setItem('user', JSON.stringify(this.user));
+    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
+      if (isAuthenticated) {
         this.loggedIn.next(true);
         this.router.navigate(['/kicker']);
       } else {
-        localStorage.setItem('user', null);
         this.loggedIn.next(false);
         this.router.navigate(['/login']);
       }
@@ -48,15 +28,15 @@ export class AuthService {
     return this.loggedIn.asObservable();
   }
 
-  async logout() {
-    await signOut(this.afAuth);
+  logout() {
+    this.oidcSecurityService.logoff().subscribe();
   }
 
-  async loginWithMicrosoft() {
-    const provider = new OAuthProvider('microsoft.com');
-    provider.setCustomParameters({
-      tenant: this.config.ms.tenant,
-    });
-    await signInWithPopup(this.afAuth, provider);
+  loginWithMicrosoft() {
+    this.oidcSecurityService.authorize();
+  }
+
+  getAccessToken(): Observable<string> {
+    return this.oidcSecurityService.getAccessToken();
   }
 }

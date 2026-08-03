@@ -1,6 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { inject, NgModule } from '@angular/core';
-import { APP_CONFIG } from './core/app-config';
+import { NgModule } from '@angular/core';
+import {
+  provideAuth,
+  StsConfigLoader,
+  StsConfigStaticLoader,
+} from 'angular-auth-oidc-client';
+import { APP_CONFIG, AppConfig } from './core/app-config';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,9 +17,11 @@ import { MatchesComponent } from './components/kicker/matches/matches.component'
 import { TournamentsComponent } from './components/kicker/tournaments/tournaments.component';
 import { provideTranslateService } from '@ngx-translate/core';
 import {
+  HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
+import { AuthInterceptor } from './core/auth.interceptor';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AddMatchComponent } from './shared/components/add-match/add-match.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -25,22 +32,9 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { KickerComponent } from './components/kicker/kicker.component';
 import { MatchFinderComponent } from './components/kicker/match-finder/match-finder.component';
-import { NotVerifiedComponent } from './components/not-verified/not-verified.component';
 import { InteractiveMapComponent } from './components/interactive-map/interactive-map.component';
 import { RoomMapComponent } from './shared/components/room-map/room-map.component';
 import { RoomInformationComponent } from './shared/components/room-information/room-information.component';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import {
-  connectFirestoreEmulator,
-  getFirestore,
-  provideFirestore,
-} from '@angular/fire/firestore';
-import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
-import {
-  connectFunctionsEmulator,
-  getFunctions,
-  provideFunctions,
-} from '@angular/fire/functions';
 import { CreateTeamDialogComponent } from './shared/components/add-match/create-team-dialog/create-team-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
@@ -59,11 +53,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorIntlService } from './shared/services/mat-paginator-intl.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
-import {
-  connectDatabaseEmulator,
-  getDatabase,
-  provideDatabase,
-} from '@angular/fire/database';
 import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AutocompleteSelectionComponent } from './shared/components/autocomplete-selection/autocomplete-selection.component';
@@ -111,7 +100,6 @@ import { SelectionWithSearchComponent } from './shared/components/selection-with
     LoginComponent,
     KickerComponent,
     MatchFinderComponent,
-    NotVerifiedComponent,
     InteractiveMapComponent,
     RoomMapComponent,
     RoomInformationComponent,
@@ -138,38 +126,29 @@ import { SelectionWithSearchComponent } from './shared/components/selection-with
       provide: MatPaginatorIntl,
       useClass: MatPaginatorIntlService,
     },
-    provideFirebaseApp(() => initializeApp(inject(APP_CONFIG).firebase)),
-    provideFirestore(() => {
-      const firestore = getFirestore();
-      if (inject(APP_CONFIG).useEmulators) {
-        connectFirestoreEmulator(firestore, 'localhost', 8080);
-      }
-      return firestore;
-    }),
-    provideAuth(() => {
-      const auth = getAuth();
-      if (inject(APP_CONFIG).useEmulators) {
-        connectAuthEmulator(auth, 'http://localhost:9099', {
-          disableWarnings: true,
-        });
-      }
-      return auth;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions();
-      if (inject(APP_CONFIG).useEmulators) {
-        connectFunctionsEmulator(functions, 'localhost', 5001);
-      }
-      return functions;
-    }),
-    provideDatabase(() => {
-      const database = getDatabase();
-      if (inject(APP_CONFIG).useEmulators) {
-        connectDatabaseEmulator(database, 'localhost', 9000);
-      }
-      return database;
+    provideAuth({
+      loader: {
+        provide: StsConfigLoader,
+        useFactory: (config: AppConfig) =>
+          new StsConfigStaticLoader({
+            authority: `https://login.microsoftonline.com/${config.ms.tenant}/v2.0`,
+            redirectUrl: window.location.origin,
+            postLogoutRedirectUri: window.location.origin,
+            clientId: config.ms.clientId,
+            scope: 'openid profile email',
+            responseType: 'code',
+            silentRenew: true,
+            useRefreshToken: true,
+          }),
+        deps: [APP_CONFIG],
+      },
     }),
     provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
     provideTranslateService({ fallbackLang: 'de' }),
     provideTranslateHttpLoader({
       prefix: './assets/i18n/',

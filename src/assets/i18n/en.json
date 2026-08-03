@@ -27,7 +27,6 @@
     "firstname": "firstname",
     "lastname": "lastname",
     "backToLogin": "back to login",
-    "verified": "You haven't verified your email address yet. Please check your mailbox to verify your email address. <br /> <br /> If you haven't received one, please contact dirk.mueller@evia.de",
     "loginWithMS": "Sign in with Microsoft",
     "error": {
       "recognised": "The username and password were not recognised",

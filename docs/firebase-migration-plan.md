@@ -9,10 +9,17 @@
 | 2 Laufzeit-Konfiguration   | Fertig                                                                                                                                                                                                     | `migration/phase-2-runtime-config`  |
 | 3 Backend und Datenbank    | Fertig                                                                                                                                                                                                     | `migration/phase-3-nestjs-backend`  |
 | 4 Datenmigration           | Fertig, gegen echte `T-`-Testdaten in `evia-desk` verifiziert                                                                                                                                              | `migration/phase-4-data-migration`  |
-| 5 Frontend umschalten      | Offen                                                                                                                                                                                                      | —                                   |
-| 6 Auth auf Entra ID        | Offen                                                                                                                                                                                                      | —                                   |
+| 5 Frontend umschalten      | Fertig. Direkt gegen die neue API umgestellt (kein Feature-Flag-Rollback auf Firestore, siehe Abweichung unten)                                                                                            | `migration/phase-4-data-migration`  |
+| 6 Auth auf Entra ID        | Code fertig, direkter Cutover (kein Dual-Issuer-Zwischenschritt, siehe unten). App-Registrierung, `entra_oid`-Backfill für Bestandsnutzer und `is_admin`-Seeding stehen noch aus                           | `migration/phase-4-data-migration`  |
 | 7 Angular 21 und 22        | Offen                                                                                                                                                                                                      | —                                   |
 | 8 Containerisierung und CI | Offen                                                                                                                                                                                                      | —                                   |
+
+**Abweichungen von Phase 5/6 gegenüber diesem Plan:** Phase 5 hat Firestore
+direkt vollständig durch die REST-API ersetzt statt hinter einem
+Feature-Flag mit Rollback-Option zu isolieren. Phase 6 validiert deshalb
+ausschließlich Entra-ID-Tokens (kein Dual-Issuer-Zwischenschritt mit
+Firebase) - beide Entscheidungen wurden bewusst getroffen, da die im Plan
+vorgesehene Rollback-Option ohnehin entfallen war.
 
 **Zugriff auf `evia-desk` eingerichtet:** Ein Firebase-Service-Account-Schlüssel liegt lokal
 unter `~/secrets/evia-desk-adminsdk.json` (nicht im Repo, gitignored referenziert über
@@ -237,7 +244,7 @@ per curl gegen laufenden Server sowie per Testskript gegen echte PostgreSQL-Inst
 **Noch offen:** Lauf gegen die echten Produktivdaten (ohne Präfix) steht erst kurz vor dem
 tatsächlichen Cutover an, nicht jetzt.
 
-### Phase 5: Frontend auf das Backend umschalten (3 bis 5 PT) — offen
+### Phase 5: Frontend auf das Backend umschalten (3 bis 5 PT) — erledigt
 
 - Die vier Services ([matches.service.ts](src/app/shared/services/matches.service.ts),
   [users.service.ts](src/app/shared/services/users.service.ts),
@@ -257,7 +264,7 @@ tatsächlichen Cutover an, nicht jetzt.
 **Fertig heißt:** App läuft vollständig gegen das eigene Backend, das Firebase-SDK ist nur
 noch für Auth im Bundle. Feature-Flag erlaubt Rollback auf die Firestore-Implementierung.
 
-### Phase 6: Auth auf Entra ID (3 bis 4 PT) — offen
+### Phase 6: Auth auf Entra ID (3 bis 4 PT) — Code erledigt, Rollout offen
 
 - App-Registrierung im evia Tenant: SPA-Plattform, Auth Code Flow mit PKCE, Redirect-URIs
 - `angular-auth-oidc-client` statt `signInWithPopup` und `OAuthProvider('microsoft.com')` in
@@ -323,8 +330,8 @@ inklusive Login und Live-Kickerstatus.
 | 2 Laufzeit-Konfiguration   | 1 bis 1,5         | ✅                      |
 | 3 Backend und Datenbank    | 8 bis 12          | ✅                      |
 | 4 Datenmigration           | 3 bis 5           | ✅                      |
-| 5 Frontend umschalten      | 3 bis 5           | offen                   |
-| 6 Auth auf Entra ID        | 3 bis 4           | offen                   |
+| 5 Frontend umschalten      | 3 bis 5           | ✅                      |
+| 6 Auth auf Entra ID        | 3 bis 4           | Code ✅, Rollout offen  |
 | 7 Angular 21 und 22        | 3 bis 5           | offen                   |
 | 8 Containerisierung und CI | 3 bis 4           | offen                   |
 | **Summe**                  | **29,5 bis 45,5** | ~17,5 bis 26,5 erledigt |

@@ -7,13 +7,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
+import { EntraAuthGuard } from '../auth/entra-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 import { MatchesService } from './matches.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 
 @Controller('matches')
-@UseGuards(FirebaseAuthGuard)
+@UseGuards(EntraAuthGuard)
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
 

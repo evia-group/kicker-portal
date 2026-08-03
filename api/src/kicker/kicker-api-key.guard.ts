@@ -8,7 +8,7 @@ import { Request } from 'express';
 
 /**
  * Guards the endpoint the physical kicker table hardware calls. Deliberately
- * separate from FirebaseAuthGuard: the table has no Firebase identity, only a
+ * separate from EntraAuthGuard: the table has no Entra identity, only a
  * static, long-lived key issued once during setup.
  */
 @Injectable()

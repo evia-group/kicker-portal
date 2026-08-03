@@ -1,9 +1,9 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { EntraAuthGuard } from '../auth/entra-auth.guard';
 import { LeaderboardService } from './leaderboard.service';
 
 @Controller('leaderboard')
-@UseGuards(FirebaseAuthGuard)
+@UseGuards(EntraAuthGuard)
 export class LeaderboardController {
   constructor(private readonly leaderboardService: LeaderboardService) {}
 
@@ -13,7 +13,9 @@ export class LeaderboardController {
   }
 
   @Get('users')
-  getUserLeaderboard() {
-    return this.leaderboardService.getUserLeaderboard();
+  getUserLeaderboard(@Query('mode') mode?: string) {
+    return this.leaderboardService.getUserLeaderboard(
+      mode === 'single' ? 'single' : 'team',
+    );
   }
 }

@@ -1,16 +1,23 @@
 import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
-import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
+import { EntraAuthGuard } from '../auth/entra-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+import type { RequestUser } from '../auth/request-user.interface';
 import { UsersService } from './users.service';
 
 @Controller('users')
-@UseGuards(FirebaseAuthGuard)
+@UseGuards(EntraAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @Get('me')
+  getCurrentUser(@CurrentUser() user: RequestUser) {
+    return user;
   }
 
   @Delete(':id')

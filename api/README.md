@@ -2,8 +2,9 @@
 
 NestJS-Backend, das Firebase (Firestore, Realtime Database, Cloud Functions)
 für das Kicker-Portal ersetzt. PostgreSQL über Drizzle ORM, Auth-Tokens werden
-vorerst weiter über Firebase Auth verifiziert (siehe `src/auth/`), bis die
-Migration auf Microsoft Entra ID abgeschlossen ist.
+über Microsoft Entra ID verifiziert (`src/auth/entra-auth.guard.ts`, JWKS-
+basiert). `firebase-admin` wird nur noch von den Migrationsskripten in
+`scripts/` gebraucht, die weiterhin aus Firestore lesen.
 
 ## Setup
 
@@ -45,20 +46,21 @@ oder legt es an, transaktional zusammen mit dem Match.
 
 ## Endpunkte
 
-| Methode | Pfad               | Auth                   | Zweck                                                                                                      |
-| ------- | ------------------ | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
-| GET     | /users             | Firebase-Token         | Nutzerliste                                                                                                |
-| DELETE  | /users/:id         | Firebase-Token + Admin | Nutzer löschen                                                                                             |
-| GET     | /teams             | Firebase-Token         | Teamliste inkl. Spieler                                                                                    |
-| DELETE  | /teams/:id         | Firebase-Token + Admin | Team löschen                                                                                               |
-| GET     | /matches           | Firebase-Token         | Matchhistorie                                                                                              |
-| POST    | /matches           | Firebase-Token         | Match anlegen (transaktional)                                                                              |
-| DELETE  | /matches/:id       | Firebase-Token + Admin | Match löschen                                                                                              |
-| GET     | /playtime          | Firebase-Token         | Spielzeiten                                                                                                |
-| GET     | /leaderboard/teams | Firebase-Token         | Team-Aggregate                                                                                             |
-| GET     | /leaderboard/users | Firebase-Token         | Nutzer-Aggregate (Team- + Einzelspiele)                                                                    |
-| POST    | /kicker/status     | `x-api-key`-Header     | Vom Kickertisch aufgerufen, pusht Status per WebSocket und schreibt bei Sessionende einen Playtime-Eintrag |
-| GET     | /health            | -                      | Healthcheck für Docker (Phase 8)                                                                           |
+| Methode | Pfad                     | Auth                | Zweck                                                                                                      |
+| ------- | ------------------------ | ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| GET     | /users                   | Entra-Token         | Nutzerliste                                                                                                |
+| GET     | /users/me                | Entra-Token         | Aufgelöster eigener Nutzer (`{id, name, isAdmin}`)                                                         |
+| DELETE  | /users/:id               | Entra-Token + Admin | Nutzer löschen                                                                                             |
+| GET     | /teams                   | Entra-Token         | Teamliste inkl. Spieler                                                                                    |
+| DELETE  | /teams/:id               | Entra-Token + Admin | Team löschen                                                                                               |
+| GET     | /matches                 | Entra-Token         | Matchhistorie                                                                                              |
+| POST    | /matches                 | Entra-Token         | Match anlegen (transaktional)                                                                              |
+| DELETE  | /matches/:id             | Entra-Token + Admin | Match löschen                                                                                              |
+| GET     | /playtime                | Entra-Token         | Spielzeiten                                                                                                |
+| GET     | /leaderboard/teams       | Entra-Token         | Team-Aggregate                                                                                             |
+| GET     | /leaderboard/users?mode= | Entra-Token         | Nutzer-Aggregate, getrennt nach `team` oder `single`                                                       |
+| POST    | /kicker/status           | `x-api-key`-Header  | Vom Kickertisch aufgerufen, pusht Status per WebSocket und schreibt bei Sessionende einen Playtime-Eintrag |
+| GET     | /health                  | -                   | Healthcheck für Docker (Phase 8)                                                                           |
 
 WebSocket-Namespace `/kicker` broadcastet `status`-Events an alle
 verbundenen Clients (ersetzt die beiden `onValue('/Kicker')`-Aufrufe im
@@ -108,14 +110,56 @@ Einzelspiele, inklusive der oben genannten Bugs.
 ## Nicht in diesem Schritt
 
 - `GOOGLE_APPLICATION_CREDENTIALS` erfordert ein echtes Firebase-Service-
-  Account-JSON. Der Happy Path von `FirebaseAuthGuard` ist ohne ein solches
-  Projekt nicht end-to-end testbar; die Guard-Logik selbst wurde mit
+  Account-JSON, nur für die Migrationsskripte relevant. Diese konnten daher
+  nur gegen synthetische Fixtures getestet werden, nicht gegen echte
+  Firestore-Daten - das muss einmalig gegen die echten Test- (`T-`)
+  Collections nachgeholt werden, bevor die Produktivmigration läuft.
+- `EntraAuthGuard` ist ohne echte App-Registrierung (Client-ID/Audience) im
+  evia-Tenant nicht end-to-end testbar; die Guard-Logik selbst wurde mit
   ungültigen/fehlenden Tokens gegen eine echte Postgres-Instanz verifiziert.
-  Aus demselben Grund konnten die Migrationsskripte nur gegen synthetische
-  Fixtures getestet werden, nicht gegen echte Firestore-Daten - das muss
-  einmalig gegen die echten Test- (`T-`) Collections nachgeholt werden,
-  bevor die Produktivmigration läuft.
 - Dockerfile, docker-compose.yml und der Entrypoint für
   `GOOGLE_APPLICATION_CREDENTIALS`/`DATABASE_URL` folgen in Phase 8.
-- Die Umstellung des Frontends auf diese API (Phase 5) ist ein eigener
-  Schritt.
+
+## Frontend-Anbindung (Phase 5)
+
+Das Angular-Frontend spricht für Nutzer/Teams/Matches/Playtime/Leaderboard nur
+noch mit dieser API, nicht mehr mit Firestore/Realtime Database/Cloud
+Functions (siehe `src/app/shared/services/`).
+
+Zwei kleine Ergänzungen gegenüber Phase 4 waren dafür nötig:
+
+- `GET /users/me` (`users.controller.ts`) gibt den durch den Auth-Guard
+  aufgelösten Nutzer zurück (`{id, name, isAdmin}`) - notwendig, weil
+  `users.id` (Postgres-UUID) nicht mehr mit der Firebase-UID/Entra-`oid`
+  übereinstimmt, die früher direkt als Firestore-Dokument-ID diente.
+- `GET /leaderboard/users?mode=team|single` liefert Team- und 1v1-Aggregate
+  pro Nutzer getrennt (`leaderboard.service.ts`), da die Statistik-Seite
+  beide Modi separat anzeigt.
+
+WebSocket-Namespace `/kicker` wird über `socket.io-client`
+(`src/app/shared/services/kicker-socket.service.ts`) konsumiert.
+
+## Auth: Microsoft Entra ID (Phase 6)
+
+Auth-Tokens werden nicht mehr über Firebase, sondern direkt über Microsoft
+Entra ID verifiziert (`src/auth/entra-auth.guard.ts`): JWKS-Verifikation via
+`jose` gegen `https://login.microsoftonline.com/<ENTRA_TENANT_ID>/discovery/v2.0/keys`,
+geprüft werden `iss` und `aud` (`ENTRA_AUDIENCE`). Nutzer werden über den
+`oid`-Claim aufgelöst/provisioniert (`users.entra_oid`), analog zum
+bisherigen `legacy_firebase_uid`-Mechanismus.
+
+Das Frontend nutzt `angular-auth-oidc-client` (Auth Code Flow + PKCE) statt
+`@angular/fire/auth` - `firebase`/`@angular/fire` sind komplett aus dem
+Frontend-`package.json` entfernt. `firebase-admin` bleibt im Backend nur für
+die Migrationsskripte.
+
+**Nicht Teil dieses Schritts:**
+
+- Die eigentliche App-Registrierung im evia-Tenant (SPA-Plattform,
+  Redirect-URIs, Client-ID) - `MS_CLIENT_ID`/`ENTRA_AUDIENCE` sind Platzhalter,
+  bis die echten Werte per CI/CD bereitgestellt werden.
+- Backfill von `entra_oid` für bereits migrierte Bestandsnutzer. Ohne das
+  optionale UID-Mapping aus Phase 0 legt die Auto-Provisionierung beim ersten
+  Entra-Login neue, von der migrierten Historie getrennte Nutzer-Zeilen an -
+  vor dem Produktiv-Cutover per einmaligem SQL-Update zu klären.
+- `is_admin`-Rollen initial setzen (manuelles SQL-Update, keine Codeänderung).

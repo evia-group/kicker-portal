@@ -7,26 +7,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { KickerComponent } from './components/kicker/kicker.component';
 import { MatchFinderComponent } from './components/kicker/match-finder/match-finder.component';
 import { LoginComponent } from './components/login/login.component';
-import { pipe } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { NotVerifiedComponent } from './components/not-verified/not-verified.component';
 import { InteractiveMapComponent } from './components/interactive-map/interactive-map.component';
-import {
-  AuthGuard,
-  canActivate,
-  redirectLoggedInTo,
-  isNotAnonymous,
-} from '@angular/fire/auth-guard';
-
-const redirectUnauthorized = () => {
-  return pipe(
-    isNotAnonymous,
-    map((user) => {
-      return user ? user : ['verified'];
-    })
-  );
-};
-const redirectLoggedInToDashboard = () => redirectLoggedInTo(['kicker']);
+import { authGuard } from './core/auth.guard';
 
 const routes: Routes = [
   {
@@ -36,22 +18,22 @@ const routes: Routes = [
       {
         path: 'statistics',
         component: StatisticComponent,
-        ...canActivate(redirectUnauthorized),
+        canActivate: [authGuard],
       },
       {
         path: 'tournaments',
         component: TournamentsComponent,
-        ...canActivate(redirectUnauthorized),
+        canActivate: [authGuard],
       },
       {
         path: 'matches',
         component: MatchesComponent,
-        ...canActivate(redirectUnauthorized),
+        canActivate: [authGuard],
       },
       {
         path: 'matchmaking',
         component: MatchFinderComponent,
-        ...canActivate(redirectUnauthorized),
+        canActivate: [authGuard],
       },
       { path: '', pathMatch: 'full', redirectTo: 'matches' },
     ],
@@ -59,20 +41,17 @@ const routes: Routes = [
   {
     path: 'map',
     component: InteractiveMapComponent,
-    ...canActivate(redirectUnauthorized),
+    canActivate: [authGuard],
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard],
-    data: { authGuardPipe: redirectUnauthorized },
+    canActivate: [authGuard],
   },
   {
     path: 'login',
     component: LoginComponent,
-    ...canActivate(redirectLoggedInToDashboard),
   },
-  { path: 'verified', component: NotVerifiedComponent },
   { path: '**', pathMatch: 'full', redirectTo: 'login' },
 ];
 

@@ -3,20 +3,10 @@ import { InjectionToken } from '@angular/core';
 export interface AppConfig {
   production: boolean;
   versionNumber: string;
-  prefix: string;
-  useEmulators?: boolean;
-  firebase: {
-    apiKey: string;
-    authDomain: string;
-    databaseURL: string;
-    projectId: string;
-    storageBucket: string;
-    messagingSenderId: string;
-    appId: string;
-    measurementId: string;
-  };
+  apiUrl: string;
   ms: {
     tenant: string;
+    clientId: string;
   };
 }
 

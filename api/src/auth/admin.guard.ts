@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { AuthenticatedRequest } from './request-user.interface';
 
-/** Must run after FirebaseAuthGuard so request.user is already populated. */
+/** Must run after EntraAuthGuard so request.user is already populated. */
 @Injectable()
 export class AdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
