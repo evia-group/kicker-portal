@@ -71,7 +71,8 @@ async function main() {
 
   console.log(
     `Done. Skipped ${result.skippedMatches} team matches and ` +
-      `${result.skippedSingleMatches} single matches due to unresolved references.`,
+      `${result.skippedSingleMatches} single matches due to unresolved references. ` +
+      `${result.matchesWithoutDate} match(es) had no 'date' field and defaulted to the run time.`,
   );
 
   await client.end();

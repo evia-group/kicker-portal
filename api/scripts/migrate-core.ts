@@ -29,6 +29,7 @@ export interface FirebaseUidMapping {
 export interface MigrationResult {
   skippedMatches: number;
   skippedSingleMatches: number;
+  matchesWithoutDate: number;
 }
 
 /**
@@ -85,6 +86,7 @@ export async function runMigration(
     }
 
     let skippedMatches = 0;
+    let matchesWithoutDate = 0;
     for (const doc of collections.matches) {
       const resolved = resolveTeamMatch(doc.data);
       const side0TeamId = firestoreIdToTeamId.get(
@@ -101,10 +103,19 @@ export async function runMigration(
         skippedMatches++;
         continue;
       }
+      if (!resolved.playedAt) {
+        console.warn(
+          `Match ${doc.id} has no 'date' field, playedAt will default to the migration run time`,
+        );
+        matchesWithoutDate++;
+      }
 
       const [match] = await tx
         .insert(schema.matches)
-        .values({ playedAt: resolved.playedAt, isSingle: false })
+        .values({
+          ...(resolved.playedAt ? { playedAt: resolved.playedAt } : {}),
+          isSingle: false,
+        })
         .returning();
 
       await tx.insert(schema.matchParticipants).values([
@@ -148,10 +159,19 @@ export async function runMigration(
         skippedSingleMatches++;
         continue;
       }
+      if (!resolved.playedAt) {
+        console.warn(
+          `Single match ${doc.id} has no 'date' field, playedAt will default to the migration run time`,
+        );
+        matchesWithoutDate++;
+      }
 
       const [match] = await tx
         .insert(schema.matches)
-        .values({ playedAt: resolved.playedAt, isSingle: true })
+        .values({
+          ...(resolved.playedAt ? { playedAt: resolved.playedAt } : {}),
+          isSingle: true,
+        })
         .returning();
 
       await tx.insert(schema.matchParticipants).values([
@@ -186,6 +206,6 @@ export async function runMigration(
       });
     }
 
-    return { skippedMatches, skippedSingleMatches };
+    return { skippedMatches, skippedSingleMatches, matchesWithoutDate };
   });
 }

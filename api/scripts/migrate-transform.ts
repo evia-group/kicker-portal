@@ -10,7 +10,12 @@ export interface FirestoreDocRef {
   id: string;
 }
 
-/** Mirrors IMatch from src/app/shared/interfaces/match.interface.ts. */
+/**
+ * Mirrors IMatch from src/app/shared/interfaces/match.interface.ts. `date`
+ * is typed as required there, but real documents have been found without it
+ * (see resolveTeamMatch) - typed optional here to match what's actually on
+ * disk, not what the interface promises.
+ */
 export interface FirestoreMatchData {
   defeats: FirestoreDocRef[];
   dominations: FirestoreDocRef[];
@@ -18,7 +23,7 @@ export interface FirestoreMatchData {
   result: Record<string, number>;
   teams: FirestoreDocRef[];
   type: string;
-  date: { toDate(): Date };
+  date?: { toDate(): Date };
 }
 
 /** Mirrors ISingleMatch. No team/player refs, just the result map. */
@@ -27,7 +32,7 @@ export interface FirestoreSingleMatchData {
   dominations: FirestoreDocRef[];
   result: Record<string, number>;
   type: string;
-  date: { toDate(): Date };
+  date?: { toDate(): Date };
 }
 
 export interface ReconstructedRound {
@@ -64,7 +69,8 @@ export interface ResolvedTeamMatch {
   side1TeamFirestoreId: string;
   roundsWon: [number, number];
   rounds: ReconstructedRound[];
-  playedAt: Date;
+  /** null when the document has no `date` field at all - seen on real T- data. */
+  playedAt: Date | null;
 }
 
 /**
@@ -101,7 +107,7 @@ export function resolveTeamMatch(doc: FirestoreMatchData): ResolvedTeamMatch {
       dominationCountSide0,
       dominationCountSide1,
     ),
-    playedAt: doc.date.toDate(),
+    playedAt: doc.date ? doc.date.toDate() : null,
   };
 }
 
@@ -110,7 +116,8 @@ export interface ResolvedSingleMatch {
   side1UserFirestoreId: string;
   roundsWon: [number, number];
   rounds: ReconstructedRound[];
-  playedAt: Date;
+  /** null when the document has no `date` field at all - seen on real T- data. */
+  playedAt: Date | null;
 }
 
 export function resolveSingleMatch(
@@ -141,7 +148,7 @@ export function resolveSingleMatch(
       dominationCountSide0,
       dominationCountSide1,
     ),
-    playedAt: doc.date.toDate(),
+    playedAt: doc.date ? doc.date.toDate() : null,
   };
 }
 
