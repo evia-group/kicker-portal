@@ -13,7 +13,7 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { TwoSelectionsComponent } from '../two-selections/two-selections.component';
 import { AutocompleteSelectionComponent } from '../../../autocomplete-selection/autocomplete-selection.component';
 import { MatButton } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface DialogData {
   dataSubject: ReplaySubject<ISelectionsData>;
@@ -31,7 +31,7 @@ export interface DialogData {
     AutocompleteSelectionComponent,
     MatDialogActions,
     MatButton,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class TwoSelectionsDialogComponent implements OnInit, OnDestroy {

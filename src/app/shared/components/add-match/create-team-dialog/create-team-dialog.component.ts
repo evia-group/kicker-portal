@@ -21,7 +21,7 @@ import { environment } from 'src/environments/environment';
 import { InfoBarService } from 'src/app/shared/services/info-bar.service';
 import { TeamsService } from 'src/app/shared/services/teams.service';
 import { ReplaySubject, Subject } from 'rxjs';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AutocompleteSelectionComponent } from '../../autocomplete-selection/autocomplete-selection.component';
 import { MatButton } from '@angular/material/button';
@@ -38,7 +38,7 @@ import { MatButton } from '@angular/material/button';
     AutocompleteSelectionComponent,
     MatDialogActions,
     MatButton,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class CreateTeamDialogComponent implements OnInit, OnDestroy {

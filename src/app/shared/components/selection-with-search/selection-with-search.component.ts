@@ -19,7 +19,7 @@ import { IPlayers } from '../../interfaces/match.interface';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatSelectSearchComponent } from 'ngx-mat-select-search';
 import { AsyncPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-selection-with-search',
@@ -34,7 +34,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatOption,
     MatSelectSearchComponent,
     AsyncPipe,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class SelectionWithSearchComponent

@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { getDatabase, onValue, ref } from '@angular/fire/database';
@@ -41,7 +41,7 @@ import {
     MatDrawerContent,
     AsyncPipe,
     DatePipe,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class NavigationComponent implements OnDestroy, OnInit {

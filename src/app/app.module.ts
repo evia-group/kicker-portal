@@ -10,13 +10,12 @@ import { NavigationComponent } from './shared/components/navigation/navigation.c
 import { StatisticComponent } from './components/kicker/statistic/statistic.component';
 import { MatchesComponent } from './components/kicker/matches/matches.component';
 import { TournamentsComponent } from './components/kicker/tournaments/tournaments.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import {
-  HttpClient,
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AddMatchComponent } from './shared/components/add-match/add-match.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RoundResultComponent } from './shared/components/add-match/round-result/round-result.component';
@@ -80,22 +79,11 @@ import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { SelectionWithSearchComponent } from './shared/components/selection-with-search/selection-with-search.component';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
 @NgModule({
   declarations: [AppComponent],
   bootstrap: [AppComponent],
   imports: [
     BrowserModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
@@ -183,6 +171,11 @@ export function createTranslateLoader(http: HttpClient) {
       return database;
     }),
     provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({ fallbackLang: 'de' }),
+    provideTranslateHttpLoader({
+      prefix: './assets/i18n/',
+      suffix: '.json',
+    }),
   ],
 })
 export class AppModule {}

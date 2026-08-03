@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class MatPaginatorIntlService
     super();
 
     this.translateSub = this.translateService.onLangChange.subscribe(
-      (_event: Event) => {
+      (_event: LangChangeEvent) => {
         this.translateLabels();
       }
     );

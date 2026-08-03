@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-round-result',
@@ -18,7 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatSlideToggle,
     MatRadioGroup,
     MatRadioButton,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class RoundResultComponent implements OnInit {

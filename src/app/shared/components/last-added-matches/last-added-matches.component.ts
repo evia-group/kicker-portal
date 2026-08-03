@@ -16,7 +16,7 @@ import {
   MatCardContent,
 } from '@angular/material/card';
 import { LoadingDataComponent } from '../loading-data/loading-data.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 
 @Component({
@@ -29,7 +29,7 @@ import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
     MatCardTitle,
     MatCardContent,
     LoadingDataComponent,
-    TranslateModule,
+    TranslatePipe,
     LocalizedDatePipe,
   ],
 })

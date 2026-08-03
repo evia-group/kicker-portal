@@ -24,7 +24,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AsyncPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-match',
@@ -45,7 +45,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatIcon,
     MatProgressSpinner,
     AsyncPipe,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class AddMatchComponent implements AfterContentChecked, OnInit {

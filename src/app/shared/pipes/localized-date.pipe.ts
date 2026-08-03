@@ -9,14 +9,17 @@ export class LocalizedDatePipe implements PipeTransform {
   constructor(private translateService: TranslateService) {}
 
   transform(value: Date): string {
-    return value.toLocaleString(this.translateService.currentLang, {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: false,
-    });
+    return value.toLocaleString(
+      this.translateService.currentLang() ?? undefined,
+      {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+      }
+    );
   }
 }

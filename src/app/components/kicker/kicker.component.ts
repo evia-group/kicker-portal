@@ -5,7 +5,7 @@ import { MatTabScrollDirective } from '../../shared/directives/mat-tab-scroll.di
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface INavigationItem {
   label: string;
@@ -29,7 +29,7 @@ interface INavigationItem {
     MatTabNavPanel,
     RouterOutlet,
     MatToolbar,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class KickerComponent {

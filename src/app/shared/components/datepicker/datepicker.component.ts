@@ -24,7 +24,7 @@ import {
   MatHint,
   MatSuffix,
 } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-datepicker',
@@ -42,7 +42,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatDatepickerToggle,
     MatSuffix,
     MatDatepicker,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class DatepickerComponent implements OnInit, OnChanges {

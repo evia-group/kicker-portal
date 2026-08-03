@@ -9,7 +9,7 @@ import { TwoSelectionsComponent } from '../two-selections/two-selections.compone
 import { MatButton } from '@angular/material/button';
 import { MatChipListbox, MatChipOption } from '@angular/material/chips';
 import { AutocompleteSelectionComponent } from '../../../autocomplete-selection/autocomplete-selection.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-responsive-selector',
@@ -21,7 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatChipListbox,
     MatChipOption,
     AutocompleteSelectionComponent,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class ResponsiveSelectorComponent

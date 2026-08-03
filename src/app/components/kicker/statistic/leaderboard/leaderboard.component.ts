@@ -22,7 +22,7 @@ import {
 import { Subscription } from 'rxjs';
 import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
 import { NgClass } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-leaderboard',
@@ -46,7 +46,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatRowDef,
     MatRow,
     MatPaginator,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class LeaderboardComponent implements OnInit, OnDestroy {

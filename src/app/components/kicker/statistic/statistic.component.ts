@@ -43,7 +43,7 @@ import { BarLineChartComponent } from './bar-line-chart/bar-line-chart.component
 import { MatchesChartComponent } from './matches-chart/matches-chart.component';
 import { ResultDoughnutChartComponent } from './result-doughnut-chart/result-doughnut-chart.component';
 import { PlaytimeChartComponent } from './playtime-chart/playtime-chart.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-statistic',
@@ -68,7 +68,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatchesChartComponent,
     ResultDoughnutChartComponent,
     PlaytimeChartComponent,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class StatisticComponent implements OnInit, OnDestroy {

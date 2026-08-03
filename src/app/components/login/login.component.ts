@@ -5,13 +5,13 @@ import { AuthService } from '../../shared/services/auth.service';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [MatCard, MatCardContent, MatButton, MatIcon, TranslateModule],
+  imports: [MatCard, MatCardContent, MatButton, MatIcon, TranslatePipe],
 })
 export class LoginComponent implements OnInit {
   private returnUrl: string;

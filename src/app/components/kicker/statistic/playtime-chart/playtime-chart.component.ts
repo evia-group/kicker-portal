@@ -7,7 +7,7 @@ import { DatepickerComponent } from '../../../../shared/components/datepicker/da
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { NgChartsModule } from 'ng2-charts';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-playtime-chart',
@@ -20,7 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     MatRadioButton,
     NgChartsModule,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class PlaytimeChartComponent implements OnInit, OnChanges {

@@ -25,7 +25,7 @@ import { MatOption } from '@angular/material/select';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-autocomplete-selection',
@@ -45,7 +45,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatIcon,
     MatError,
     AsyncPipe,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class AutocompleteSelectionComponent implements OnInit, OnChanges {
