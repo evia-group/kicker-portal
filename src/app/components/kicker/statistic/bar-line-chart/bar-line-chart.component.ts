@@ -63,7 +63,8 @@ export class BarLineChartComponent implements OnChanges {
       y: {
         ticks: {
           callback: (val) => {
-            return val < 0 ? -val : val;
+            const numVal = Number(val);
+            return numVal < 0 ? -numVal : numVal;
           },
           color: 'rgb(199,199,199)',
           precision: 0,

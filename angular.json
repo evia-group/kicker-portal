@@ -88,18 +88,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "kicker-portal:build"
+            "buildTarget": "kicker-portal:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "kicker-portal:build:production"
+              "buildTarget": "kicker-portal:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "kicker-portal:build"
+            "buildTarget": "kicker-portal:build"
           }
         },
         "test": {

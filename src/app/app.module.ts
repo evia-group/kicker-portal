@@ -130,6 +130,25 @@ export function createTranslateLoader(http: HttpClient) {
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    NgChartsModule,
+    MatDateFnsModule,
+    MatDatepickerModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    NgxMatSelectSearchModule,
+  ],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useClass: MatPaginatorIntlService,
+    },
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => {
       const firestore = getFirestore();
@@ -161,25 +180,6 @@ export function createTranslateLoader(http: HttpClient) {
       }
       return database;
     }),
-    FormsModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    NgChartsModule,
-    MatDateFnsModule,
-    MatDatepickerModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatAutocompleteModule,
-    NgxMatSelectSearchModule,
-  ],
-  providers: [
-    {
-      provide: MatPaginatorIntl,
-      useClass: MatPaginatorIntlService,
-    },
   ],
   bootstrap: [AppComponent],
 })
