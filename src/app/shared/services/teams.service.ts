@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -10,7 +10,7 @@ import {
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { ITeam } from '../interfaces/user.interface';
-import { environment } from '../../../environments/environment';
+import { APP_CONFIG, AppConfig } from '../../core/app-config';
 import { IPlayers } from '../interfaces/match.interface';
 
 @Injectable({
@@ -21,10 +21,13 @@ export class TeamsService {
 
   protected collection: CollectionReference;
 
-  constructor(protected db: Firestore) {
+  constructor(
+    protected db: Firestore,
+    @Inject(APP_CONFIG) protected config: AppConfig
+  ) {
     this.collection = collection(
       this.db,
-      `${environment.prefix}Teams`
+      `${this.config.prefix}Teams`
     ) as CollectionReference<ITeam>;
     this.teams$ = collectionSnapshots(this.collection).pipe(
       map((actions) => {

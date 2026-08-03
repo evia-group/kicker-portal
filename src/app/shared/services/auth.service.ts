@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   User,
   Auth,
@@ -9,7 +9,7 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { APP_CONFIG, AppConfig } from '../../core/app-config';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,11 @@ export class AuthService {
   }
   private loggedIn = new BehaviorSubject<boolean>(false);
 
-  constructor(private afAuth: Auth, public router: Router) {
+  constructor(
+    private afAuth: Auth,
+    public router: Router,
+    @Inject(APP_CONFIG) private config: AppConfig
+  ) {
     authState(afAuth).subscribe((user) => {
       if (user) {
         this.user = user;
@@ -51,7 +55,7 @@ export class AuthService {
   async loginWithMicrosoft() {
     const provider = new OAuthProvider('microsoft.com');
     provider.setCustomParameters({
-      tenant: environment.ms.tenant,
+      tenant: this.config.ms.tenant,
     });
     await signInWithPopup(this.afAuth, provider);
   }

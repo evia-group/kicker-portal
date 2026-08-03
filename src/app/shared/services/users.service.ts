@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -10,7 +10,7 @@ import {
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
-import { environment } from '../../../environments/environment';
+import { APP_CONFIG, AppConfig } from '../../core/app-config';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +20,13 @@ export class UsersService {
 
   protected collection: CollectionReference;
 
-  constructor(protected db: Firestore) {
+  constructor(
+    protected db: Firestore,
+    @Inject(APP_CONFIG) protected config: AppConfig
+  ) {
     this.collection = collection(
       this.db,
-      `${environment.prefix}Users`
+      `${this.config.prefix}Users`
     ) as CollectionReference<IUser>;
 
     this.users$ = collectionSnapshots(this.collection).pipe(

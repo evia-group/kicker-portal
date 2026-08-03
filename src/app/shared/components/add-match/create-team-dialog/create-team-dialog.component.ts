@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { IPlayers } from 'src/app/shared/interfaces/match.interface';
 import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment';
+import { APP_CONFIG, AppConfig } from 'src/app/core/app-config';
 import { InfoBarService } from 'src/app/shared/services/info-bar.service';
 import { TeamsService } from 'src/app/shared/services/teams.service';
 import { ReplaySubject, Subject } from 'rxjs';
@@ -81,7 +81,8 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
     protected db: Firestore,
     protected infoBar: InfoBarService,
     private teamsService: TeamsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    @Inject(APP_CONFIG) private config: AppConfig
   ) {}
 
   ngOnInit(): void {
@@ -127,14 +128,14 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
 
   async createTeam(teamId: string, teamName: string, teamPlayers: IPlayers[]) {
     this.teamExists = false;
-    const docRef = doc(this.db, environment.prefix + `Teams/${teamId}`);
+    const docRef = doc(this.db, this.config.prefix + `Teams/${teamId}`);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       const team: ITeam = {
         name: teamName,
         players: [
-          doc(this.db, environment.prefix + `Users/${teamPlayers[0].id}`),
-          doc(this.db, environment.prefix + `Users/${teamPlayers[1].id}`),
+          doc(this.db, this.config.prefix + `Users/${teamPlayers[0].id}`),
+          doc(this.db, this.config.prefix + `Users/${teamPlayers[1].id}`),
         ],
         wins: 0,
         losses: 0,
@@ -147,7 +148,7 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
         dominations: 0,
         defeats: 0,
       };
-      await setDoc(doc(this.db, environment.prefix + `Teams/${teamId}`), team)
+      await setDoc(doc(this.db, this.config.prefix + `Teams/${teamId}`), team)
         .then(() => {
           this.infoBar.openCustomSnackBar(this.infoText, this.closeText, 5);
         })

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { Component, inject } from '@angular/core';
+import { APP_CONFIG } from 'src/app/core/app-config';
 import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
 import { MatTabScrollDirective } from '../../shared/directives/mat-tab-scroll.directive';
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
@@ -33,7 +33,7 @@ interface INavigationItem {
   ],
 })
 export class KickerComponent {
-  versionNumber: string = environment.versionNumber;
+  versionNumber: string = inject(APP_CONFIG).versionNumber;
 
   navLinks: INavigationItem[] = [
     {

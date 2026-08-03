@@ -7,7 +7,7 @@
     "build": "ng build --configuration=production",
     "test": "ng test",
     "lint": "ng lint",
-    "init": "node env.ci.js",
+    "init": "node generate-config.js",
     "prepare": "husky install",
     "p:check": "prettier --check .",
     "p:write": "prettier --write ."

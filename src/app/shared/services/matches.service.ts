@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import {
   addDoc,
   collection,
@@ -15,7 +15,7 @@ import { shareReplay, take } from 'rxjs/operators';
 import { IMatch, ISingleMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
 import { UntypedFormGroup } from '@angular/forms';
-import { environment } from '../../../environments/environment';
+import { APP_CONFIG, AppConfig } from '../../core/app-config';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { IUser } from '../interfaces/user.interface';
 import { IPlaytime } from '../interfaces/statistic.interface';
@@ -53,11 +53,12 @@ export class MatchesService implements OnDestroy {
     protected db: Firestore,
     protected infoBar: InfoBarService,
     protected translateService: TranslateService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    @Inject(APP_CONFIG) protected config: AppConfig
   ) {
     this.collection = collection(
       db,
-      `${environment.prefix}Matches`
+      `${this.config.prefix}Matches`
     ) as CollectionReference<IMatch>;
     this.matches$ = collectionData(this.collection).pipe(
       shareReplay(1)
@@ -65,7 +66,7 @@ export class MatchesService implements OnDestroy {
 
     this.singleMatchCollection = collection(
       db,
-      `${environment.prefix}Single-Matches`
+      `${this.config.prefix}Single-Matches`
     ) as CollectionReference<ISingleMatch>;
     this.singleMatches$ = collectionData(this.singleMatchCollection).pipe(
       shareReplay(1)
@@ -82,7 +83,7 @@ export class MatchesService implements OnDestroy {
 
     const playtimeCol = collection(
       db,
-      `${environment.prefix}Playtime`
+      `${this.config.prefix}Playtime`
     ) as CollectionReference<IMatch>;
     this.playtime$ = collectionData(playtimeCol).pipe(
       shareReplay(1)
@@ -170,26 +171,26 @@ export class MatchesService implements OnDestroy {
     const dominations: DocumentReference[] = [];
 
     const teams = [
-      doc(this.db, `${environment.prefix}Teams/${team1})}`),
-      doc(this.db, `${environment.prefix}Teams/${team2})}`),
+      doc(this.db, `${this.config.prefix}Teams/${team1})}`),
+      doc(this.db, `${this.config.prefix}Teams/${team2})}`),
     ];
 
     const players = [
       doc(
         this.db,
-        `${environment.prefix}Users/${match.get('players.team1.one').value.id}`
+        `${this.config.prefix}Users/${match.get('players.team1.one').value.id}`
       ),
       doc(
         this.db,
-        `${environment.prefix}Users/${match.get('players.team1.two').value.id}`
+        `${this.config.prefix}Users/${match.get('players.team1.two').value.id}`
       ),
       doc(
         this.db,
-        `${environment.prefix}Users/${match.get('players.team2.one').value.id}`
+        `${this.config.prefix}Users/${match.get('players.team2.one').value.id}`
       ),
       doc(
         this.db,
-        `${environment.prefix}Users/${match.get('players.team2.two').value.id}`
+        `${this.config.prefix}Users/${match.get('players.team2.two').value.id}`
       ),
     ];
 
@@ -199,13 +200,13 @@ export class MatchesService implements OnDestroy {
     };
 
     for (let i = 0; i < dominationsTeam1; i++) {
-      dominations.push(doc(this.db, `${environment.prefix}Teams/${team1}`));
-      defeats.push(doc(this.db, `${environment.prefix}Teams/${team2}`));
+      dominations.push(doc(this.db, `${this.config.prefix}Teams/${team1}`));
+      defeats.push(doc(this.db, `${this.config.prefix}Teams/${team2}`));
     }
 
     for (let j = 0; j < dominationsTeam2; j++) {
-      dominations.push(doc(this.db, `${environment.prefix}Teams/${team2}`));
-      defeats.push(doc(this.db, `${environment.prefix}Teams/${team1}`));
+      dominations.push(doc(this.db, `${this.config.prefix}Teams/${team2}`));
+      defeats.push(doc(this.db, `${this.config.prefix}Teams/${team1}`));
     }
 
     const resultMatch: IMatch = {
@@ -255,13 +256,13 @@ export class MatchesService implements OnDestroy {
     };
 
     for (let i = 0; i < dominationsPlayer1; i++) {
-      dominations.push(doc(this.db, `${environment.prefix}Users/${player1}`));
-      defeats.push(doc(this.db, `${environment.prefix}Users/${player2}`));
+      dominations.push(doc(this.db, `${this.config.prefix}Users/${player1}`));
+      defeats.push(doc(this.db, `${this.config.prefix}Users/${player2}`));
     }
 
     for (let j = 0; j < dominationsPlayer2; j++) {
-      dominations.push(doc(this.db, `${environment.prefix}Users/${player2}`));
-      defeats.push(doc(this.db, `${environment.prefix}Users/${player1}`));
+      dominations.push(doc(this.db, `${this.config.prefix}Users/${player2}`));
+      defeats.push(doc(this.db, `${this.config.prefix}Users/${player1}`));
     }
 
     const resultMatch: ISingleMatch = {

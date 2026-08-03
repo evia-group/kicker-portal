@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { environment } from '../environments/environment';
+import { inject, NgModule } from '@angular/core';
+import { APP_CONFIG } from './core/app-config';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -138,17 +138,17 @@ import { SelectionWithSearchComponent } from './shared/components/selection-with
       provide: MatPaginatorIntl,
       useClass: MatPaginatorIntlService,
     },
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirebaseApp(() => initializeApp(inject(APP_CONFIG).firebase)),
     provideFirestore(() => {
       const firestore = getFirestore();
-      if (environment['useEmulators']) {
+      if (inject(APP_CONFIG).useEmulators) {
         connectFirestoreEmulator(firestore, 'localhost', 8080);
       }
       return firestore;
     }),
     provideAuth(() => {
       const auth = getAuth();
-      if (environment['useEmulators']) {
+      if (inject(APP_CONFIG).useEmulators) {
         connectAuthEmulator(auth, 'http://localhost:9099', {
           disableWarnings: true,
         });
@@ -157,14 +157,14 @@ import { SelectionWithSearchComponent } from './shared/components/selection-with
     }),
     provideFunctions(() => {
       const functions = getFunctions();
-      if (environment['useEmulators']) {
+      if (inject(APP_CONFIG).useEmulators) {
         connectFunctionsEmulator(functions, 'localhost', 5001);
       }
       return functions;
     }),
     provideDatabase(() => {
       const database = getDatabase();
-      if (environment['useEmulators']) {
+      if (inject(APP_CONFIG).useEmulators) {
         connectDatabaseEmulator(database, 'localhost', 9000);
       }
       return database;

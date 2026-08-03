@@ -20,43 +20,23 @@ Install the dependencies
 npm install
 ```
 
-As a second step the dev environment must be set. To do the process a bit easier, you can run the command
+As a second step, copy `.env.example` to `.env` and fill in the Firebase and Microsoft
+parameters. `.env` is never committed.
+
+```sh
+cp .env.example .env
+```
+
+Then generate the runtime configuration the app loads at startup:
 
 ```sh
 npm start init
 ```
 
-Please update the firebase and the microsoft parameters.
-
-```js
-export const environment = {
-  production: false,
-  versionNumber: 'v2.0.0',
-  prefix: 'T-',
-  // Firebase Config
-  firebase: {
-    apiKey: '',
-    authDomain: '',
-    databaseURL: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: '',
-    measurementId: '',
-  },
-  globals: {
-    team1: 0,
-    team2: 1,
-    round1: 0,
-    round2: 1,
-    round3: 2,
-  },
-  // MS Auth
-  ms: {
-    tenant: '',
-  },
-};
-```
+This writes `src/config.json` from your `.env` (regenerate it whenever `.env` changes).
+Unlike the old build-time `environment.ts`, this file is read by the browser at runtime,
+so the same build works across dev, test and production - only the served `config.json`
+differs.
 
 ## Usage
 
@@ -89,40 +69,9 @@ Without configuration, the emulators will use the default ports and run with ope
 ### Connecting the App to the Emulator
 
 In the file `app.module.ts` you have to set the ports for the connections to the ports of the Emulator.
-You also have to add the `useEmulators` property and set it to `true` in `environment.ts`.
-You can set the `prefix` property to an empty string when using the emulator for Firestore,
+You also have to set `USE_EMULATORS=true` in your `.env` and regenerate the config
+(`npm start init`). You can set `PREFIX=` (empty) when using the emulator for Firestore,
 because it won't affect the data in production.
-
-```js
-export const environment = {
-  useEmulators: true,
-  production: false,
-  versionNumber: 'v2.0.0',
-  prefix: '',
-  // Firebase Config
-  firebase: {
-    apiKey: '',
-    authDomain: '',
-    databaseURL: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: '',
-    measurementId: '',
-  },
-  globals: {
-    team1: 0,
-    team2: 1,
-    round1: 0,
-    round2: 1,
-    round3: 2,
-  },
-  // MS Auth
-  ms: {
-    tenant: '',
-  },
-};
-```
 
 If you use the Emulator for the database, you must set the `databaseURL` to URL of the Emulator,
 which you can retrieve from the terminal while the emulator is running.
