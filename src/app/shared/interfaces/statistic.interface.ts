@@ -1,3 +1,14 @@
+/** Response shape of GET /leaderboard/teams and GET /leaderboard/users. */
+export interface ILeaderboardEntry {
+  id: string;
+  wins: number;
+  losses: number;
+  dominations: number;
+  defeats: number;
+  stats: Record<string, number>;
+  totalMatches: number;
+}
+
 export interface ILeaderboard {
   name: string;
   wins: number;

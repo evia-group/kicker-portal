@@ -1,10 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatchesService } from '../../services/matches.service';
-import {
-  IMatch,
-  ISingleMatch,
-  LastMatches,
-} from '../../interfaces/match.interface';
+import { IMatch, LastMatches } from '../../interfaces/match.interface';
 import { TeamsService } from '../../services/teams.service';
 import { combineLatestWith, Observable, Subscription } from 'rxjs';
 import { ITeam, IUser } from '../../interfaces/user.interface';
@@ -41,7 +37,7 @@ export class LastAddedMatchesComponent implements OnInit, OnDestroy {
   lastAddedMatches: LastMatches[] = [];
   subscription: Subscription;
   matchesAvailable = false;
-  currentObservable: Observable<[IMatch[] | ISingleMatch[], ITeam[] | IUser[]]>;
+  currentObservable: Observable<[IMatch[], ITeam[] | IUser[]]>;
 
   constructor(
     private matchesService: MatchesService,
@@ -59,41 +55,40 @@ export class LastAddedMatchesComponent implements OnInit, OnDestroy {
         );
 
     this.subscription = this.currentObservable.subscribe(
-      ([matches, entities]: [IMatch[] | ISingleMatch[], ITeam[] | IUser[]]) => {
+      ([matches, entities]: [IMatch[], ITeam[] | IUser[]]) => {
         this.createLastMatchesList(matches, entities);
       }
     );
   }
 
-  createLastMatchesList(
-    matches: IMatch[] | ISingleMatch[],
-    entities: ITeam[] | IUser[]
-  ) {
+  createLastMatchesList(matches: IMatch[], entities: ITeam[] | IUser[]) {
     const currentNumberOfMatches = Math.min(
       this.numberOfMatchesToShow,
       matches.length
     );
     const lastMatches = matches
       .sort((a, b) => {
-        return b.date.toMillis() - a.date.toMillis();
+        return new Date(b.playedAt).getTime() - new Date(a.playedAt).getTime();
       })
       .slice(0, currentNumberOfMatches);
     let lastMatchesStrings: LastMatches[] = lastMatches.map((match) => {
-      const entityIds = Object.keys(match.result);
-      const resultEntity1 = match.result[entityIds[0]];
-      const resultEntity2 = match.result[entityIds[1]];
+      const [side0, side1] = [...match.participants].sort(
+        (a, b) => a.side - b.side
+      );
+      const entityId1 = side0.teamId ?? side0.userId;
+      const entityId2 = side1.teamId ?? side1.userId;
       const nameEntity1 = this.singleMode
-        ? this.getUserNameById(entityIds[0], entities as IUser[])
-        : this.getTeamNameById(entityIds[0], entities as ITeam[]);
+        ? this.getUserNameById(entityId1, entities as IUser[])
+        : this.getTeamNameById(entityId1, entities as ITeam[]);
       const nameEntity2 = this.singleMode
-        ? this.getUserNameById(entityIds[1], entities as IUser[])
-        : this.getTeamNameById(entityIds[1], entities as ITeam[]);
+        ? this.getUserNameById(entityId2, entities as IUser[])
+        : this.getTeamNameById(entityId2, entities as ITeam[]);
       return nameEntity1 && nameEntity2
         ? {
             team1: nameEntity1,
             team2: nameEntity2,
-            result: resultEntity1 + ':' + resultEntity2,
-            date: match.date.toDate(),
+            result: side0.roundsWon + ':' + side1.roundsWon,
+            date: new Date(match.playedAt),
           }
         : null;
     });

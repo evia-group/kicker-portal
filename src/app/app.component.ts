@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { getDatabase, onValue, ref } from '@angular/fire/database';
+import { Subscription } from 'rxjs';
+import { KickerSocketService } from './shared/services/kicker-socket.service';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +9,14 @@ import { getDatabase, onValue, ref } from '@angular/fire/database';
   styleUrls: ['./app.component.scss'],
   standalone: false,
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   kickerStatus = false;
-  constructor(translate: TranslateService) {
+  private statusSubscription: Subscription;
+
+  constructor(
+    translate: TranslateService,
+    private kickerSocketService: KickerSocketService
+  ) {
     const lang = translate.getBrowserLang();
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
@@ -22,8 +28,14 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    onValue(ref(getDatabase(), '/Kicker'), (snapshot) => {
-      this.kickerStatus = snapshot.val().status || false;
-    });
+    this.statusSubscription = this.kickerSocketService.status$.subscribe(
+      (status) => {
+        this.kickerStatus = status.status || false;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.statusSubscription?.unsubscribe();
   }
 }

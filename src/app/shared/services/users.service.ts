@@ -1,14 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  CollectionReference,
-  doc,
-  deleteDoc,
-  collectionSnapshots,
-} from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { shareReplay, switchMap } from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
 import { APP_CONFIG, AppConfig } from '../../core/app-config';
 
@@ -16,32 +9,31 @@ import { APP_CONFIG, AppConfig } from '../../core/app-config';
   providedIn: 'root',
 })
 export class UsersService {
-  public users$: Observable<any>;
+  private refresh$ = new BehaviorSubject<void>(undefined);
 
-  protected collection: CollectionReference;
+  /**
+   * Unlike the old Firestore snapshot listener, GET /users doesn't push
+   * updates - refresh() re-fetches so mutations elsewhere (e.g. adding a
+   * match, which can create a user via auto-provisioning) show up here too.
+   */
+  public users$: Observable<IUser[]> = this.refresh$.pipe(
+    switchMap(() => this.http.get<IUser[]>(`${this.config.apiUrl}/users`)),
+    shareReplay(1)
+  );
 
   constructor(
-    protected db: Firestore,
+    protected http: HttpClient,
     @Inject(APP_CONFIG) protected config: AppConfig
-  ) {
-    this.collection = collection(
-      this.db,
-      `${this.config.prefix}Users`
-    ) as CollectionReference<IUser>;
+  ) {}
 
-    this.users$ = collectionSnapshots(this.collection).pipe(
-      map((actions) => {
-        return actions.map((a) => {
-          const data = a.data() as IUser;
-          const id = a.id;
-          return { id, ...data };
-        });
-      }),
-      shareReplay(1)
-    );
+  refresh() {
+    this.refresh$.next();
   }
 
-  async delete(userId) {
-    await deleteDoc(doc(this.db, this.collection.path, userId));
+  async delete(userId: string) {
+    await firstValueFrom(
+      this.http.delete(`${this.config.apiUrl}/users/${userId}`)
+    );
+    this.refresh();
   }
 }

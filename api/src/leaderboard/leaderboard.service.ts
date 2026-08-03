@@ -51,16 +51,35 @@ export class LeaderboardService {
     return this.aggregate(entityRows);
   }
 
-  async getUserLeaderboard(): Promise<LeaderboardEntry[]> {
-    const singleParticipants = await this.db
-      .select({
-        matchId: matchParticipants.matchId,
-        side: matchParticipants.side,
-        userId: matchParticipants.userId,
-      })
-      .from(matchParticipants)
-      .innerJoin(matches, eq(matches.id, matchParticipants.matchId))
-      .where(eq(matches.isSingle, true));
+  /**
+   * Team and single (1v1) matches are aggregated separately per user - the
+   * frontend's statistics page shows them as distinct leaderboards, so they
+   * must not be merged into one entry here.
+   */
+  async getUserLeaderboard(
+    mode: 'team' | 'single',
+  ): Promise<LeaderboardEntry[]> {
+    if (mode === 'single') {
+      const singleParticipants = await this.db
+        .select({
+          matchId: matchParticipants.matchId,
+          side: matchParticipants.side,
+          userId: matchParticipants.userId,
+        })
+        .from(matchParticipants)
+        .innerJoin(matches, eq(matches.id, matchParticipants.matchId))
+        .where(eq(matches.isSingle, true));
+
+      const entityRows: EntityMatchRow[] = singleParticipants
+        .filter((p) => p.userId)
+        .map((p) => ({
+          entityId: p.userId as string,
+          matchId: p.matchId,
+          side: p.side,
+        }));
+
+      return this.aggregate(entityRows);
+    }
 
     const teamParticipants = await this.db
       .select({
@@ -82,24 +101,15 @@ export class LeaderboardService {
           .where(inArray(teamPlayers.teamId, teamIds))
       : [];
 
-    const entityRows: EntityMatchRow[] = [
-      ...singleParticipants
-        .filter((p) => p.userId)
-        .map((p) => ({
-          entityId: p.userId as string,
+    const entityRows: EntityMatchRow[] = teamParticipants.flatMap((p) =>
+      memberships
+        .filter((m) => m.teamId === p.teamId)
+        .map((m) => ({
+          entityId: m.userId,
           matchId: p.matchId,
           side: p.side,
         })),
-      ...teamParticipants.flatMap((p) =>
-        memberships
-          .filter((m) => m.teamId === p.teamId)
-          .map((m) => ({
-            entityId: m.userId,
-            matchId: p.matchId,
-            side: p.side,
-          })),
-      ),
-    ];
+    );
 
     return this.aggregate(entityRows);
   }

@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormControl,
@@ -14,13 +14,12 @@ import {
   MatDialogActions,
 } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { take } from 'rxjs/operators';
 import { IPlayers } from 'src/app/shared/interfaces/match.interface';
-import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
-import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
-import { APP_CONFIG, AppConfig } from 'src/app/core/app-config';
+import { IUser } from 'src/app/shared/interfaces/user.interface';
 import { InfoBarService } from 'src/app/shared/services/info-bar.service';
 import { TeamsService } from 'src/app/shared/services/teams.service';
-import { ReplaySubject, Subject } from 'rxjs';
+import { firstValueFrom, ReplaySubject, Subject } from 'rxjs';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AutocompleteSelectionComponent } from '../../autocomplete-selection/autocomplete-selection.component';
@@ -78,11 +77,9 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
       displayWithFunction: (option: any) => any;
     },
     private fb: UntypedFormBuilder,
-    protected db: Firestore,
     protected infoBar: InfoBarService,
     private teamsService: TeamsService,
-    private translateService: TranslateService,
-    @Inject(APP_CONFIG) private config: AppConfig
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -126,37 +123,27 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
+  /**
+   * Teams have no independent identity in the new backend - they're implied
+   * by the exact player pairing and get created lazily when a match with
+   * this pairing is submitted (MatchesService.findOrCreateTeam). This just
+   * checks whether the pairing already exists so the user gets the same
+   * "team already exists" feedback as before; nothing is persisted here.
+   */
   async createTeam(teamId: string, teamName: string, teamPlayers: IPlayers[]) {
     this.teamExists = false;
-    const docRef = doc(this.db, this.config.prefix + `Teams/${teamId}`);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) {
-      const team: ITeam = {
-        name: teamName,
-        players: [
-          doc(this.db, this.config.prefix + `Users/${teamPlayers[0].id}`),
-          doc(this.db, this.config.prefix + `Users/${teamPlayers[1].id}`),
-        ],
-        wins: 0,
-        losses: 0,
-        stats: {
-          '0:2': 0,
-          '2:0': 0,
-          '1:2': 0,
-          '2:1': 0,
-        },
-        dominations: 0,
-        defeats: 0,
-      };
-      await setDoc(doc(this.db, this.config.prefix + `Teams/${teamId}`), team)
-        .then(() => {
-          this.infoBar.openCustomSnackBar(this.infoText, this.closeText, 5);
-        })
-        .catch((err) => {
-          this.infoBar.openComponentSnackBar(5);
-          console.log('ERROR', err);
-        });
-    } else {
+    const memberIds = teamPlayers.map((p) => p.id).sort();
+
+    const teams = await firstValueFrom(this.teamsService.teams$.pipe(take(1)));
+    const exists = teams.some((team) => {
+      const teamMemberIds = team.players.map((p) => p.id).sort();
+      return (
+        teamMemberIds.length === memberIds.length &&
+        teamMemberIds.every((id, i) => id === memberIds[i])
+      );
+    });
+
+    if (exists) {
       this.infoBar.openCustomSnackBar(
         this.warnText,
         this.closeText,
@@ -164,6 +151,8 @@ export class CreateTeamDialogComponent implements OnInit, OnDestroy {
         'alert-snackbar'
       );
       this.teamExists = true;
+    } else {
+      this.infoBar.openCustomSnackBar(this.infoText, this.closeText, 5);
     }
   }
 }

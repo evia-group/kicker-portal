@@ -139,7 +139,8 @@ export async function verifyMigration(
   );
 
   const teamAggregates = new Map<string, RefAggregate>();
-  const userAggregates = new Map<string, RefAggregate>();
+  const userTeamAggregates = new Map<string, RefAggregate>();
+  const userSingleAggregates = new Map<string, RefAggregate>();
 
   for (const doc of collections.matches) {
     const [teamAId, teamBId] = Object.keys(doc.data.result);
@@ -179,7 +180,7 @@ export async function verifyMigration(
     for (const player of doc.data.players) {
       if (teamAMemberIds.has(player.id)) {
         applyMatch(
-          userAggregates,
+          userTeamAggregates,
           player.id,
           teamAId,
           roundsA,
@@ -189,7 +190,7 @@ export async function verifyMigration(
         );
       } else {
         applyMatch(
-          userAggregates,
+          userTeamAggregates,
           player.id,
           teamBId,
           roundsB,
@@ -206,7 +207,7 @@ export async function verifyMigration(
     const roundsA = doc.data.result[userAId];
     const roundsB = doc.data.result[userBId];
     applyMatch(
-      userAggregates,
+      userSingleAggregates,
       userAId,
       userAId,
       roundsA,
@@ -215,7 +216,7 @@ export async function verifyMigration(
       doc.data.defeats,
     );
     applyMatch(
-      userAggregates,
+      userSingleAggregates,
       userBId,
       userBId,
       roundsB,
@@ -255,21 +256,32 @@ export async function verifyMigration(
     }
   }
 
-  const userAggregatesByUuid = new Map<string, RefAggregate>();
-  for (const [firebaseUid, agg] of userAggregates) {
-    const uuid = userIdByFirebaseUid.get(firebaseUid);
-    if (uuid) {
-      userAggregatesByUuid.set(uuid, agg);
-    } else {
-      errors.push(
-        `Could not resolve Postgres user for Firestore user ${firebaseUid}`,
-      );
+  const mapAggregatesToUuid = (
+    aggregates: Map<string, RefAggregate>,
+  ): Map<string, RefAggregate> => {
+    const byUuid = new Map<string, RefAggregate>();
+    for (const [firebaseUid, agg] of aggregates) {
+      const uuid = userIdByFirebaseUid.get(firebaseUid);
+      if (uuid) {
+        byUuid.set(uuid, agg);
+      } else {
+        errors.push(
+          `Could not resolve Postgres user for Firestore user ${firebaseUid}`,
+        );
+      }
     }
-  }
+    return byUuid;
+  };
+
+  const userTeamAggregatesByUuid = mapAggregatesToUuid(userTeamAggregates);
+  const userSingleAggregatesByUuid = mapAggregatesToUuid(userSingleAggregates);
 
   const leaderboardService = new LeaderboardService(db);
   const actualTeams = await leaderboardService.getTeamLeaderboard();
-  const actualUsers = await leaderboardService.getUserLeaderboard();
+  const actualUserTeams = await leaderboardService.getUserLeaderboard('team');
+  const actualUserSingles = await leaderboardService.getUserLeaderboard(
+    'single',
+  );
 
   const teamNameById = new Map(dbTeams.map((t) => [t.id, t.name]));
   const userNameById = new Map(
@@ -285,9 +297,16 @@ export async function verifyMigration(
     errors,
   );
   mismatchCount += diffAggregates(
-    'users',
-    userAggregatesByUuid,
-    actualUsers,
+    'users (team)',
+    userTeamAggregatesByUuid,
+    actualUserTeams,
+    (id) => userNameById.get(id) ?? id,
+    errors,
+  );
+  mismatchCount += diffAggregates(
+    'users (single)',
+    userSingleAggregatesByUuid,
+    actualUserSingles,
     (id) => userNameById.get(id) ?? id,
     errors,
   );
