@@ -85,8 +85,33 @@ export function createTranslateLoader(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+    }),
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    NgChartsModule,
+    MatDateFnsModule,
+    MatDatepickerModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    NgxMatSelectSearchModule,
     NavigationComponent,
     StatisticComponent,
     MatchesComponent,
@@ -120,33 +145,6 @@ export function createTranslateLoader(http: HttpClient) {
     MatTabScrollDirective,
     LoadingDataComponent,
     SelectionWithSearchComponent,
-  ],
-  bootstrap: [AppComponent],
-  imports: [
-    BrowserModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MaterialModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    NgChartsModule,
-    MatDateFnsModule,
-    MatDatepickerModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatAutocompleteModule,
-    NgxMatSelectSearchModule,
   ],
   providers: [
     {

@@ -4,12 +4,24 @@ import { UsersService } from '../../../shared/services/users.service';
 import { TeamsService } from '../../../shared/services/teams.service';
 import { ITeam, IUser } from '../../../shared/interfaces/user.interface';
 import { MatchesService } from '../../../shared/services/matches.service';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { AddMatchComponent } from '../../../shared/components/add-match/add-match.component';
+import { NgStyle } from '@angular/common';
+import { LastAddedMatchesComponent } from '../../../shared/components/last-added-matches/last-added-matches.component';
 
 @Component({
   selector: 'app-matches',
   templateUrl: './matches.component.html',
   styleUrls: ['./matches.component.scss'],
-  standalone: false,
+  imports: [
+    MatRadioGroup,
+    FormsModule,
+    MatRadioButton,
+    AddMatchComponent,
+    NgStyle,
+    LastAddedMatchesComponent,
+  ],
 })
 export class MatchesComponent implements OnInit, OnDestroy {
   users$: Observable<IUser[]>;

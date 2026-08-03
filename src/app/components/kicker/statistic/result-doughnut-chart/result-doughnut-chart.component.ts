@@ -12,12 +12,13 @@ import {
   twoZero,
   zeroTwo,
 } from '../../../../shared/global-variables';
+import { NgChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'app-result-doughnut-chart',
   templateUrl: './result-doughnut-chart.component.html',
   styleUrls: ['./result-doughnut-chart.component.scss'],
-  standalone: false,
+  imports: [NgChartsModule],
 })
 export class ResultDoughnutChartComponent implements OnChanges {
   @Input()

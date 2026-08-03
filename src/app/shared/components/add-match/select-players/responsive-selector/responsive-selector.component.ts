@@ -5,12 +5,24 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { TwoSelectionsDialogComponent } from '../two-selections-dialog/two-selections-dialog.component';
 import { ISelectionsData } from '../../../../interfaces/match.interface';
+import { TwoSelectionsComponent } from '../two-selections/two-selections.component';
+import { MatButton } from '@angular/material/button';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { AutocompleteSelectionComponent } from '../../../autocomplete-selection/autocomplete-selection.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-responsive-selector',
   templateUrl: './responsive-selector.component.html',
   styleUrls: ['./responsive-selector.component.scss'],
-  standalone: false,
+  imports: [
+    TwoSelectionsComponent,
+    MatButton,
+    MatChipListbox,
+    MatChipOption,
+    AutocompleteSelectionComponent,
+    TranslateModule,
+  ],
 })
 export class ResponsiveSelectorComponent
   implements OnInit, OnDestroy, OnChanges

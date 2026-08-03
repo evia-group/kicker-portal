@@ -25,12 +25,51 @@ import {
   IPlayers,
   ISingleMatch,
 } from '../../../shared/interfaces/match.interface';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { LoadingDataComponent } from '../../../shared/components/loading-data/loading-data.component';
+import { LeaderboardComponent } from './leaderboard/leaderboard.component';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { SelectionWithSearchComponent } from '../../../shared/components/selection-with-search/selection-with-search.component';
+import { DatepickerComponent } from '../../../shared/components/datepicker/datepicker.component';
+import { NgStyle } from '@angular/common';
+import { BarLineChartComponent } from './bar-line-chart/bar-line-chart.component';
+import { MatchesChartComponent } from './matches-chart/matches-chart.component';
+import { ResultDoughnutChartComponent } from './result-doughnut-chart/result-doughnut-chart.component';
+import { PlaytimeChartComponent } from './playtime-chart/playtime-chart.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-statistic',
   templateUrl: './statistic.component.html',
   styleUrls: ['./statistic.component.scss'],
-  standalone: false,
+  imports: [
+    MatRadioGroup,
+    FormsModule,
+    MatRadioButton,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    LoadingDataComponent,
+    LeaderboardComponent,
+    MatTabGroup,
+    MatTab,
+    SelectionWithSearchComponent,
+    DatepickerComponent,
+    NgStyle,
+    BarLineChartComponent,
+    MatchesChartComponent,
+    ResultDoughnutChartComponent,
+    PlaytimeChartComponent,
+    TranslateModule,
+  ],
 })
 export class StatisticComponent implements OnInit, OnDestroy {
   playersMap = new Map<string, ILeaderboard>();

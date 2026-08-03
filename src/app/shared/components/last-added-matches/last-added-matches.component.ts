@@ -9,12 +9,29 @@ import { TeamsService } from '../../services/teams.service';
 import { combineLatestWith, Observable, Subscription } from 'rxjs';
 import { ITeam, IUser } from '../../interfaces/user.interface';
 import { UsersService } from '../../services/users.service';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { LoadingDataComponent } from '../loading-data/loading-data.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 
 @Component({
   selector: 'app-last-added-matches',
   templateUrl: './last-added-matches.component.html',
   styleUrls: ['./last-added-matches.component.scss'],
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    LoadingDataComponent,
+    TranslateModule,
+    LocalizedDatePipe,
+  ],
 })
 export class LastAddedMatchesComponent implements OnInit, OnDestroy {
   @Input()

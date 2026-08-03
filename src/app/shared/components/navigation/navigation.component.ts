@@ -1,18 +1,48 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { getDatabase, onValue, ref } from '@angular/fire/database';
 import { Router } from '@angular/router';
-import { MatIconRegistry } from '@angular/material/icon';
+import { MatIconRegistry, MatIcon } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import {
+  NgClass,
+  NgTemplateOutlet,
+  AsyncPipe,
+  DatePipe,
+} from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import {
+  MatDrawerContainer,
+  MatDrawerContent,
+} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
-  standalone: false,
+  imports: [
+    MatToolbar,
+    MatIcon,
+    MatChipListbox,
+    MatChipOption,
+    NgClass,
+    MatIconButton,
+    NgTemplateOutlet,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDrawerContainer,
+    MatDrawerContent,
+    AsyncPipe,
+    DatePipe,
+    TranslateModule,
+  ],
 })
 export class NavigationComponent implements OnDestroy, OnInit {
   isLoggedIn$: Observable<boolean>;

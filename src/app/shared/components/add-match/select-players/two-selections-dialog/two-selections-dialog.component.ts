@@ -1,8 +1,19 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { ISelectionsData } from '../../../../interfaces/match.interface';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { TwoSelectionsComponent } from '../two-selections/two-selections.component';
+import { AutocompleteSelectionComponent } from '../../../autocomplete-selection/autocomplete-selection.component';
+import { MatButton } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface DialogData {
   dataSubject: ReplaySubject<ISelectionsData>;
@@ -12,7 +23,16 @@ export interface DialogData {
   selector: 'app-two-selections-dialog',
   templateUrl: './two-selections-dialog.component.html',
   styleUrls: ['./two-selections-dialog.component.scss'],
-  standalone: false,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    TwoSelectionsComponent,
+    AutocompleteSelectionComponent,
+    MatDialogActions,
+    MatButton,
+    TranslateModule,
+  ],
 })
 export class TwoSelectionsDialogComponent implements OnInit, OnDestroy {
   firstPlayerControl = new UntypedFormControl();

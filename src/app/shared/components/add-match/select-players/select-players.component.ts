@@ -7,14 +7,17 @@ import {
   FormControlStatus,
   UntypedFormGroup,
   ValidatorFn,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { UsersService } from 'src/app/shared/services/users.service';
+import { ResponsiveSelectorComponent } from './responsive-selector/responsive-selector.component';
 
 @Component({
   selector: 'app-select-players',
   templateUrl: './select-players.component.html',
   styleUrls: ['./select-players.component.scss'],
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, ResponsiveSelectorComponent],
 })
 export class SelectPlayersComponent implements OnInit, OnDestroy {
   @Input()

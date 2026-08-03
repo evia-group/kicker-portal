@@ -7,13 +7,46 @@ import {
   Validators,
   UntypedFormBuilder,
   UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions,
+} from '@angular/material/card';
+import { MatDivider } from '@angular/material/list';
+import { SelectPlayersComponent } from './select-players/select-players.component';
+import { RoundResultComponent } from './round-result/round-result.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-match',
   templateUrl: './add-match.component.html',
   styleUrls: ['./add-match.component.scss'],
-  standalone: false,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatDivider,
+    FormsModule,
+    ReactiveFormsModule,
+    SelectPlayersComponent,
+    RoundResultComponent,
+    MatCardActions,
+    MatButton,
+    MatIcon,
+    MatProgressSpinner,
+    AsyncPipe,
+    TranslateModule,
+  ],
 })
 export class AddMatchComponent implements AfterContentChecked, OnInit {
   @Input()

@@ -2,12 +2,14 @@ import { Component, Input } from '@angular/core';
 import * as room from '../../models/wallgrabenData.model';
 import { RoomsService } from '../../services/rooms.service';
 import { IRoom } from '../../interfaces/room.interface';
+import { NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-room-map',
   templateUrl: '../../../../assets/svg/am-wallgraben.svg',
   styleUrls: ['./room-map.component.scss'],
-  standalone: false,
+  imports: [NgClass, MatTooltip],
 })
 export class RoomMapComponent {
   @Input() locations = '';

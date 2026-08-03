@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
+import { MatTabScrollDirective } from '../../shared/directives/mat-tab-scroll.directive';
+import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface INavigationItem {
   label: string;
@@ -13,7 +19,18 @@ interface INavigationItem {
   selector: 'app-kicker',
   templateUrl: './kicker.component.html',
   styleUrls: ['./kicker.component.scss'],
-  standalone: false,
+  imports: [
+    MatTabNav,
+    MatTabScrollDirective,
+    MatTabLink,
+    RouterLinkActive,
+    RouterLink,
+    MatIcon,
+    MatTabNavPanel,
+    RouterOutlet,
+    MatToolbar,
+    TranslateModule,
+  ],
 })
 export class KickerComponent {
   versionNumber: string = environment.versionNumber;

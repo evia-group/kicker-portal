@@ -4,8 +4,15 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { IPlayers } from 'src/app/shared/interfaces/match.interface';
 import { ITeam, IUser } from 'src/app/shared/interfaces/user.interface';
@@ -14,13 +21,25 @@ import { environment } from 'src/environments/environment';
 import { InfoBarService } from 'src/app/shared/services/info-bar.service';
 import { TeamsService } from 'src/app/shared/services/teams.service';
 import { ReplaySubject, Subject } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { AutocompleteSelectionComponent } from '../../autocomplete-selection/autocomplete-selection.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-create-team-dialog',
   templateUrl: './create-team-dialog.component.html',
   styleUrls: ['./create-team-dialog.component.scss'],
-  standalone: false,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CdkScrollable,
+    MatDialogContent,
+    AutocompleteSelectionComponent,
+    MatDialogActions,
+    MatButton,
+    TranslateModule,
+  ],
 })
 export class CreateTeamDialogComponent implements OnInit, OnDestroy {
   addTeamForm: UntypedFormGroup = this.fb.group({

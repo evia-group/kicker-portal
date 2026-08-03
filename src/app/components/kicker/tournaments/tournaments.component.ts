@@ -1,12 +1,36 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-tournaments',
   templateUrl: './tournaments.component.html',
   styleUrls: ['./tournaments.component.scss'],
-  standalone: false,
+  imports: [
+    MatGridList,
+    MatGridTile,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatCardContent,
+    AsyncPipe,
+  ],
 })
 export class TournamentsComponent {
   /** Based on the screen size, switch from standard to one column per row */

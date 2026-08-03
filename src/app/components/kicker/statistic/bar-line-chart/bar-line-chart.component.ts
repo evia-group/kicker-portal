@@ -11,12 +11,13 @@ import {
   lossesTimeline,
   winsTimeline,
 } from '../../../../shared/global-variables';
+import { NgChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'app-bar-line-chart',
   templateUrl: './bar-line-chart.component.html',
   styleUrls: ['./bar-line-chart.component.scss'],
-  standalone: false,
+  imports: [NgChartsModule],
 })
 export class BarLineChartComponent implements OnChanges {
   @Input()
