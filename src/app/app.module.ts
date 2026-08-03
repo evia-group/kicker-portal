@@ -49,7 +49,7 @@ import {
   MatPaginatorModule,
 } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { NgChartsModule } from 'ng2-charts';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { LeaderboardComponent } from './components/kicker/statistic/leaderboard/leaderboard.component';
 import { BarLineChartComponent } from './components/kicker/statistic/bar-line-chart/bar-line-chart.component';
 import { ResultDoughnutChartComponent } from './components/kicker/statistic/result-doughnut-chart/result-doughnut-chart.component';
@@ -93,7 +93,6 @@ import { SelectionWithSearchComponent } from './shared/components/selection-with
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    NgChartsModule,
     MatDateFnsModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
@@ -176,6 +175,7 @@ import { SelectionWithSearchComponent } from './shared/components/selection-with
       prefix: './assets/i18n/',
       suffix: '.json',
     }),
+    provideCharts(withDefaultRegisterables()),
   ],
 })
 export class AppModule {}

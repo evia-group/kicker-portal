@@ -6,13 +6,13 @@ import {
   Output,
 } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-matches-chart',
   templateUrl: './matches-chart.component.html',
   styleUrls: ['./matches-chart.component.scss'],
-  imports: [NgChartsModule],
+  imports: [BaseChartDirective],
 })
 export class MatchesChartComponent implements OnChanges {
   @Input()

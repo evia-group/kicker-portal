@@ -6,7 +6,7 @@ import { LoadingDataComponent } from '../../../../shared/components/loading-data
 import { DatepickerComponent } from '../../../../shared/components/datepicker/datepicker.component';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -19,7 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     MatRadioGroup,
     FormsModule,
     MatRadioButton,
-    NgChartsModule,
+    BaseChartDirective,
     TranslatePipe,
   ],
 })
