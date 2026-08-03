@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { UsersService } from '../../../shared/services/users.service';
 import { TeamsService } from '../../../shared/services/teams.service';
@@ -14,6 +19,7 @@ import { LastAddedMatchesComponent } from '../../../shared/components/last-added
   selector: 'app-matches',
   templateUrl: './matches.component.html',
   styleUrls: ['./matches.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatRadioGroup,
     FormsModule,

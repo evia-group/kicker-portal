@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import * as room from '../../models/wallgrabenData.model';
 import { RoomsService } from '../../services/rooms.service';
 import { IRoom } from '../../interfaces/room.interface';
@@ -9,6 +9,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'app-room-map',
   templateUrl: '../../../../assets/svg/am-wallgraben.svg',
   styleUrls: ['./room-map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, MatTooltip],
 })
 export class RoomMapComponent {

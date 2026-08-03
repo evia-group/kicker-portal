@@ -5,6 +5,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Observable, startWith } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -31,6 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-autocomplete-selection',
   templateUrl: './autocomplete-selection.component.html',
   styleUrls: ['./autocomplete-selection.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     MatFormField,

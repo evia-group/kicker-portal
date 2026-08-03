@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
@@ -17,6 +17,7 @@ import { AsyncPipe } from '@angular/common';
   selector: 'app-tournaments',
   templateUrl: './tournaments.component.html',
   styleUrls: ['./tournaments.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatGridList,
     MatGridTile,

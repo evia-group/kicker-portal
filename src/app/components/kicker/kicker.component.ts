@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { APP_CONFIG } from 'src/app/core/app-config';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { APP_CONFIG } from '../../core/app-config';
 import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
 import { MatTabScrollDirective } from '../../shared/directives/mat-tab-scroll.directive';
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
@@ -19,6 +19,7 @@ interface INavigationItem {
   selector: 'app-kicker',
   templateUrl: './kicker.component.html',
   styleUrls: ['./kicker.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTabNav,
     MatTabScrollDirective,

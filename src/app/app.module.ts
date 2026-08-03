@@ -20,6 +20,7 @@ import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
+  withXhr,
 } from '@angular/common/http';
 import { AuthInterceptor } from './core/auth.interceptor';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -143,7 +144,7 @@ import { SelectionWithSearchComponent } from './shared/components/selection-with
         deps: [APP_CONFIG],
       },
     }),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

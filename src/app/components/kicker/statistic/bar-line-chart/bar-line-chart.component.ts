@@ -4,9 +4,10 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
-import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
+import { ILeaderboard } from '../../../../shared/interfaces/statistic.interface';
 import {
   lossesTimeline,
   winsTimeline,
@@ -17,6 +18,7 @@ import { BaseChartDirective } from 'ng2-charts';
   selector: 'app-bar-line-chart',
   templateUrl: './bar-line-chart.component.html',
   styleUrls: ['./bar-line-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [BaseChartDirective],
 })
 export class BarLineChartComponent implements OnChanges {

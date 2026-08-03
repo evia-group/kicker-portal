@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  Inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormControl,
@@ -15,10 +21,10 @@ import {
 } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { take } from 'rxjs/operators';
-import { IPlayers } from 'src/app/shared/interfaces/match.interface';
-import { IUser } from 'src/app/shared/interfaces/user.interface';
-import { InfoBarService } from 'src/app/shared/services/info-bar.service';
-import { TeamsService } from 'src/app/shared/services/teams.service';
+import { IPlayers } from '../../../interfaces/match.interface';
+import { IUser } from '../../../interfaces/user.interface';
+import { InfoBarService } from '../../../services/info-bar.service';
+import { TeamsService } from '../../../services/teams.service';
 import { firstValueFrom, ReplaySubject, Subject } from 'rxjs';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
@@ -29,6 +35,7 @@ import { MatButton } from '@angular/material/button';
   selector: 'app-create-team-dialog',
   templateUrl: './create-team-dialog.component.html',
   styleUrls: ['./create-team-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,

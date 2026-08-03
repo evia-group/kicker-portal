@@ -1,4 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatchesService } from '../../services/matches.service';
 import { IMatch, LastMatches } from '../../interfaces/match.interface';
 import { TeamsService } from '../../services/teams.service';
@@ -19,6 +25,7 @@ import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
   selector: 'app-last-added-matches',
   templateUrl: './last-added-matches.component.html',
   styleUrls: ['./last-added-matches.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatCard,
     MatCardHeader,

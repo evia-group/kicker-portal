@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   UntypedFormGroup,
   FormsModule,
@@ -12,6 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-round-result',
   templateUrl: './round-result.component.html',
   styleUrls: ['./round-result.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,

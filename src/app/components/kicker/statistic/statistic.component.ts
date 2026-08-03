@@ -1,8 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatchesService } from 'src/app/shared/services/matches.service';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { MatchesService } from '../../../shared/services/matches.service';
 import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
+import { ILeaderboard } from '../../../shared/interfaces/statistic.interface';
 import { SortDirection } from '@angular/material/sort';
 import { TableService } from '../../../shared/services/table.service';
 import { ChartsService } from '../../../shared/services/charts.service';
@@ -47,6 +52,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-statistic',
   templateUrl: './statistic.component.html',
   styleUrls: ['./statistic.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatRadioGroup,
     FormsModule,

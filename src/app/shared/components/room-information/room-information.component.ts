@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IRoom } from '../../interfaces/room.interface';
 import { DefaultRoomData } from '../../models/default.model';
 import { RoomsService } from '../../services/rooms.service';
@@ -21,6 +21,7 @@ import {
   selector: 'app-room-information',
   templateUrl: './room-information.component.html',
   styleUrls: ['./room-information.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatCard,
     MatCardHeader,

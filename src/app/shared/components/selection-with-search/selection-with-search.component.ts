@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
@@ -25,6 +26,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-selection-with-search',
   templateUrl: './selection-with-search.component.html',
   styleUrls: ['./selection-with-search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormField,
     MatLabel,

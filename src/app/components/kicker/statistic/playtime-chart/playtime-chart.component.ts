@@ -1,7 +1,13 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { take } from 'rxjs';
-import { MatchesService } from 'src/app/shared/services/matches.service';
+import { MatchesService } from '../../../../shared/services/matches.service';
 import { LoadingDataComponent } from '../../../../shared/components/loading-data/loading-data.component';
 import { DatepickerComponent } from '../../../../shared/components/datepicker/datepicker.component';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
@@ -13,6 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-playtime-chart',
   templateUrl: './playtime-chart.component.html',
   styleUrls: ['./playtime-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingDataComponent,
     DatepickerComponent,

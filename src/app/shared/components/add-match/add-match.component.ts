@@ -1,4 +1,10 @@
-import { AfterContentChecked, Component, Input, OnInit } from '@angular/core';
+import {
+  AfterContentChecked,
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ITeam, IUser } from '../../interfaces/user.interface';
 import { BehaviorSubject, combineLatestWith, Observable } from 'rxjs';
 import { MatchesService } from '../../services/matches.service';
@@ -30,6 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-add-match',
   templateUrl: './add-match.component.html',
   styleUrls: ['./add-match.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatCard,
     MatCardHeader,

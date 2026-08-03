@@ -6,6 +6,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -31,6 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
   providers: [{ provide: MAT_DATE_FORMATS, useClass: DateFormat }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormField,
     MatLabel,

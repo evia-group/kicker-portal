@@ -1,4 +1,10 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -23,6 +29,7 @@ export interface DialogData {
   selector: 'app-two-selections-dialog',
   templateUrl: './two-selections-dialog.component.html',
   styleUrls: ['./two-selections-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     CdkScrollable,

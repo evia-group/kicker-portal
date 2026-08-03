@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -15,6 +22,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-responsive-selector',
   templateUrl: './responsive-selector.component.html',
   styleUrls: ['./responsive-selector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     TwoSelectionsComponent,
     MatButton,

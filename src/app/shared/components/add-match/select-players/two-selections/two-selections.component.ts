@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { AutocompleteSelectionComponent } from '../../../autocomplete-selection/autocomplete-selection.component';
 
@@ -6,6 +6,7 @@ import { AutocompleteSelectionComponent } from '../../../autocomplete-selection/
   selector: 'app-two-selections',
   templateUrl: './two-selections.component.html',
   styleUrls: ['./two-selections.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AutocompleteSelectionComponent],
 })
 export class TwoSelectionsComponent {
