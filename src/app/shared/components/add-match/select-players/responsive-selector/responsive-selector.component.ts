@@ -10,6 +10,7 @@ import { ISelectionsData } from '../../../../interfaces/match.interface';
   selector: 'app-responsive-selector',
   templateUrl: './responsive-selector.component.html',
   styleUrls: ['./responsive-selector.component.scss'],
+  standalone: false,
 })
 export class ResponsiveSelectorComponent
   implements OnInit, OnDestroy, OnChanges

@@ -17,6 +17,7 @@ import { IPlayers } from '../../interfaces/match.interface';
   selector: 'app-selection-with-search',
   templateUrl: './selection-with-search.component.html',
   styleUrls: ['./selection-with-search.component.scss'],
+  standalone: false,
 })
 export class SelectionWithSearchComponent
   implements OnInit, AfterViewInit, OnDestroy

@@ -30,6 +30,7 @@ import {
   selector: 'app-statistic',
   templateUrl: './statistic.component.html',
   styleUrls: ['./statistic.component.scss'],
+  standalone: false,
 })
 export class StatisticComponent implements OnInit, OnDestroy {
   playersMap = new Map<string, ILeaderboard>();

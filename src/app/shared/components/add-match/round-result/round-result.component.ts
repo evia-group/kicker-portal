@@ -5,6 +5,7 @@ import { UntypedFormGroup } from '@angular/forms';
   selector: 'app-round-result',
   templateUrl: './round-result.component.html',
   styleUrls: ['./round-result.component.scss'],
+  standalone: false,
 })
 export class RoundResultComponent implements OnInit {
   public dominationTeamOne = 'dominationTeamOne';

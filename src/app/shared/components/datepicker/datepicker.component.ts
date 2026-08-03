@@ -18,6 +18,7 @@ import { de, enUS } from 'date-fns/locale';
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
   providers: [{ provide: MAT_DATE_FORMATS, useClass: DateFormat }],
+  standalone: false,
 })
 export class DatepickerComponent implements OnInit, OnChanges {
   @Input()

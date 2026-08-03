@@ -14,6 +14,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
   selector: 'app-autocomplete-selection',
   templateUrl: './autocomplete-selection.component.html',
   styleUrls: ['./autocomplete-selection.component.scss'],
+  standalone: false,
 })
 export class AutocompleteSelectionComponent implements OnInit, OnChanges {
   @Input()

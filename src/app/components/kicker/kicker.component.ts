@@ -13,6 +13,7 @@ interface INavigationItem {
   selector: 'app-kicker',
   templateUrl: './kicker.component.html',
   styleUrls: ['./kicker.component.scss'],
+  standalone: false,
 })
 export class KickerComponent {
   versionNumber: string = environment.versionNumber;

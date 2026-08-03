@@ -16,6 +16,7 @@ import {
   selector: 'app-bar-line-chart',
   templateUrl: './bar-line-chart.component.html',
   styleUrls: ['./bar-line-chart.component.scss'],
+  standalone: false,
 })
 export class BarLineChartComponent implements OnChanges {
   @Input()

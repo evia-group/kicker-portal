@@ -14,6 +14,7 @@ import { UsersService } from 'src/app/shared/services/users.service';
   selector: 'app-select-players',
   templateUrl: './select-players.component.html',
   styleUrls: ['./select-players.component.scss'],
+  standalone: false,
 })
 export class SelectPlayersComponent implements OnInit, OnDestroy {
   @Input()

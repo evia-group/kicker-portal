@@ -7,6 +7,7 @@ import { MatchesService } from 'src/app/shared/services/matches.service';
   selector: 'app-playtime-chart',
   templateUrl: './playtime-chart.component.html',
   styleUrls: ['./playtime-chart.component.scss'],
+  standalone: false,
 })
 export class PlaytimeChartComponent implements OnInit, OnChanges {
   @Input()

@@ -17,6 +17,7 @@ import {
   selector: 'app-result-doughnut-chart',
   templateUrl: './result-doughnut-chart.component.html',
   styleUrls: ['./result-doughnut-chart.component.scss'],
+  standalone: false,
 })
 export class ResultDoughnutChartComponent implements OnChanges {
   @Input()

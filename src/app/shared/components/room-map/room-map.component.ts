@@ -7,6 +7,7 @@ import { IRoom } from '../../interfaces/room.interface';
   selector: 'app-room-map',
   templateUrl: '../../../../assets/svg/am-wallgraben.svg',
   styleUrls: ['./room-map.component.scss'],
+  standalone: false,
 })
 export class RoomMapComponent {
   @Input() locations = '';

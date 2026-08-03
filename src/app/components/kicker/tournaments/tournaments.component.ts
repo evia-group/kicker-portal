@@ -6,6 +6,7 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
   selector: 'app-tournaments',
   templateUrl: './tournaments.component.html',
   styleUrls: ['./tournaments.component.scss'],
+  standalone: false,
 })
 export class TournamentsComponent {
   /** Based on the screen size, switch from standard to one column per row */

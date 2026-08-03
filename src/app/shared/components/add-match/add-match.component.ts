@@ -13,6 +13,7 @@ import {
   selector: 'app-add-match',
   templateUrl: './add-match.component.html',
   styleUrls: ['./add-match.component.scss'],
+  standalone: false,
 })
 export class AddMatchComponent implements AfterContentChecked, OnInit {
   @Input()

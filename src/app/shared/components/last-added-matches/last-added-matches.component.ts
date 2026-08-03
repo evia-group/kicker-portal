@@ -14,6 +14,7 @@ import { UsersService } from '../../services/users.service';
   selector: 'app-last-added-matches',
   templateUrl: './last-added-matches.component.html',
   styleUrls: ['./last-added-matches.component.scss'],
+  standalone: false,
 })
 export class LastAddedMatchesComponent implements OnInit, OnDestroy {
   @Input()

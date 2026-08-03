@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-interactive-map',
   templateUrl: './interactive-map.component.html',
   styleUrls: ['./interactive-map.component.scss'],
+  standalone: false,
 })
 export class InteractiveMapComponent {}

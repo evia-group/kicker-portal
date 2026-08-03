@@ -10,6 +10,7 @@ import { fromEvent, Subscription } from 'rxjs';
 
 @Directive({
   selector: '[appMatTabScroll]',
+  standalone: false,
 })
 export class MatTabScrollDirective implements OnInit, AfterViewInit, OnDestroy {
   private tabListContainer: HTMLElement;

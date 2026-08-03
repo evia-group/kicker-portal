@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
   styleUrls: ['./leaderboard.component.scss'],
+  standalone: false,
 })
 export class LeaderboardComponent implements OnInit, OnDestroy {
   boardData = new MatTableDataSource();

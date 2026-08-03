@@ -9,6 +9,7 @@ import { MatchesService } from '../../../shared/services/matches.service';
   selector: 'app-matches',
   templateUrl: './matches.component.html',
   styleUrls: ['./matches.component.scss'],
+  standalone: false,
 })
 export class MatchesComponent implements OnInit, OnDestroy {
   users$: Observable<IUser[]>;

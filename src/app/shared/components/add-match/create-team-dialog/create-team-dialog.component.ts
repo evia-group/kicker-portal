@@ -20,6 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-create-team-dialog',
   templateUrl: './create-team-dialog.component.html',
   styleUrls: ['./create-team-dialog.component.scss'],
+  standalone: false,
 })
 export class CreateTeamDialogComponent implements OnInit, OnDestroy {
   addTeamForm: UntypedFormGroup = this.fb.group({

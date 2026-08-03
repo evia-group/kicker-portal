@@ -5,6 +5,7 @@ import { UntypedFormControl } from '@angular/forms';
   selector: 'app-two-selections',
   templateUrl: './two-selections.component.html',
   styleUrls: ['./two-selections.component.scss'],
+  standalone: false,
 })
 export class TwoSelectionsComponent {
   @Input()

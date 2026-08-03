@@ -4,6 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-loading-data',
   templateUrl: './loading-data.component.html',
   styleUrls: ['./loading-data.component.scss'],
+  standalone: false,
 })
 export class LoadingDataComponent {
   @Input()

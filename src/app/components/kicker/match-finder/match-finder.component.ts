@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-match-finder',
   templateUrl: './match-finder.component.html',
   styleUrls: ['./match-finder.component.scss'],
+  standalone: false,
 })
 export class MatchFinderComponent {}

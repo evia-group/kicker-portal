@@ -7,6 +7,7 @@ import { RoomsService } from '../../services/rooms.service';
   selector: 'app-room-information',
   templateUrl: './room-information.component.html',
   styleUrls: ['./room-information.component.scss'],
+  standalone: false,
 })
 export class RoomInformationComponent {
   public roomInformation: IRoom = DefaultRoomData;

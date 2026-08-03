@@ -12,6 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
+  standalone: false,
 })
 export class NavigationComponent implements OnDestroy, OnInit {
   isLoggedIn$: Observable<boolean>;

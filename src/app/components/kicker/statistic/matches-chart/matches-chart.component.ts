@@ -11,6 +11,7 @@ import { ChartConfiguration } from 'chart.js';
   selector: 'app-matches-chart',
   templateUrl: './matches-chart.component.html',
   styleUrls: ['./matches-chart.component.scss'],
+  standalone: false,
 })
 export class MatchesChartComponent implements OnChanges {
   @Input()

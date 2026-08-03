@@ -12,6 +12,7 @@ export interface DialogData {
   selector: 'app-two-selections-dialog',
   templateUrl: './two-selections-dialog.component.html',
   styleUrls: ['./two-selections-dialog.component.scss'],
+  standalone: false,
 })
 export class TwoSelectionsDialogComponent implements OnInit, OnDestroy {
   firstPlayerControl = new UntypedFormControl();
