@@ -8,7 +8,16 @@ services:
       target: dev
     volumes:
       - ./src:/app/src
+      - ./public:/app/public
+      - ./angular.json:/app/angular.json
+      - ./ngsw-config.json:/app/ngsw-config.json
       - ./generate-config.js:/app/generate-config.js
+      # node_modules bleibt bewusst aussen vor: darin liegen plattformabhaengige
+      # Binaries, ein Host-Mount wuerde sie im Container unbrauchbar machen. Eine
+      # Aenderung an den Abhaengigkeiten braucht daher weiterhin
+      # `docker compose up -d --build web`. Alles andere ausserhalb von src/ ist
+      # jetzt live, damit ein Compile-Fehler nicht unbemerkt einen alten Stand
+      # weiterlaufen laesst.
     ports:
       - '4200:4200'
     environment:

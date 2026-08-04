@@ -149,5 +149,28 @@
     "reload": "Reload",
     "iosInstallHint": "Add to your home screen so notifications can reach you.",
     "understood": "Got it"
+  },
+  "matchmaking": {
+    "intro": "Add yourself and we'll tell you as soon as enough people are in.",
+    "join": "I want to play",
+    "leave": "Leave the queue",
+    "inQueue": "You're in the queue.",
+    "stillMissing": "{{count}} more player(s) needed.",
+    "singles": "Singles (1 vs 1)",
+    "doubles": "Doubles (2 vs 2)",
+    "waiting": "Who's waiting",
+    "nobodyWaiting": "Nobody is waiting right now.",
+    "proposalFound": "Match found",
+    "proposalHint": "Please confirm, valid until",
+    "accept": "I'm in",
+    "decline": "Can't make it",
+    "waitingForOthers": "Confirmed. Waiting for the others.",
+    "tableFree": "The table just freed up.",
+    "joinFailed": "Could not join the queue.",
+    "resolved": {
+      "accepted": "Everyone confirmed. Have fun!",
+      "declined": "Someone can't make it. You're back in the queue.",
+      "expired": "The proposal expired. You're back in the queue."
+    }
   }
 }

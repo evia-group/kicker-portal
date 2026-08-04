@@ -150,5 +150,28 @@
     "reload": "Neu laden",
     "iosInstallHint": "Zum Home-Bildschirm hinzufügen, damit Benachrichtigungen ankommen.",
     "understood": "Verstanden"
+  },
+  "matchmaking": {
+    "intro": "Trag dich ein und wir sagen dir, sobald genug Leute da sind.",
+    "join": "Ich will spielen",
+    "leave": "Aus der Warteschlange austreten",
+    "inQueue": "Du stehst in der Warteschlange.",
+    "stillMissing": "Es fehlen noch {{count}} Mitspieler.",
+    "singles": "Einzel (1 vs 1)",
+    "doubles": "Doppel (2 vs 2)",
+    "waiting": "Wer wartet",
+    "nobodyWaiting": "Gerade wartet niemand.",
+    "proposalFound": "Paarung gefunden",
+    "proposalHint": "Bitte bestätigen, gültig bis",
+    "accept": "Bin dabei",
+    "decline": "Kann nicht",
+    "waitingForOthers": "Zugesagt. Warten auf die anderen.",
+    "tableFree": "Der Tisch ist frei geworden.",
+    "joinFailed": "Eintragen hat nicht geklappt.",
+    "resolved": {
+      "accepted": "Alle haben zugesagt. Viel Spaß!",
+      "declined": "Jemand kann nicht. Du stehst wieder in der Warteschlange.",
+      "expired": "Der Vorschlag ist abgelaufen. Du stehst wieder in der Warteschlange."
+    }
   }
 }

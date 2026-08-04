@@ -51,5 +51,14 @@ export class KickerComponent {
       active: true,
       index: 1,
     },
+    // Route und i18n-Keys gab es schon, nur dieser Eintrag fehlte. Die Seite
+    // war deshalb nur ueber die Adresszeile erreichbar.
+    {
+      label: 'app.matchmaking',
+      link: '/kicker/matchmaking',
+      icon: 'sports_esports',
+      active: true,
+      index: 2,
+    },
   ];
 }

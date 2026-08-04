@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import {
   boolean,
   index,
@@ -8,6 +9,7 @@ import {
   smallint,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
 
@@ -156,6 +158,86 @@ export const matchRounds = pgTable('match_rounds', {
   /** Feinere Rundendaten, etwa der Legstand oder geworfene Aufnahmen. */
   detail: jsonb('detail'),
 });
+
+/**
+ * Wer gerade auf Mitspieler wartet.
+ *
+ * Bewusst eine Tabelle und nicht nur Zustand im Gateway: eine Warteschlange nur
+ * im Speicher waere nach jedem Neustart des Backends leer, und wer sein Telefon
+ * weglegt, verliert seinen Platz beim ersten Verbindungsabbruch.
+ */
+export const queueEntries = pgTable(
+  'queue_entries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    gameTypeId: uuid('game_type_id')
+      .notNull()
+      .references(() => gameTypes.id),
+    /** Gesuchte Mannschaftsgroesse: 1 fuer Einzel, 2 fuer Doppel. */
+    teamSize: smallint('team_size').notNull(),
+    /** waiting, matched, cancelled oder expired. */
+    status: text('status').notNull().default('waiting'),
+    joinedAt: timestamp('joined_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    /** Danach zaehlt der Eintrag nicht mehr, siehe Aufraeumlauf. */
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    proposalId: uuid('proposal_id'),
+  },
+  (table) => [
+    // Hoechstens ein wartender Eintrag je Nutzer und Spielart. Als partieller
+    // Index, damit abgelaufene und abgesagte Eintraege als Historie liegen
+    // bleiben duerfen.
+    uniqueIndex('queue_entries_one_waiting_per_user_and_game_type')
+      .on(table.userId, table.gameTypeId)
+      .where(sql`status = 'waiting'`),
+    index('queue_entries_lookup_idx').on(
+      table.gameTypeId,
+      table.teamSize,
+      table.status,
+      table.joinedAt,
+    ),
+  ],
+);
+
+/**
+ * Eine gefundene Paarung, die noch bestaetigt werden muss.
+ *
+ * Ohne diesen Zwischenschritt wuerde die Queue Leute in Spiele stecken, die
+ * inzwischen nicht mehr koennen. Ein Vorschlag laeuft ab, wenn nicht alle
+ * zustimmen, und die Zusagenden gehen zurueck in die Warteschlange.
+ */
+export const matchProposals = pgTable('match_proposals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  gameTypeId: uuid('game_type_id')
+    .notNull()
+    .references(() => gameTypes.id),
+  teamSize: smallint('team_size').notNull(),
+  /** pending, accepted, declined oder expired. */
+  status: text('status').notNull().default('pending'),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+});
+
+export const matchProposalPlayers = pgTable(
+  'match_proposal_players',
+  {
+    proposalId: uuid('proposal_id')
+      .notNull()
+      .references(() => matchProposals.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    /** pending, accepted oder declined. */
+    response: text('response').notNull().default('pending'),
+  },
+  (table) => [primaryKey({ columns: [table.proposalId, table.userId] })],
+);
 
 export const playtime = pgTable('playtime', {
   id: uuid('id').primaryKey().defaultRandom(),

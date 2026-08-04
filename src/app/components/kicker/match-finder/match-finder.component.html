@@ -1,1 +1,122 @@
-<p>match-finder works!</p>
+<div class="match-finder-container">
+  @if (proposal(); as current) {
+  <!-- Ein Vorschlag verlangt eine Entscheidung, deshalb steht er oben und
+       hervorgehoben. -->
+  <mat-card class="proposal-card">
+    <mat-card-title>{{
+      'matchmaking.proposalFound' | translate
+    }}</mat-card-title>
+    <mat-card-content>
+      <p class="proposal-hint">
+        {{ 'matchmaking.proposalHint' | translate }}
+        {{ current.expiresAt | date: 'H:mm:ss' }}
+      </p>
+      <ul class="player-list">
+        @for (player of current.players; track player.userId) {
+        <li>
+          <mat-icon
+            [class.accepted]="player.response === 'accepted'"
+            [class.declined]="player.response === 'declined'">
+            @if (player.response === 'accepted') { check_circle } @else if
+            (player.response === 'declined') { cancel } @else { hourglass_empty
+            }
+          </mat-icon>
+          <span>{{ player.userName }}</span>
+        </li>
+        }
+      </ul>
+
+      @if (ownResponse() === 'pending') {
+      <div class="proposal-actions">
+        <button
+          mat-flat-button
+          [disabled]="busy()"
+          (click)="respond('accepted')">
+          {{ 'matchmaking.accept' | translate }}
+        </button>
+        <button mat-button [disabled]="busy()" (click)="respond('declined')">
+          {{ 'matchmaking.decline' | translate }}
+        </button>
+      </div>
+      } @else {
+      <p class="waiting-hint">
+        {{ 'matchmaking.waitingForOthers' | translate }}
+      </p>
+      }
+    </mat-card-content>
+  </mat-card>
+  }
+
+  <mat-card>
+    <mat-card-title>{{ 'app.matchmaking' | translate }}</mat-card-title>
+    <mat-card-content>
+      @if (!isInQueue()) {
+      <p>{{ 'matchmaking.intro' | translate }}</p>
+      <mat-radio-group
+        class="team-size-group"
+        [(ngModel)]="teamSize"
+        [disabled]="busy()">
+        <mat-radio-button [value]="2">
+          {{ 'matchmaking.doubles' | translate }}
+        </mat-radio-button>
+        <mat-radio-button [value]="1">
+          {{ 'matchmaking.singles' | translate }}
+        </mat-radio-button>
+      </mat-radio-group>
+      <button
+        mat-flat-button
+        class="primary-action"
+        [disabled]="busy()"
+        (click)="join()">
+        <mat-icon>sports_esports</mat-icon>
+        {{ 'matchmaking.join' | translate }}
+      </button>
+      } @else {
+      <p class="in-queue">
+        <mat-icon class="in-queue-icon">check_circle</mat-icon>
+        {{ 'matchmaking.inQueue' | translate }}
+      </p>
+      @if (missingPlayers() > 0) {
+      <p class="waiting-hint">
+        {{
+          'matchmaking.stillMissing' | translate: { count: missingPlayers() }
+        }}
+      </p>
+      }
+      <button
+        mat-button
+        class="primary-action"
+        [disabled]="busy()"
+        (click)="leave()">
+        {{ 'matchmaking.leave' | translate }}
+      </button>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-title>{{ 'matchmaking.waiting' | translate }}</mat-card-title>
+    <mat-card-content>
+      @if (entries().length === 0) {
+      <p>{{ 'matchmaking.nobodyWaiting' | translate }}</p>
+      } @else {
+      <ul class="player-list">
+        @for (entry of entries(); track entry.userId) {
+        <li>
+          <mat-icon>schedule</mat-icon>
+          <span class="player-name">{{ entry.userName }}</span>
+          <span class="player-meta">
+            {{
+              entry.teamSize === 1
+                ? ('matchmaking.singles' | translate)
+                : ('matchmaking.doubles' | translate)
+            }}
+            &middot; {{ entry.joinedAt | date: 'H:mm' }}
+          </span>
+        </li>
+        }
+      </ul>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
