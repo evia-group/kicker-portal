@@ -1,0 +1,22 @@
+<!-- Quelle der App-Icons. Aus dieser Datei werden die PNGs in public/icons
+     erzeugt, siehe tools/generate-icons.sh.
+
+     Corporate Design: schwarzer Grund (#05060A), gruene Flaeche (#BEE600),
+     Formen statt Bild, keine weitere Farbe.
+
+     Konzentrische Ringe, weil das Portal zwei Disziplinen tragen soll: als
+     Kugel liest es sich fuer den Kicker, als Zielscheibe fuer Dart. Bleibt bis
+     48px erkennbar, weil nur zwei Kanten unterschieden werden muessen.
+
+     Das Motiv liegt innerhalb von 60% der Kantenlaenge; die randlose
+     maskable-Variante steht in app-icon-maskable.svg. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 512 512"
+  width="512"
+  height="512">
+  <rect width="512" height="512" fill="#05060A" />
+  <circle cx="256" cy="256" r="152" fill="#BEE600" />
+  <circle cx="256" cy="256" r="104" fill="#05060A" />
+  <circle cx="256" cy="256" r="56" fill="#BEE600" />
+</svg>

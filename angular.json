@@ -53,7 +53,15 @@
             "index": "src/index.html",
             "polyfills": ["src/polyfills.ts"],
             "tsConfig": "src/tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets", "src/config.json"],
+            "assets": [
+              "src/assets",
+              "src/config.json",
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "."
+              }
+            ],
             "styles": [
               "@fontsource/material-icons/latin-400.css",
               "src/styles.scss"
@@ -78,7 +86,8 @@
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
                 }
-              ]
+              ],
+              "serviceWorker": "ngsw-config.json"
             }
           }
         },

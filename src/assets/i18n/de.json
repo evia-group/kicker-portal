@@ -144,5 +144,11 @@
     "legPlural": "Legs",
     "kicker": "Kicker",
     "darts": "Dart"
+  },
+  "pwa": {
+    "updateAvailable": "Eine neue Version ist bereit.",
+    "reload": "Neu laden",
+    "iosInstallHint": "Zum Home-Bildschirm hinzufügen, damit Benachrichtigungen ankommen.",
+    "understood": "Verstanden"
   }
 }

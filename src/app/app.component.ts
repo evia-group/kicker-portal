@@ -7,6 +7,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { KickerSocketService } from './shared/services/kicker-socket.service';
+import { PwaService } from './core/pwa.service';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     translate: TranslateService,
-    private kickerSocketService: KickerSocketService
+    private kickerSocketService: KickerSocketService,
+    private pwaService: PwaService
   ) {
     const lang = translate.getBrowserLang();
 
@@ -34,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.pwaService.init();
     this.statusSubscription = this.kickerSocketService.status$.subscribe(
       (status) => {
         this.kickerStatus = status.status || false;
