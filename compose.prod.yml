@@ -1,0 +1,33 @@
+# Optional TLS-terminating overlay:
+#   docker compose -f docker-compose.yml -f compose.prod.yml up -d
+# (docker-compose.override.yml is meant for local dev and is NOT loaded here
+# since it's not passed via -f.)
+#
+# Routes /api/* to the backend and everything else to the frontend, matching
+# the target architecture in docs/firebase-migration-plan.md. Requires DOMAIN
+# to point at this host; Caddy handles ACME/TLS automatically.
+#
+# web/api still publish their ports from docker-compose.yml directly to the
+# host (8080/3000) - fine for a single-host setup behind Caddy, but if those
+# ports shouldn't be reachable except through Caddy, remove the `ports:` entries
+# from the `web`/`api` services in docker-compose.yml or block them at the
+# host firewall.
+services:
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      DOMAIN: ${DOMAIN:?DOMAIN is required, e.g. kicker.example.com}
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - web
+      - api
+
+volumes:
+  caddy-data:
+  caddy-config:

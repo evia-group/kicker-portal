@@ -1,0 +1,41 @@
+# Loaded automatically by `docker compose up` alongside docker-compose.yml.
+# Swaps web/api to their `dev` build targets with the actual source
+# bind-mounted, so edits are picked up by ng serve / nest start --watch
+# without rebuilding the image. Not meant for `compose.prod.yml` runs.
+services:
+  web:
+    build:
+      target: dev
+    volumes:
+      - ./src:/app/src
+      - ./generate-config.js:/app/generate-config.js
+    ports:
+      - '4200:4200'
+    environment:
+      # No real Entra App Registration needed for local dev - see
+      # auth.service.ts/app.module.ts. Set to "false" (or remove) to test
+      # the real login flow locally once MS_TENANT/MS_CLIENT_ID are real.
+      DISABLE_SSO: 'true'
+    command: sh -c "node generate-config.js && npm run start -- --host 0.0.0.0"
+    depends_on:
+      api:
+        condition: service_started
+
+  api:
+    build:
+      target: dev
+    volumes:
+      - ./api/src:/app/src
+    environment:
+      # See EntraAuthGuard - every request is authenticated as a fixed
+      # local-dev admin user, no token/App Registration needed.
+      AUTH_DISABLED: 'true'
+      # ng serve runs on 4200 in dev mode (docker-compose.yml's CORS_ORIGIN
+      # default is 8080, the production nginx port) - override so the
+      # browser's requests aren't blocked by CORS.
+      CORS_ORIGIN: http://localhost:4200
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
