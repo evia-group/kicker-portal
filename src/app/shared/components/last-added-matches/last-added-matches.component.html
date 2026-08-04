@@ -8,17 +8,19 @@
       [showNoData]="
         matchesAvailable && lastAddedMatches.length === 0
       "></app-loading-data>
-    <ng-container *ngIf="matchesAvailable && lastAddedMatches.length > 0">
-      <div class="matches-container">
-        <div *ngFor="let match of lastAddedMatches">
-          <span class="date">{{ match.date | localizedDate }}</span>
-          <div class="match-row">
-            <span class="left-team">{{ match.team1 }}</span>
-            <span class="result">{{ match.result }}</span>
-            <span class="right-team">{{ match.team2 }}</span>
-          </div>
+    @if (matchesAvailable && lastAddedMatches.length > 0) {
+    <div class="matches-container">
+      @for (match of lastAddedMatches; track match) {
+      <div>
+        <span class="date">{{ match.date | localizedDate }}</span>
+        <div class="match-row">
+          <span class="left-team">{{ match.team1 }}</span>
+          <span class="result">{{ match.result }}</span>
+          <span class="right-team">{{ match.team2 }}</span>
         </div>
       </div>
-    </ng-container>
+      }
+    </div>
+    }
   </mat-card-content>
 </mat-card>

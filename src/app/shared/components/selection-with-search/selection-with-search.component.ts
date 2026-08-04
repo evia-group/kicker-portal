@@ -7,16 +7,37 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
-import { MatSelect, MatSelectChange } from '@angular/material/select';
+import {
+  MatSelect,
+  MatSelectChange,
+  MatOption,
+} from '@angular/material/select';
 import { IPlayers } from '../../interfaces/match.interface';
+import { MatFormField, MatLabel } from '@angular/material/input';
+import { MatSelectSearchComponent } from 'ngx-mat-select-search';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-selection-with-search',
   templateUrl: './selection-with-search.component.html',
   styleUrls: ['./selection-with-search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    FormsModule,
+    ReactiveFormsModule,
+    MatOption,
+    MatSelectSearchComponent,
+    AsyncPipe,
+    TranslatePipe,
+  ],
 })
 export class SelectionWithSearchComponent
   implements OnInit, AfterViewInit, OnDestroy

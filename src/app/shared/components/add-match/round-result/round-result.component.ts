@@ -1,10 +1,31 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import {
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import {
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-round-result',
   templateUrl: './round-result.component.html',
   styleUrls: ['./round-result.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatSlideToggle,
+    MatRadioGroup,
+    MatRadioButton,
+    TranslatePipe,
+  ],
 })
 export class RoundResultComponent implements OnInit {
   public dominationTeamOne = 'dominationTeamOne';

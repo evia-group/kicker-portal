@@ -15,10 +15,9 @@
     [ngStyle]="{ display: !singleMode ? 'block' : 'none' }"
     [data]="users$"
     [singleMode]="false"></app-add-match>
-  <app-last-added-matches
-    *ngIf="singleMode"
-    [singleMode]="true"></app-last-added-matches>
-  <app-last-added-matches
-    *ngIf="!singleMode"
-    [singleMode]="false"></app-last-added-matches>
+  @if (singleMode) {
+  <app-last-added-matches [singleMode]="true"></app-last-added-matches>
+  } @if (!singleMode) {
+  <app-last-added-matches [singleMode]="false"></app-last-added-matches>
+  }
 </div>

@@ -1,44 +1,32 @@
-import { Injectable } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  CollectionReference,
-  doc,
-  deleteDoc,
-  collectionSnapshots,
-} from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { shareReplay, switchMap } from 'rxjs/operators';
 import { ITeam } from '../interfaces/user.interface';
-import { environment } from '../../../environments/environment';
+import { APP_CONFIG, AppConfig } from '../../core/app-config';
 import { IPlayers } from '../interfaces/match.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TeamsService {
-  public teams$: Observable<any>;
+  private refresh$ = new BehaviorSubject<void>(undefined);
 
-  protected collection: CollectionReference;
+  public teams$: Observable<ITeam[]> = this.refresh$.pipe(
+    switchMap(() => this.http.get<ITeam[]>(`${this.config.apiUrl}/teams`)),
+    shareReplay(1)
+  );
 
-  constructor(protected db: Firestore) {
-    this.collection = collection(
-      this.db,
-      `${environment.prefix}Teams`
-    ) as CollectionReference<ITeam>;
-    this.teams$ = collectionSnapshots(this.collection).pipe(
-      map((actions) => {
-        return actions.map((a) => {
-          const data = a.data() as ITeam;
-          const id = a.id;
-          return { id, ...data };
-        });
-      }),
-      shareReplay(1)
-    );
+  constructor(
+    protected http: HttpClient,
+    @Inject(APP_CONFIG) protected config: AppConfig
+  ) {}
+
+  refresh() {
+    this.refresh$.next();
   }
 
-  public createTeamId(team): string {
+  public createTeamId(team: IPlayers[]): string {
     const sortetTeam: IPlayers[] = team.sort((a, b) =>
       a.id.localeCompare(b.id)
     );
@@ -54,7 +42,10 @@ export class TeamsService {
     return teamName;
   }
 
-  public async delete(teamId) {
-    await deleteDoc(doc(this.db, this.collection.path, teamId));
+  public async delete(teamId: string) {
+    await firstValueFrom(
+      this.http.delete(`${this.config.apiUrl}/teams/${teamId}`)
+    );
+    this.refresh();
   }
 }

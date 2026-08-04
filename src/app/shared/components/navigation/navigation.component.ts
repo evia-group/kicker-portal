@@ -1,17 +1,55 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { getDatabase, onValue, ref } from '@angular/fire/database';
+import { KickerSocketService } from '../../services/kicker-socket.service';
 import { Router } from '@angular/router';
-import { MatIconRegistry } from '@angular/material/icon';
+import { MatIconRegistry, MatIcon } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import {
+  NgClass,
+  NgTemplateOutlet,
+  AsyncPipe,
+  DatePipe,
+} from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import {
+  MatDrawerContainer,
+  MatDrawerContent,
+} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatToolbar,
+    MatIcon,
+    MatChipListbox,
+    MatChipOption,
+    NgClass,
+    MatIconButton,
+    NgTemplateOutlet,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDrawerContainer,
+    MatDrawerContent,
+    AsyncPipe,
+    DatePipe,
+    TranslatePipe,
+  ],
 })
 export class NavigationComponent implements OnDestroy, OnInit {
   isLoggedIn$: Observable<boolean>;
@@ -19,12 +57,14 @@ export class NavigationComponent implements OnDestroy, OnInit {
   kickerBusyTime: Date;
   private mobileQueryListener: () => void;
   breakpointObserverSubscription: Subscription;
+  kickerStatusSubscription: Subscription;
   showDropdown = false;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     changeDetectorRef: ChangeDetectorRef,
     private authService: AuthService,
+    private kickerSocketService: KickerSocketService,
     private translate: TranslateService,
     private router: Router,
     iconRegistry: MatIconRegistry,
@@ -40,12 +80,14 @@ export class NavigationComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    onValue(ref(getDatabase(), '/Kicker'), (snapshot) => {
-      this.kickerStatus = snapshot.val().status || false;
-      if (this.kickerStatus === false) {
-        this.kickerBusyTime = new Date(snapshot.val().startTime * 1000);
+    this.kickerStatusSubscription = this.kickerSocketService.status$.subscribe(
+      (status) => {
+        this.kickerStatus = status.status || false;
+        if (this.kickerStatus === false) {
+          this.kickerBusyTime = new Date(status.startTime * 1000);
+        }
       }
-    });
+    );
     this.breakpointObserverSubscription = this.breakpointObserver
       .observe('(max-width: 740px)')
       .subscribe((result) => {
@@ -55,6 +97,7 @@ export class NavigationComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.breakpointObserverSubscription.unsubscribe();
+    this.kickerStatusSubscription?.unsubscribe();
   }
 
   public changeLanguage(language: string): void {

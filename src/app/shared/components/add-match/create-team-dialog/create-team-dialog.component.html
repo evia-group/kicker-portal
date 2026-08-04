@@ -1,17 +1,17 @@
 <form [formGroup]="addTeamForm" (ngSubmit)="saveTeam()">
   <div class="select-container">
-    <ng-container *ngFor="let p of players">
-      <div mat-dialog-content>
-        <div class="select-player-team-container">
-          <app-autocomplete-selection
-            [selectionFormControl]="p === 0 ? data.control1 : data.control2"
-            [options]="options[p]"
-            [displayWithFunction]="data.displayWithFunction"
-            [labelText]="labelText"
-            [placeholderText]="placeholderText"></app-autocomplete-selection>
-        </div>
+    @for (p of players; track p) {
+    <div mat-dialog-content>
+      <div class="select-player-team-container">
+        <app-autocomplete-selection
+          [selectionFormControl]="p === 0 ? data.control1 : data.control2"
+          [options]="options[p]"
+          [displayWithFunction]="data.displayWithFunction"
+          [labelText]="labelText"
+          [placeholderText]="placeholderText"></app-autocomplete-selection>
       </div>
-    </ng-container>
+    </div>
+    }
   </div>
   <mat-dialog-actions>
     <button mat-stroked-button type="button" (click)="closeDialog()">

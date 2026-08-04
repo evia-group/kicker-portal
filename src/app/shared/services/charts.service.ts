@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { IMatch, ISingleMatch } from '../interfaces/match.interface';
-import { AuthService } from './auth.service';
+import { IMatch } from '../interfaces/match.interface';
+import { CurrentUserService } from './current-user.service';
 import { ILeaderboard } from '../interfaces/statistic.interface';
 import {
   lossesTimeline,
@@ -12,15 +12,31 @@ import {
   name,
 } from '../global-variables';
 
+interface IMatchData {
+  team1: string;
+  team2: string;
+  resultTeam1: number;
+  resultTeam2: number;
+  matchYear: number;
+  matchMonth: number;
+  dominationsSide0: number;
+  dominationsSide1: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ChartsService {
-  constructor(private authService: AuthService) {}
+  constructor(private currentUserService: CurrentUserService) {}
 
+  /**
+   * @param teamPlayersById team id -> member player ids (id.name.interface.ts's ITeam.players).
+   * Unused for single matches, where the "side id" already is the player id.
+   */
   createStatisticPlayerData(
-    matches: IMatch[] | ISingleMatch[],
-    playersMap: Map<string, ILeaderboard>
+    matches: IMatch[],
+    playersMap: Map<string, ILeaderboard>,
+    teamPlayersById: Map<string, string[]>
   ): [
     Map<string, ILeaderboard>,
     { id: string; name: string },
@@ -31,7 +47,6 @@ export class ChartsService {
     number[]
   ] {
     let selectedPlayer: { id: string; name: string };
-    let playerIds: string[] = [];
     const playersWithMatches: { id: string; name: string }[] = [];
     let playerYearsList: number[];
     let selectedYearPlayer: number;
@@ -40,7 +55,7 @@ export class ChartsService {
     this.clearTimelineAndElo(playersMap);
 
     if (matches.length > 0) {
-      const loggedInUser = this.authService.user.uid;
+      const loggedInUser = this.currentUserService.id;
       this.sortByDate(matches);
 
       const playerIdsWithMatches: string[] = [];
@@ -53,11 +68,20 @@ export class ChartsService {
           resultTeam2,
           matchYear,
           matchMonth,
+          dominationsSide0,
+          dominationsSide1,
         } = this.getMatchData(match);
 
-        playerIds = Array.from(playersMap.keys());
-        const playersTeam1 = this.getPlayersOfTeam(team1, playerIds);
-        const playersTeam2 = this.getPlayersOfTeam(team2, playerIds);
+        const playersTeam1 = this.getPlayersOfSide(
+          team1,
+          match.isSingle,
+          teamPlayersById
+        );
+        const playersTeam2 = this.getPlayersOfSide(
+          team2,
+          match.isSingle,
+          teamPlayersById
+        );
 
         playersTeam1.forEach((player) => {
           if (!playerIdsWithMatches.includes(player)) {
@@ -71,8 +95,10 @@ export class ChartsService {
           }
         });
 
-        const winningTeam = resultTeam1 === 2 ? playersTeam1 : playersTeam2;
-        const loosingTeam = resultTeam1 === 2 ? playersTeam2 : playersTeam1;
+        const winningTeam =
+          resultTeam1 > resultTeam2 ? playersTeam1 : playersTeam2;
+        const loosingTeam =
+          resultTeam1 > resultTeam2 ? playersTeam2 : playersTeam1;
 
         winningTeam.forEach((player) => {
           this.updateTimeline(
@@ -100,8 +126,8 @@ export class ChartsService {
           playersTeam1,
           playersTeam2,
           playersMap,
-          match,
-          team1,
+          dominationsSide0,
+          dominationsSide1,
           resultTeam1,
           resultTeam2
         );
@@ -150,7 +176,8 @@ export class ChartsService {
 
   createStatisticTeamData(
     matches: IMatch[],
-    teamsMap: Map<string, ILeaderboard>
+    teamsMap: Map<string, ILeaderboard>,
+    teamPlayersById: Map<string, string[]>
   ): [
     Map<string, ILeaderboard>,
     { id: string; name: string },
@@ -169,7 +196,7 @@ export class ChartsService {
     let matchesChartDataTeam: number[];
     this.clearTimelineAndElo(teamsMap);
     if (matches.length > 0) {
-      const loggedInUser = this.authService.user.uid;
+      const loggedInUser = this.currentUserService.id;
       this.sortByDate(matches);
 
       const teamIdsWithMatches: string[] = [];
@@ -182,6 +209,8 @@ export class ChartsService {
           resultTeam2,
           matchYear,
           matchMonth,
+          dominationsSide0,
+          dominationsSide1,
         } = this.getMatchData(match);
         const teamIds = Array.from(teamsMap.keys());
 
@@ -196,21 +225,19 @@ export class ChartsService {
 
           if (!selectedTeamId) {
             if (
-              (team1.startsWith(loggedInUser) ||
-                team1.endsWith(loggedInUser)) &&
+              (teamPlayersById.get(team1)?.includes(loggedInUser) ?? false) &&
               teamIdsWithMatches.includes(team1)
             ) {
               selectedTeamId = team1;
             } else if (
-              (team2.startsWith(loggedInUser) ||
-                team2.endsWith(loggedInUser)) &&
+              (teamPlayersById.get(team2)?.includes(loggedInUser) ?? false) &&
               teamIdsWithMatches.includes(team2)
             ) {
               selectedTeamId = team2;
             }
           }
 
-          if (resultTeam1 === 2) {
+          if (resultTeam1 > resultTeam2) {
             this.updateTimeline(
               teamsMap,
               team1,
@@ -251,8 +278,8 @@ export class ChartsService {
           [team1],
           [team2],
           teamsMap,
-          match,
-          team1,
+          dominationsSide0,
+          dominationsSide1,
           resultTeam1,
           resultTeam2
         );
@@ -296,24 +323,62 @@ export class ChartsService {
     ];
   }
 
-  private getMatchData(match: IMatch) {
-    const matchTeams = Object.keys(match.result);
-    const team1 = matchTeams[0];
-    const team2 = matchTeams[1];
-    const resultTeam1 = match.result[team1];
-    const resultTeam2 = match.result[team2];
+  private getMatchData(match: IMatch): IMatchData {
+    const [side0, side1] = [...match.participants].sort(
+      (a, b) => a.side - b.side
+    );
+    const team1 = side0.teamId ?? side0.userId;
+    const team2 = side1.teamId ?? side1.userId;
+    const resultTeam1 = side0.roundsWon;
+    const resultTeam2 = side1.roundsWon;
 
-    const matchYear = match.date.toDate().getFullYear();
-    const matchMonth = match.date.toDate().getMonth();
-    return { team1, team2, resultTeam1, resultTeam2, matchYear, matchMonth };
+    const playedAt = new Date(match.playedAt);
+    const matchYear = playedAt.getFullYear();
+    const matchMonth = playedAt.getMonth();
+
+    let dominationsSide0 = 0;
+    let dominationsSide1 = 0;
+    for (const round of match.rounds) {
+      if (!round.domination) {
+        continue;
+      }
+      if (round.winnerSide === 0) {
+        dominationsSide0++;
+      } else {
+        dominationsSide1++;
+      }
+    }
+
+    return {
+      team1,
+      team2,
+      resultTeam1,
+      resultTeam2,
+      matchYear,
+      matchMonth,
+      dominationsSide0,
+      dominationsSide1,
+    };
+  }
+
+  /** For single matches the "side id" already is the player id. */
+  private getPlayersOfSide(
+    sideId: string,
+    isSingle: boolean,
+    teamPlayersById: Map<string, string[]>
+  ): string[] {
+    if (isSingle) {
+      return [sideId];
+    }
+    return teamPlayersById.get(sideId) ?? [];
   }
 
   private calculateElo(
     playersTeam1: string[],
     playersTeam2: string[],
     playersMap: Map<string, ILeaderboard>,
-    match: IMatch,
-    team1: string,
+    dominationsT1: number,
+    dominationsT2: number,
     resultTeam1: number,
     resultTeam2: number
   ) {
@@ -345,30 +410,12 @@ export class ChartsService {
       const ET1 = this.getExpectedScore(T1Rating, T2Rating);
       const ET2 = this.getExpectedScore(T2Rating, T1Rating);
 
-      let dominationsT1 = 0;
-      let dominationsT2 = 0;
+      // A domination round scored by one side is a "defeat" suffered by the other.
+      const defeatsT1 = dominationsT2;
+      const defeatsT2 = dominationsT1;
 
-      match.dominations.forEach((domination) => {
-        if (domination.id === team1) {
-          dominationsT1++;
-        } else {
-          dominationsT2++;
-        }
-      });
-
-      let defeatsT1 = 0;
-      let defeatsT2 = 0;
-
-      match.defeats.forEach((defeat) => {
-        if (defeat.id === team1) {
-          defeatsT1++;
-        } else {
-          defeatsT2++;
-        }
-      });
-
-      const ST1 = resultTeam1 === 2 ? 1 : 0;
-      const ST2 = resultTeam2 === 2 ? 1 : 0;
+      const ST1 = resultTeam1 > resultTeam2 ? 1 : 0;
+      const ST2 = resultTeam2 > resultTeam1 ? 1 : 0;
 
       const resultDifferenceT1 = this.convertValue(resultTeam1 - resultTeam2);
       const resultDifferenceT2 = this.convertValue(resultTeam2 - resultTeam1);
@@ -440,8 +487,10 @@ export class ChartsService {
     list.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  sortByDate(matches: IMatch[] | ISingleMatch[]) {
-    matches.sort((a, b) => a.date.toMillis() - b.date.toMillis());
+  sortByDate(matches: IMatch[]) {
+    matches.sort(
+      (a, b) => new Date(a.playedAt).getTime() - new Date(b.playedAt).getTime()
+    );
   }
 
   clearTimelineAndElo(currentMap: Map<string, ILeaderboard>) {
@@ -456,22 +505,6 @@ export class ChartsService {
         currentLossesTimeline.clear();
       }
     });
-  }
-
-  getPlayersOfTeam(teamId: string, playerIds: string[]): string[] {
-    let counter = 0;
-    const teamPlayers: string[] = [];
-
-    for (const playerId of playerIds) {
-      if (teamId.startsWith(playerId) || teamId.endsWith(playerId)) {
-        teamPlayers.push(playerId);
-        counter++;
-      }
-      if (counter === 2) {
-        break;
-      }
-    }
-    return teamPlayers;
   }
 
   updateTimeline(

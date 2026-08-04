@@ -1,19 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { getDatabase, onValue, ref } from '@angular/fire/database';
+import { Subscription } from 'rxjs';
+import { KickerSocketService } from './shared/services/kicker-socket.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   kickerStatus = false;
-  constructor(translate: TranslateService) {
-    const lang = translate.getBrowserLang();
+  private statusSubscription: Subscription;
 
-    // this language will be used as a fallback when a translation isn't found in the current language
-    translate.setDefaultLang('de');
+  constructor(
+    translate: TranslateService,
+    private kickerSocketService: KickerSocketService
+  ) {
+    const lang = translate.getBrowserLang();
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     if (lang === 'de' || lang === 'en') {
@@ -24,8 +34,14 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    onValue(ref(getDatabase(), '/Kicker'), (snapshot) => {
-      this.kickerStatus = snapshot.val().status || false;
-    });
+    this.statusSubscription = this.kickerSocketService.status$.subscribe(
+      (status) => {
+        this.kickerStatus = status.status || false;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.statusSubscription?.unsubscribe();
   }
 }

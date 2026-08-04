@@ -1,5 +1,11 @@
-import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { APP_CONFIG } from '../../core/app-config';
+import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
+import { MatTabScrollDirective } from '../../shared/directives/mat-tab-scroll.directive';
+import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface INavigationItem {
   label: string;
@@ -13,9 +19,22 @@ interface INavigationItem {
   selector: 'app-kicker',
   templateUrl: './kicker.component.html',
   styleUrls: ['./kicker.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatTabNav,
+    MatTabScrollDirective,
+    MatTabLink,
+    RouterLinkActive,
+    RouterLink,
+    MatIcon,
+    MatTabNavPanel,
+    RouterOutlet,
+    MatToolbar,
+    TranslatePipe,
+  ],
 })
 export class KickerComponent {
-  versionNumber: string = environment.versionNumber;
+  versionNumber: string = inject(APP_CONFIG).versionNumber;
 
   navLinks: INavigationItem[] = [
     {

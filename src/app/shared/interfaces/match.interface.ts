@@ -1,4 +1,3 @@
-import { DocumentReference, Timestamp } from '@angular/fire/firestore';
 import { UntypedFormControl } from '@angular/forms';
 
 export interface IRounds {
@@ -23,26 +22,31 @@ export interface IMatchForm {
   teams: ITeamForm[];
 }
 
-export interface IMatch {
-  defeats: DocumentReference[];
-  dominations: DocumentReference[];
-  players: DocumentReference[];
-  result: {
-    [teamId: string]: number;
-  };
-  teams: DocumentReference[];
-  type: string;
-  date: Timestamp;
+/** One row per match side (0 or 1). teamId XOR userId is set, depending on isSingle. */
+export interface IMatchParticipant {
+  id: string;
+  matchId: string;
+  side: 0 | 1;
+  teamId: string | null;
+  userId: string | null;
+  roundsWon: number;
 }
 
-export interface ISingleMatch {
-  defeats: DocumentReference[];
-  dominations: DocumentReference[];
-  result: {
-    [playerId: string]: number;
-  };
-  type: string;
-  date: Timestamp;
+export interface IMatchRound {
+  id: string;
+  matchId: string;
+  roundNo: number;
+  winnerSide: 0 | 1;
+  domination: boolean;
+}
+
+/** Response shape of GET /matches - covers both team and 1v1 matches. */
+export interface IMatch {
+  id: string;
+  playedAt: string;
+  isSingle: boolean;
+  participants: IMatchParticipant[];
+  rounds: IMatchRound[];
 }
 
 export interface ISelectionsData {

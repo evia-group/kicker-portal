@@ -1,12 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IRoom } from '../../interfaces/room.interface';
 import { DefaultRoomData } from '../../models/default.model';
 import { RoomsService } from '../../services/rooms.service';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardAvatar,
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatList,
+  MatListSubheaderCssMatStyler,
+  MatListItem,
+} from '@angular/material/list';
 
 @Component({
   selector: 'app-room-information',
   templateUrl: './room-information.component.html',
   styleUrls: ['./room-information.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatIcon,
+    MatCardAvatar,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    MatList,
+    MatListSubheaderCssMatStyler,
+    MatListItem,
+  ],
 })
 export class RoomInformationComponent {
   public roomInformation: IRoom = DefaultRoomData;

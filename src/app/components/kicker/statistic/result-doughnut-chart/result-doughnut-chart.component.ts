@@ -4,6 +4,7 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import {
@@ -12,11 +13,14 @@ import {
   twoZero,
   zeroTwo,
 } from '../../../../shared/global-variables';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-result-doughnut-chart',
   templateUrl: './result-doughnut-chart.component.html',
   styleUrls: ['./result-doughnut-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [BaseChartDirective],
 })
 export class ResultDoughnutChartComponent implements OnChanges {
   @Input()

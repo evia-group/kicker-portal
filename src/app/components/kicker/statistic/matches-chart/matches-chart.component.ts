@@ -4,13 +4,17 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-matches-chart',
   templateUrl: './matches-chart.component.html',
   styleUrls: ['./matches-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [BaseChartDirective],
 })
 export class MatchesChartComponent implements OnChanges {
   @Input()

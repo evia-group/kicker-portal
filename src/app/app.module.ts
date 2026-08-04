@@ -1,6 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { environment } from '../environments/environment';
+import {
+  provideAuth,
+  StsConfigLoader,
+  StsConfigStaticLoader,
+} from 'angular-auth-oidc-client';
+import { APP_CONFIG, AppConfig } from './core/app-config';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,9 +15,15 @@ import { NavigationComponent } from './shared/components/navigation/navigation.c
 import { StatisticComponent } from './components/kicker/statistic/statistic.component';
 import { MatchesComponent } from './components/kicker/matches/matches.component';
 import { TournamentsComponent } from './components/kicker/tournaments/tournaments.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService } from '@ngx-translate/core';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+  withXhr,
+} from '@angular/common/http';
+import { AuthInterceptor } from './core/auth.interceptor';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AddMatchComponent } from './shared/components/add-match/add-match.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RoundResultComponent } from './shared/components/add-match/round-result/round-result.component';
@@ -22,22 +33,9 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { KickerComponent } from './components/kicker/kicker.component';
 import { MatchFinderComponent } from './components/kicker/match-finder/match-finder.component';
-import { NotVerifiedComponent } from './components/not-verified/not-verified.component';
 import { InteractiveMapComponent } from './components/interactive-map/interactive-map.component';
 import { RoomMapComponent } from './shared/components/room-map/room-map.component';
 import { RoomInformationComponent } from './shared/components/room-information/room-information.component';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import {
-  connectFirestoreEmulator,
-  getFirestore,
-  provideFirestore,
-} from '@angular/fire/firestore';
-import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
-import {
-  connectFunctionsEmulator,
-  getFunctions,
-  provideFunctions,
-} from '@angular/fire/functions';
 import { CreateTeamDialogComponent } from './shared/components/add-match/create-team-dialog/create-team-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
@@ -46,7 +44,7 @@ import {
   MatPaginatorModule,
 } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { NgChartsModule } from 'ng2-charts';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { LeaderboardComponent } from './components/kicker/statistic/leaderboard/leaderboard.component';
 import { BarLineChartComponent } from './components/kicker/statistic/bar-line-chart/bar-line-chart.component';
 import { ResultDoughnutChartComponent } from './components/kicker/statistic/result-doughnut-chart/result-doughnut-chart.component';
@@ -56,11 +54,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorIntlService } from './shared/services/mat-paginator-intl.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
-import {
-  connectDatabaseEmulator,
-  getDatabase,
-  provideDatabase,
-} from '@angular/fire/database';
 import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AutocompleteSelectionComponent } from './shared/components/autocomplete-selection/autocomplete-selection.component';
@@ -76,13 +69,26 @@ import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { SelectionWithSearchComponent } from './shared/components/selection-with-search/selection-with-search.component';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
 @NgModule({
-  declarations: [
-    AppComponent,
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDateFnsModule,
+    MatDatepickerModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    NgxMatSelectSearchModule,
     NavigationComponent,
     StatisticComponent,
     MatchesComponent,
@@ -95,7 +101,6 @@ export function createTranslateLoader(http: HttpClient) {
     LoginComponent,
     KickerComponent,
     MatchFinderComponent,
-    NotVerifiedComponent,
     InteractiveMapComponent,
     RoomMapComponent,
     RoomInformationComponent,
@@ -117,70 +122,40 @@ export function createTranslateLoader(http: HttpClient) {
     LoadingDataComponent,
     SelectionWithSearchComponent,
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MaterialModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => {
-      const firestore = getFirestore();
-      if (environment['useEmulators']) {
-        connectFirestoreEmulator(firestore, 'localhost', 8080);
-      }
-      return firestore;
-    }),
-    provideAuth(() => {
-      const auth = getAuth();
-      if (environment['useEmulators']) {
-        connectAuthEmulator(auth, 'http://localhost:9099', {
-          disableWarnings: true,
-        });
-      }
-      return auth;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions();
-      if (environment['useEmulators']) {
-        connectFunctionsEmulator(functions, 'localhost', 5001);
-      }
-      return functions;
-    }),
-    provideDatabase(() => {
-      const database = getDatabase();
-      if (environment['useEmulators']) {
-        connectDatabaseEmulator(database, 'localhost', 9000);
-      }
-      return database;
-    }),
-    FormsModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    NgChartsModule,
-    MatDateFnsModule,
-    MatDatepickerModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatAutocompleteModule,
-    NgxMatSelectSearchModule,
-  ],
   providers: [
     {
       provide: MatPaginatorIntl,
       useClass: MatPaginatorIntlService,
     },
+    provideAuth({
+      loader: {
+        provide: StsConfigLoader,
+        useFactory: (config: AppConfig) =>
+          new StsConfigStaticLoader({
+            authority: `https://login.microsoftonline.com/${config.ms.tenant}/v2.0`,
+            redirectUrl: window.location.origin,
+            postLogoutRedirectUri: window.location.origin,
+            clientId: config.ms.clientId,
+            scope: 'openid profile email',
+            responseType: 'code',
+            silentRenew: true,
+            useRefreshToken: true,
+          }),
+        deps: [APP_CONFIG],
+      },
+    }),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    provideTranslateService({ fallbackLang: 'de' }),
+    provideTranslateHttpLoader({
+      prefix: './assets/i18n/',
+      suffix: '.json',
+    }),
+    provideCharts(withDefaultRegisterables()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}

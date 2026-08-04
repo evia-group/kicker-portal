@@ -1,12 +1,34 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { take } from 'rxjs';
-import { MatchesService } from 'src/app/shared/services/matches.service';
+import { MatchesService } from '../../../../shared/services/matches.service';
+import { LoadingDataComponent } from '../../../../shared/components/loading-data/loading-data.component';
+import { DatepickerComponent } from '../../../../shared/components/datepicker/datepicker.component';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { BaseChartDirective } from 'ng2-charts';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-playtime-chart',
   templateUrl: './playtime-chart.component.html',
   styleUrls: ['./playtime-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    LoadingDataComponent,
+    DatepickerComponent,
+    MatRadioGroup,
+    FormsModule,
+    MatRadioButton,
+    BaseChartDirective,
+    TranslatePipe,
+  ],
 })
 export class PlaytimeChartComponent implements OnInit, OnChanges {
   @Input()

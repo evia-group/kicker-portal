@@ -6,18 +6,46 @@ import {
   OnChanges,
   OnInit,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { FormControl } from '@angular/forms';
-import { DateFilterFn, MatDatepicker } from '@angular/material/datepicker';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  DateFilterFn,
+  MatDatepicker,
+  MatDatepickerInput,
+  MatDatepickerToggle,
+} from '@angular/material/datepicker';
 import { DateFormat } from './date-format';
 import { de, enUS } from 'date-fns/locale';
+import {
+  MatFormField,
+  MatLabel,
+  MatInput,
+  MatHint,
+  MatSuffix,
+} from '@angular/material/input';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-datepicker',
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
   providers: [{ provide: MAT_DATE_FORMATS, useClass: DateFormat }],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatDatepickerInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatHint,
+    MatDatepickerToggle,
+    MatSuffix,
+    MatDatepicker,
+    TranslatePipe,
+  ],
 })
 export class DatepickerComponent implements OnInit, OnChanges {
   @Input()

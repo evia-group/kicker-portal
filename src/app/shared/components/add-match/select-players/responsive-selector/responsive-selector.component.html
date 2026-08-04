@@ -1,66 +1,69 @@
-<ng-container *ngIf="!showButton && !singleMode">
-  <div>
-    <app-two-selections
-      [firstPlayerControl]="firstPlayerControl"
-      [secondPlayerControl]="secondPlayerControl"
-      [firstPlayerOptions]="firstPlayerOptions"
-      [secondPlayerOptions]="secondPlayerOptions"
-      [displayWithFunction]="displayWithFunction"
-      [placeholderText]="placeholderText"
-      [labelText]="labelText"></app-two-selections>
-  </div>
-</ng-container>
-<ng-container *ngIf="showButton && !singleMode">
-  <div class="selection-container">
-    <button
-      class="select-button"
-      mat-raised-button
-      color="primary"
-      type="button"
-      [disabled]="firstPlayerControl.disabled"
-      (click)="openDialog()">
-      {{ buttonText | translate }}
-    </button>
-    <mat-chip-listbox
-      *ngIf="firstPlayer || secondPlayer"
-      class="mat-chip-list-stacked">
-      <mat-chip-option *ngIf="firstPlayer">
-        {{ firstPlayer }}
-      </mat-chip-option>
-      <mat-chip-option *ngIf="secondPlayer">
-        {{ secondPlayer }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-</ng-container>
-<ng-container *ngIf="!showButton && singleMode">
-  <app-autocomplete-selection
-    [selectionFormControl]="firstPlayerControl"
-    [options]="firstPlayerOptions"
+@if (!showButton && !singleMode) {
+<div>
+  <app-two-selections
+    [firstPlayerControl]="firstPlayerControl"
+    [secondPlayerControl]="secondPlayerControl"
+    [firstPlayerOptions]="firstPlayerOptions"
+    [secondPlayerOptions]="secondPlayerOptions"
     [displayWithFunction]="displayWithFunction"
     [placeholderText]="placeholderText"
-    [labelText]="labelText"></app-autocomplete-selection>
-</ng-container>
-<ng-container *ngIf="showButton && singleMode">
-  <div class="selection-container">
-    <button
-      class="select-button"
-      mat-raised-button
-      color="primary"
-      type="button"
-      [disabled]="firstPlayerControl.disabled"
-      (click)="openDialog()">
-      {{ buttonText | translate }}
-    </button>
-    <mat-chip-listbox
-      *ngIf="firstPlayer || secondPlayer"
-      class="mat-mdc-chip-set-stacked">
-      <mat-chip-option *ngIf="firstPlayer">
-        {{ firstPlayer }}
-      </mat-chip-option>
-      <mat-chip-option *ngIf="secondPlayer">
-        {{ secondPlayer }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-</ng-container>
+    [labelText]="labelText"></app-two-selections>
+</div>
+} @if (showButton && !singleMode) {
+<div class="selection-container">
+  <button
+    class="select-button"
+    mat-raised-button
+    color="primary"
+    type="button"
+    [disabled]="firstPlayerControl.disabled"
+    (click)="openDialog()">
+    {{ buttonText | translate }}
+  </button>
+  @if (firstPlayer || secondPlayer) {
+  <mat-chip-listbox class="mat-chip-list-stacked">
+    @if (firstPlayer) {
+    <mat-chip-option>
+      {{ firstPlayer }}
+    </mat-chip-option>
+    } @if (secondPlayer) {
+    <mat-chip-option>
+      {{ secondPlayer }}
+    </mat-chip-option>
+    }
+  </mat-chip-listbox>
+  }
+</div>
+} @if (!showButton && singleMode) {
+<app-autocomplete-selection
+  [selectionFormControl]="firstPlayerControl"
+  [options]="firstPlayerOptions"
+  [displayWithFunction]="displayWithFunction"
+  [placeholderText]="placeholderText"
+  [labelText]="labelText"></app-autocomplete-selection>
+} @if (showButton && singleMode) {
+<div class="selection-container">
+  <button
+    class="select-button"
+    mat-raised-button
+    color="primary"
+    type="button"
+    [disabled]="firstPlayerControl.disabled"
+    (click)="openDialog()">
+    {{ buttonText | translate }}
+  </button>
+  @if (firstPlayer || secondPlayer) {
+  <mat-chip-listbox class="mat-mdc-chip-set-stacked">
+    @if (firstPlayer) {
+    <mat-chip-option>
+      {{ firstPlayer }}
+    </mat-chip-option>
+    } @if (secondPlayer) {
+    <mat-chip-option>
+      {{ secondPlayer }}
+    </mat-chip-option>
+    }
+  </mat-chip-listbox>
+  }
+</div>
+}

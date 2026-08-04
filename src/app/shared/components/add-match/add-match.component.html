@@ -40,11 +40,12 @@
 
         <mat-divider></mat-divider>
 
+        @if ((winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1) {
         <app-round-result
-          *ngIf="(winsTeam1 | async) >= 1 && (winsTeam2 | async) >= 1"
           [matchForm]="singleMode ? addSingleMatchForm : addMatchForm"
           [round]="'three'">
         </app-round-result>
+        }
 
         <mat-card-actions>
           <button
@@ -58,14 +59,12 @@
             ">
             <span class="button-content">
               {{ 'common.save.match' | translate }}
-              <mat-icon
-                *ngIf="
-                  singleMode
-                    ? singleModeSaveButtonDisabled
-                    : playersSaveButtonDisabled
-                ">
+              @if ( singleMode ? singleModeSaveButtonDisabled :
+              playersSaveButtonDisabled ) {
+              <mat-icon>
                 <mat-spinner [diameter]="20"></mat-spinner>
               </mat-icon>
+              }
             </span>
           </button>
         </mat-card-actions>

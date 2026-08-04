@@ -4,18 +4,22 @@ import {
   Input,
   OnChanges,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
-import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
+import { ILeaderboard } from '../../../../shared/interfaces/statistic.interface';
 import {
   lossesTimeline,
   winsTimeline,
 } from '../../../../shared/global-variables';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-bar-line-chart',
   templateUrl: './bar-line-chart.component.html',
   styleUrls: ['./bar-line-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [BaseChartDirective],
 })
 export class BarLineChartComponent implements OnChanges {
   @Input()
@@ -63,7 +67,8 @@ export class BarLineChartComponent implements OnChanges {
       y: {
         ticks: {
           callback: (val) => {
-            return val < 0 ? -val : val;
+            const numVal = Number(val);
+            return numVal < 0 ? -numVal : numVal;
           },
           color: 'rgb(199,199,199)',
           precision: 0,

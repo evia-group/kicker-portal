@@ -11,80 +11,82 @@
     <mat-card-header>
       <mat-card-title>{{ 'stats.leaderboard' | translate }}</mat-card-title>
     </mat-card-header>
-    <ng-container *ngIf="singleMode">
-      <mat-card-content>
-        <app-loading-data
-          [showSpinner]="!receivedDataP || !receivedDataSM"
-          [showNoData]="
-            receivedDataP &&
-            receivedDataSM &&
-            (!playerDataAvailableSM || !matchesDataAvailableSM)
-          "></app-loading-data>
-        <div class="single-content">
-          <app-leaderboard
-            *ngIf="playerDataAvailableSM && matchesDataAvailableSM"
-            [dataSubject$]="playerTableDataSM$"
-            [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
-            [displayedColumns]="displayedColumns"
-            [activeColumn]="activeColumn"
-            [sortDirection]="sortDirection"
-            [disableClear]="disableClear"
-            [filterHintText]="filterHintTranslationKey"
-            [filterText]="filterTranslationKey"
-            [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
-        </div>
-      </mat-card-content>
-    </ng-container>
-    <ng-container *ngIf="!singleMode">
-      <mat-card-content>
-        <mat-tab-group>
-          <mat-tab label="{{ 'stats.players' | translate }}">
-            <div class="content-container">
-              <app-loading-data
-                [showSpinner]="!receivedDataP || !receivedDataM"
-                [showNoData]="
-                  receivedDataP &&
-                  receivedDataM &&
-                  (!playerDataAvailable || !matchesDataAvailable)
-                "></app-loading-data>
-              <app-leaderboard
-                *ngIf="playerDataAvailable && matchesDataAvailable"
-                [dataSubject$]="playerTableData$"
-                [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
-                [displayedColumns]="displayedColumns"
-                [activeColumn]="activeColumn"
-                [sortDirection]="sortDirection"
-                [disableClear]="disableClear"
-                [filterHintText]="filterHintTranslationKey"
-                [filterText]="filterTranslationKey"
-                [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
-            </div>
-          </mat-tab>
-          <mat-tab label="{{ 'stats.teams' | translate }}">
-            <div class="content-container">
-              <app-loading-data
-                [showSpinner]="!receivedDataT || !receivedDataM"
-                [showNoData]="
-                  receivedDataT &&
-                  receivedDataM &&
-                  (!teamDataAvailable || !matchesDataAvailable)
-                "></app-loading-data>
-              <app-leaderboard
-                *ngIf="teamDataAvailable && matchesDataAvailable"
-                [dataSubject$]="teamsTableData$"
-                [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
-                [displayedColumns]="displayedColumns"
-                [activeColumn]="activeColumn"
-                [sortDirection]="sortDirection"
-                [disableClear]="disableClear"
-                [filterHintText]="filterHintTranslationKey"
-                [filterText]="filterTranslationKey"
-                [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
-            </div>
-          </mat-tab>
-        </mat-tab-group>
-      </mat-card-content>
-    </ng-container>
+    @if (singleMode) {
+    <mat-card-content>
+      <app-loading-data
+        [showSpinner]="!receivedDataP || !receivedDataSM"
+        [showNoData]="
+          receivedDataP &&
+          receivedDataSM &&
+          (!playerDataAvailableSM || !matchesDataAvailableSM)
+        "></app-loading-data>
+      <div class="single-content">
+        @if (playerDataAvailableSM && matchesDataAvailableSM) {
+        <app-leaderboard
+          [dataSubject$]="playerTableDataSM$"
+          [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
+          [displayedColumns]="displayedColumns"
+          [activeColumn]="activeColumn"
+          [sortDirection]="sortDirection"
+          [disableClear]="disableClear"
+          [filterHintText]="filterHintTranslationKey"
+          [filterText]="filterTranslationKey"
+          [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+        }
+      </div>
+    </mat-card-content>
+    } @if (!singleMode) {
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab label="{{ 'stats.players' | translate }}">
+          <div class="content-container">
+            <app-loading-data
+              [showSpinner]="!receivedDataP || !receivedDataM"
+              [showNoData]="
+                receivedDataP &&
+                receivedDataM &&
+                (!playerDataAvailable || !matchesDataAvailable)
+              "></app-loading-data>
+            @if (playerDataAvailable && matchesDataAvailable) {
+            <app-leaderboard
+              [dataSubject$]="playerTableData$"
+              [displayedColumnsText]="displayedColumnsTranslationKeysPlayer"
+              [displayedColumns]="displayedColumns"
+              [activeColumn]="activeColumn"
+              [sortDirection]="sortDirection"
+              [disableClear]="disableClear"
+              [filterHintText]="filterHintTranslationKey"
+              [filterText]="filterTranslationKey"
+              [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+            }
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'stats.teams' | translate }}">
+          <div class="content-container">
+            <app-loading-data
+              [showSpinner]="!receivedDataT || !receivedDataM"
+              [showNoData]="
+                receivedDataT &&
+                receivedDataM &&
+                (!teamDataAvailable || !matchesDataAvailable)
+              "></app-loading-data>
+            @if (teamDataAvailable && matchesDataAvailable) {
+            <app-leaderboard
+              [dataSubject$]="teamsTableData$"
+              [displayedColumnsText]="displayedColumnsTranslationKeysTeam"
+              [displayedColumns]="displayedColumns"
+              [activeColumn]="activeColumn"
+              [sortDirection]="sortDirection"
+              [disableClear]="disableClear"
+              [filterHintText]="filterHintTranslationKey"
+              [filterText]="filterTranslationKey"
+              [pageSizeOptions]="pageSizeOptions"></app-leaderboard>
+            }
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+    }
   </mat-card>
   <mat-card>
     <mat-card-header>
@@ -94,250 +96,239 @@
       }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <ng-container *ngIf="singleMode">
-        <app-loading-data
-          [showSpinner]="!receivedDataP || !receivedDataSM"
-          [showNoData]="
-            receivedDataP &&
-            receivedDataSM &&
-            (!playerDataAvailableSM || !matchesDataAvailableSM)
-          "></app-loading-data>
+      @if (singleMode) {
+      <app-loading-data
+        [showSpinner]="!receivedDataP || !receivedDataSM"
+        [showNoData]="
+          receivedDataP &&
+          receivedDataSM &&
+          (!playerDataAvailableSM || !matchesDataAvailableSM)
+        "></app-loading-data>
+      @if ( allChartsReadyPSM && playerDataAvailableSM && matchesDataAvailableSM
+      ) {
+      <div class="selections">
+        <app-selection-with-search
+          class="selection-search"
+          [values]="playersWithMatchesSM"
+          [selectedValue]="selectedPlayerValueSM"
+          [labelText]="'common.player' | translate"
+          (optionSelectedEvent)="
+            onOptionSelectedEvent($event, false, true)
+          "></app-selection-with-search>
+        <app-datepicker
+          class="year-selection"
+          [dateFilter]="yearFilterPlayerSM"
+          [formatType]="0"
+          [localeId]="'app.language.id' | translate"
+          [textLabel]="datepickerLabelKeys[0]"
+          [textHint]="datepickerHintKeys[0]"
+          [panelClass]="'year-picker'"
+          [formControlDate]="yearDatePlayerSM"
+          (newDateEvent)="
+            updateMatchesData(false, true, $event)
+          "></app-datepicker>
+      </div>
+      }
+      <div>
         <div
-          class="selections"
-          *ngIf="
-            allChartsReadyPSM && playerDataAvailableSM && matchesDataAvailableSM
-          ">
-          <app-selection-with-search
-            class="selection-search"
-            [values]="playersWithMatchesSM"
-            [selectedValue]="selectedPlayerValueSM"
-            [labelText]="'common.player' | translate"
-            (optionSelectedEvent)="
-              onOptionSelectedEvent($event, false, true)
-            "></app-selection-with-search>
-          <app-datepicker
-            class="year-selection"
-            [dateFilter]="yearFilterPlayerSM"
-            [formatType]="0"
-            [localeId]="'app.language.id' | translate"
-            [textLabel]="datepickerLabelKeys[0]"
-            [textHint]="datepickerHintKeys[0]"
-            [panelClass]="'year-picker'"
-            [formControlDate]="yearDatePlayerSM"
-            (newDateEvent)="
-              updateMatchesData(false, true, $event)
-            "></app-datepicker>
-        </div>
-        <div>
-          <div
-            class="flex-container"
-            [ngStyle]="{
-              display:
-                allChartsReadyPSM &&
-                playerDataAvailableSM &&
-                matchesDataAvailableSM
-                  ? 'block'
-                  : 'none'
-            }">
-            <div>
-              <app-bar-line-chart
-                (barLineChartIsReadyEvent)="checkIfChartsReady(6, $event)"
-                [dataMap]="playersMapSM"
-                [selectedData]="selectedPlayerSM"
-                [selectedYear]="selectedYearPlayerSM"
-                [months]="'months' | translate"
-                [topBarLegendLabel]="'stats.wins' | translate"
-                [lowerBarLegendLabel]="'stats.losses' | translate"
-                [lineLegendLabel]="'stats.winRate' | translate"
-                [allChartsReady]="allChartsReadyPSM"></app-bar-line-chart>
-            </div>
-            <div class="matches-chart">
-              <app-matches-chart
-                (matchesChartIsReadyEvent)="checkIfChartsReady(8, $event)"
-                [chartData]="matchesChartDataPlayerSM"
-                [legendLabel]="'app.matches' | translate"
-                [months]="'months' | translate"
-                [allChartsReady]="allChartsReadyPSM"></app-matches-chart>
-            </div>
-            <div>
-              <app-result-doughnut-chart
-                (doughnutChartIsReadyEvent)="checkIfChartsReady(7, $event)"
-                [chartData]="doughnutDataPlayerSM"
-                [winsLegendLabel]="'stats.wins' | translate"
-                [lossesLegendLabel]="'stats.losses' | translate"
-                [dominationsLegendLabel]="'stats.dominations' | translate"
-                [defeatsLegendLabel]="'stats.defeats' | translate"
-                [allChartsReady]="
-                  allChartsReadyPSM
-                "></app-result-doughnut-chart>
-            </div>
+          class="flex-container"
+          [ngStyle]="{
+            display:
+              allChartsReadyPSM &&
+              playerDataAvailableSM &&
+              matchesDataAvailableSM
+                ? 'block'
+                : 'none'
+          }">
+          <div>
+            <app-bar-line-chart
+              (barLineChartIsReadyEvent)="checkIfChartsReady(6, $event)"
+              [dataMap]="playersMapSM"
+              [selectedData]="selectedPlayerSM"
+              [selectedYear]="selectedYearPlayerSM"
+              [months]="'months' | translate"
+              [topBarLegendLabel]="'stats.wins' | translate"
+              [lowerBarLegendLabel]="'stats.losses' | translate"
+              [lineLegendLabel]="'stats.winRate' | translate"
+              [allChartsReady]="allChartsReadyPSM"></app-bar-line-chart>
+          </div>
+          <div class="matches-chart">
+            <app-matches-chart
+              (matchesChartIsReadyEvent)="checkIfChartsReady(8, $event)"
+              [chartData]="matchesChartDataPlayerSM"
+              [legendLabel]="'app.matches' | translate"
+              [months]="'months' | translate"
+              [allChartsReady]="allChartsReadyPSM"></app-matches-chart>
+          </div>
+          <div>
+            <app-result-doughnut-chart
+              (doughnutChartIsReadyEvent)="checkIfChartsReady(7, $event)"
+              [chartData]="doughnutDataPlayerSM"
+              [winsLegendLabel]="'stats.wins' | translate"
+              [lossesLegendLabel]="'stats.losses' | translate"
+              [dominationsLegendLabel]="'stats.dominations' | translate"
+              [defeatsLegendLabel]="'stats.defeats' | translate"
+              [allChartsReady]="allChartsReadyPSM"></app-result-doughnut-chart>
           </div>
         </div>
-      </ng-container>
-      <ng-container *ngIf="!singleMode">
-        <mat-tab-group mat-align-tabs="start">
-          <mat-tab label="{{ 'stats.players' | translate }}">
-            <div class="content-container">
-              <app-loading-data
-                [showSpinner]="!receivedDataP || !receivedDataM"
-                [showNoData]="
-                  receivedDataP &&
-                  receivedDataM &&
-                  (!playerDataAvailable || !matchesDataAvailable)
-                "></app-loading-data>
-            </div>
-            <div
-              class="selections"
-              *ngIf="
-                allChartsReadyP && playerDataAvailable && matchesDataAvailable
-              ">
-              <app-selection-with-search
-                class="selection-search"
-                [values]="playersWithMatches"
-                [selectedValue]="selectedPlayerValue"
-                [labelText]="'common.player' | translate"
-                (optionSelectedEvent)="
-                  onOptionSelectedEvent($event, false, false)
-                "></app-selection-with-search>
-              <app-datepicker
-                class="year-selection"
-                [dateFilter]="yearFilterPlayer"
-                [formatType]="0"
-                [localeId]="'app.language.id' | translate"
-                [textLabel]="datepickerLabelKeys[0]"
-                [textHint]="datepickerHintKeys[0]"
-                [panelClass]="'year-picker'"
-                [formControlDate]="yearDatePlayer"
-                (newDateEvent)="
-                  updateMatchesData(false, false, $event)
-                "></app-datepicker>
-            </div>
-            <div>
-              <div
-                class="flex-container"
-                [ngStyle]="{
-                  display:
-                    allChartsReadyP &&
-                    playerDataAvailable &&
-                    matchesDataAvailable
-                      ? 'block'
-                      : 'none'
-                }">
-                <div>
-                  <app-bar-line-chart
-                    (barLineChartIsReadyEvent)="checkIfChartsReady(0, $event)"
-                    [dataMap]="playersMap"
-                    [selectedData]="selectedPlayer"
-                    [selectedYear]="selectedYearPlayer"
-                    [months]="'months' | translate"
-                    [topBarLegendLabel]="'stats.wins' | translate"
-                    [lowerBarLegendLabel]="'stats.losses' | translate"
-                    [lineLegendLabel]="'stats.winRate' | translate"
-                    [allChartsReady]="allChartsReadyP"></app-bar-line-chart>
-                </div>
-                <div class="matches-chart">
-                  <app-matches-chart
-                    (matchesChartIsReadyEvent)="checkIfChartsReady(2, $event)"
-                    [chartData]="matchesChartDataPlayer"
-                    [legendLabel]="'app.matches' | translate"
-                    [months]="'months' | translate"
-                    [allChartsReady]="allChartsReadyP"></app-matches-chart>
-                </div>
-                <div>
-                  <app-result-doughnut-chart
-                    (doughnutChartIsReadyEvent)="checkIfChartsReady(1, $event)"
-                    [chartData]="doughnutDataPlayer"
-                    [winsLegendLabel]="'stats.wins' | translate"
-                    [lossesLegendLabel]="'stats.losses' | translate"
-                    [dominationsLegendLabel]="'stats.dominations' | translate"
-                    [defeatsLegendLabel]="'stats.defeats' | translate"
-                    [allChartsReady]="
-                      allChartsReadyP
-                    "></app-result-doughnut-chart>
-                </div>
-              </div>
-            </div>
-          </mat-tab>
-          <mat-tab label="{{ 'stats.teams' | translate }}">
-            <div class="content-container">
-              <app-loading-data
-                [showSpinner]="!receivedDataT || !receivedDataM"
-                [showNoData]="
-                  receivedDataT &&
-                  receivedDataM &&
-                  (!teamDataAvailable || !matchesDataAvailable)
-                "></app-loading-data>
-            </div>
-            <div
-              class="selections"
-              *ngIf="
-                allChartsReadyT && teamDataAvailable && matchesDataAvailable
-              ">
-              <app-selection-with-search
-                class="selection-search-team"
-                [values]="teamsWithMatches"
-                [selectedValue]="selectedTeamValue"
-                [labelText]="'common.team' | translate"
-                (optionSelectedEvent)="
-                  onOptionSelectedEvent($event, true, false)
-                "></app-selection-with-search>
-              <app-datepicker
-                class="year-selection"
-                [dateFilter]="yearFilterTeam"
-                [formatType]="0"
-                [localeId]="'app.language.id' | translate"
-                [textLabel]="datepickerLabelKeys[0]"
-                [textHint]="datepickerHintKeys[0]"
-                [panelClass]="'year-picker'"
-                [formControlDate]="yearDateTeam"
-                (newDateEvent)="
-                  updateMatchesData(true, false, $event)
-                "></app-datepicker>
-            </div>
+      </div>
+      } @if (!singleMode) {
+      <mat-tab-group mat-align-tabs="start">
+        <mat-tab label="{{ 'stats.players' | translate }}">
+          <div class="content-container">
+            <app-loading-data
+              [showSpinner]="!receivedDataP || !receivedDataM"
+              [showNoData]="
+                receivedDataP &&
+                receivedDataM &&
+                (!playerDataAvailable || !matchesDataAvailable)
+              "></app-loading-data>
+          </div>
+          @if ( allChartsReadyP && playerDataAvailable && matchesDataAvailable )
+          {
+          <div class="selections">
+            <app-selection-with-search
+              class="selection-search"
+              [values]="playersWithMatches"
+              [selectedValue]="selectedPlayerValue"
+              [labelText]="'common.player' | translate"
+              (optionSelectedEvent)="
+                onOptionSelectedEvent($event, false, false)
+              "></app-selection-with-search>
+            <app-datepicker
+              class="year-selection"
+              [dateFilter]="yearFilterPlayer"
+              [formatType]="0"
+              [localeId]="'app.language.id' | translate"
+              [textLabel]="datepickerLabelKeys[0]"
+              [textHint]="datepickerHintKeys[0]"
+              [panelClass]="'year-picker'"
+              [formControlDate]="yearDatePlayer"
+              (newDateEvent)="
+                updateMatchesData(false, false, $event)
+              "></app-datepicker>
+          </div>
+          }
+          <div>
             <div
               class="flex-container"
               [ngStyle]="{
                 display:
-                  allChartsReadyT && teamDataAvailable && matchesDataAvailable
+                  allChartsReadyP && playerDataAvailable && matchesDataAvailable
                     ? 'block'
                     : 'none'
               }">
               <div>
                 <app-bar-line-chart
-                  (barLineChartIsReadyEvent)="checkIfChartsReady(3, $event)"
-                  [dataMap]="teamsMap"
-                  [selectedData]="selectedTeam"
-                  [selectedYear]="selectedYearTeam"
+                  (barLineChartIsReadyEvent)="checkIfChartsReady(0, $event)"
+                  [dataMap]="playersMap"
+                  [selectedData]="selectedPlayer"
+                  [selectedYear]="selectedYearPlayer"
                   [months]="'months' | translate"
                   [topBarLegendLabel]="'stats.wins' | translate"
                   [lowerBarLegendLabel]="'stats.losses' | translate"
                   [lineLegendLabel]="'stats.winRate' | translate"
-                  [allChartsReady]="allChartsReadyT"></app-bar-line-chart>
+                  [allChartsReady]="allChartsReadyP"></app-bar-line-chart>
               </div>
               <div class="matches-chart">
                 <app-matches-chart
-                  (matchesChartIsReadyEvent)="checkIfChartsReady(5, $event)"
-                  [chartData]="matchesChartDataTeam"
+                  (matchesChartIsReadyEvent)="checkIfChartsReady(2, $event)"
+                  [chartData]="matchesChartDataPlayer"
                   [legendLabel]="'app.matches' | translate"
                   [months]="'months' | translate"
-                  [allChartsReady]="allChartsReadyT"></app-matches-chart>
+                  [allChartsReady]="allChartsReadyP"></app-matches-chart>
               </div>
               <div>
                 <app-result-doughnut-chart
-                  (doughnutChartIsReadyEvent)="checkIfChartsReady(4, $event)"
-                  [chartData]="doughnutDataTeam"
+                  (doughnutChartIsReadyEvent)="checkIfChartsReady(1, $event)"
+                  [chartData]="doughnutDataPlayer"
                   [winsLegendLabel]="'stats.wins' | translate"
                   [lossesLegendLabel]="'stats.losses' | translate"
                   [dominationsLegendLabel]="'stats.dominations' | translate"
                   [defeatsLegendLabel]="'stats.defeats' | translate"
                   [allChartsReady]="
-                    allChartsReadyT
+                    allChartsReadyP
                   "></app-result-doughnut-chart>
               </div>
             </div>
-          </mat-tab>
-        </mat-tab-group>
-      </ng-container>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'stats.teams' | translate }}">
+          <div class="content-container">
+            <app-loading-data
+              [showSpinner]="!receivedDataT || !receivedDataM"
+              [showNoData]="
+                receivedDataT &&
+                receivedDataM &&
+                (!teamDataAvailable || !matchesDataAvailable)
+              "></app-loading-data>
+          </div>
+          @if ( allChartsReadyT && teamDataAvailable && matchesDataAvailable ) {
+          <div class="selections">
+            <app-selection-with-search
+              class="selection-search-team"
+              [values]="teamsWithMatches"
+              [selectedValue]="selectedTeamValue"
+              [labelText]="'common.team' | translate"
+              (optionSelectedEvent)="
+                onOptionSelectedEvent($event, true, false)
+              "></app-selection-with-search>
+            <app-datepicker
+              class="year-selection"
+              [dateFilter]="yearFilterTeam"
+              [formatType]="0"
+              [localeId]="'app.language.id' | translate"
+              [textLabel]="datepickerLabelKeys[0]"
+              [textHint]="datepickerHintKeys[0]"
+              [panelClass]="'year-picker'"
+              [formControlDate]="yearDateTeam"
+              (newDateEvent)="
+                updateMatchesData(true, false, $event)
+              "></app-datepicker>
+          </div>
+          }
+          <div
+            class="flex-container"
+            [ngStyle]="{
+              display:
+                allChartsReadyT && teamDataAvailable && matchesDataAvailable
+                  ? 'block'
+                  : 'none'
+            }">
+            <div>
+              <app-bar-line-chart
+                (barLineChartIsReadyEvent)="checkIfChartsReady(3, $event)"
+                [dataMap]="teamsMap"
+                [selectedData]="selectedTeam"
+                [selectedYear]="selectedYearTeam"
+                [months]="'months' | translate"
+                [topBarLegendLabel]="'stats.wins' | translate"
+                [lowerBarLegendLabel]="'stats.losses' | translate"
+                [lineLegendLabel]="'stats.winRate' | translate"
+                [allChartsReady]="allChartsReadyT"></app-bar-line-chart>
+            </div>
+            <div class="matches-chart">
+              <app-matches-chart
+                (matchesChartIsReadyEvent)="checkIfChartsReady(5, $event)"
+                [chartData]="matchesChartDataTeam"
+                [legendLabel]="'app.matches' | translate"
+                [months]="'months' | translate"
+                [allChartsReady]="allChartsReadyT"></app-matches-chart>
+            </div>
+            <div>
+              <app-result-doughnut-chart
+                (doughnutChartIsReadyEvent)="checkIfChartsReady(4, $event)"
+                [chartData]="doughnutDataTeam"
+                [winsLegendLabel]="'stats.wins' | translate"
+                [lossesLegendLabel]="'stats.losses' | translate"
+                [dominationsLegendLabel]="'stats.dominations' | translate"
+                [defeatsLegendLabel]="'stats.defeats' | translate"
+                [allChartsReady]="allChartsReadyT"></app-result-doughnut-chart>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+      }
     </mat-card-content>
   </mat-card>
   <mat-card>

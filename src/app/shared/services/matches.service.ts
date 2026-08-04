@@ -1,25 +1,39 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import {
-  addDoc,
-  collection,
-  collectionData,
-  CollectionReference,
-  deleteDoc,
-  doc,
-  DocumentReference,
-  Firestore,
-  Timestamp,
-} from '@angular/fire/firestore';
-import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
-import { shareReplay, take } from 'rxjs/operators';
-import { IMatch, ISingleMatch } from '../interfaces/match.interface';
+  BehaviorSubject,
+  firstValueFrom,
+  Observable,
+  ReplaySubject,
+  Subscription,
+} from 'rxjs';
+import { map, shareReplay, switchMap, take } from 'rxjs/operators';
+import { IMatch } from '../interfaces/match.interface';
 import { InfoBarService } from './info-bar.service';
 import { UntypedFormGroup } from '@angular/forms';
-import { environment } from '../../../environments/environment';
+import { APP_CONFIG, AppConfig } from '../../core/app-config';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { IUser } from '../interfaces/user.interface';
 import { IPlaytime } from '../interfaces/statistic.interface';
 import { AuthService } from './auth.service';
+import { UsersService } from './users.service';
+import { TeamsService } from './teams.service';
+import { LeaderboardService } from './leaderboard.service';
+
+interface MatchSideDto {
+  playerIds: string[];
+}
+
+interface MatchRoundDto {
+  winnerSide: 0 | 1;
+  domination: boolean;
+}
+
+interface CreateMatchDto {
+  side0: MatchSideDto;
+  side1: MatchSideDto;
+  rounds: MatchRoundDto[];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -31,46 +45,46 @@ export class MatchesService implements OnDestroy {
 
   closeText = '';
 
-  public matches$: Observable<IMatch[]>;
+  private refresh$ = new BehaviorSubject<void>(undefined);
 
-  public singleMatches$: Observable<ISingleMatch[]>;
+  private allMatches$: Observable<IMatch[]> = this.refresh$.pipe(
+    switchMap(() => this.http.get<IMatch[]>(`${this.config.apiUrl}/matches`)),
+    shareReplay(1)
+  );
 
-  public playtime$: Observable<IPlaytime[]>;
+  public matches$: Observable<IMatch[]> = this.allMatches$.pipe(
+    map((matches) => matches.filter((match) => !match.isSingle))
+  );
 
-  protected collection: CollectionReference;
+  public singleMatches$: Observable<IMatch[]> = this.allMatches$.pipe(
+    map((matches) => matches.filter((match) => match.isSingle))
+  );
 
-  protected singleMatchCollection: CollectionReference;
+  public playtime$: Observable<IPlaytime[]> = this.refresh$.pipe(
+    switchMap(() =>
+      this.http.get<IPlaytime[]>(`${this.config.apiUrl}/playtime`)
+    ),
+    shareReplay(1)
+  );
 
   matchesSub$ = new BehaviorSubject<IMatch[]>(undefined);
 
-  singleMatchesSub$ = new BehaviorSubject<ISingleMatch[]>(undefined);
+  singleMatchesSub$ = new BehaviorSubject<IMatch[]>(undefined);
 
   singleModeSub$ = new ReplaySubject<boolean>(1);
 
   subscribtions: Subscription[] = [];
 
   constructor(
-    protected db: Firestore,
+    protected http: HttpClient,
     protected infoBar: InfoBarService,
     protected translateService: TranslateService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    protected usersService: UsersService,
+    protected teamsService: TeamsService,
+    protected leaderboardService: LeaderboardService,
+    @Inject(APP_CONFIG) protected config: AppConfig
   ) {
-    this.collection = collection(
-      db,
-      `${environment.prefix}Matches`
-    ) as CollectionReference<IMatch>;
-    this.matches$ = collectionData(this.collection).pipe(
-      shareReplay(1)
-    ) as Observable<IMatch[]>;
-
-    this.singleMatchCollection = collection(
-      db,
-      `${environment.prefix}Single-Matches`
-    ) as CollectionReference<ISingleMatch>;
-    this.singleMatches$ = collectionData(this.singleMatchCollection).pipe(
-      shareReplay(1)
-    ) as Observable<ISingleMatch[]>;
-
     authService.isLoggedIn.subscribe((loggedIn) => {
       if (loggedIn) {
         this.subscribeToObservables();
@@ -79,14 +93,6 @@ export class MatchesService implements OnDestroy {
         this.unsubscribeFromObservables();
       }
     });
-
-    const playtimeCol = collection(
-      db,
-      `${environment.prefix}Playtime`
-    ) as CollectionReference<IMatch>;
-    this.playtime$ = collectionData(playtimeCol).pipe(
-      shareReplay(1)
-    ) as Observable<IPlaytime[]>;
 
     this.getText();
 
@@ -128,161 +134,86 @@ export class MatchesService implements OnDestroy {
       });
   }
 
-  private static getRoundInfos(
-    team: string,
-    form: UntypedFormGroup,
-    type: 'win' | 'dominationTeamOne' | 'dominationTeamTwo'
-  ): number {
-    const rounds = [
-      form.get(`rounds.one.${type}`).value,
-      form.get(`rounds.two.${type}`).value,
-      form.get(`rounds.three.${type}`).value,
-    ];
-
-    return rounds.filter((round) => {
-      if (type === 'win') {
-        return round === team;
-      } else {
-        return round;
+  /** Only rounds that were actually played (rounds.three.win can be null). */
+  private static buildRounds(form: UntypedFormGroup): MatchRoundDto[] {
+    const rounds: MatchRoundDto[] = [];
+    for (const key of ['one', 'two', 'three']) {
+      const win = form.get(`rounds.${key}.win`).value;
+      if (win === null || win === undefined) {
+        continue;
       }
-    }).length;
+      const dominationTeamOne = form.get(
+        `rounds.${key}.dominationTeamOne`
+      ).value;
+      const dominationTeamTwo = form.get(
+        `rounds.${key}.dominationTeamTwo`
+      ).value;
+      rounds.push({
+        winnerSide: win === 'team1' ? 0 : 1,
+        domination: !!(dominationTeamOne || dominationTeamTwo),
+      });
+    }
+    return rounds;
   }
 
   public async add(match: UntypedFormGroup): Promise<void> {
-    const team1 = match.get('players.team1.teamId').value;
-    const team2 = match.get('players.team2.teamId').value;
-
-    const winTeam1 = MatchesService.getRoundInfos('team1', match, 'win');
-    const winTeam2 = MatchesService.getRoundInfos('team2', match, 'win');
-
-    const dominationsTeam1 = MatchesService.getRoundInfos(
-      'team1',
-      match,
-      'dominationTeamOne'
-    );
-    const dominationsTeam2 = MatchesService.getRoundInfos(
-      'team2',
-      match,
-      'dominationTeamTwo'
-    );
-
-    const defeats: DocumentReference[] = [];
-    const dominations: DocumentReference[] = [];
-
-    const teams = [
-      doc(this.db, `${environment.prefix}Teams/${team1})}`),
-      doc(this.db, `${environment.prefix}Teams/${team2})}`),
-    ];
-
-    const players = [
-      doc(
-        this.db,
-        `${environment.prefix}Users/${match.get('players.team1.one').value.id}`
-      ),
-      doc(
-        this.db,
-        `${environment.prefix}Users/${match.get('players.team1.two').value.id}`
-      ),
-      doc(
-        this.db,
-        `${environment.prefix}Users/${match.get('players.team2.one').value.id}`
-      ),
-      doc(
-        this.db,
-        `${environment.prefix}Users/${match.get('players.team2.two').value.id}`
-      ),
-    ];
-
-    const result = {
-      [`${team1}`]: winTeam1,
-      [`${team2}`]: winTeam2,
+    const dto: CreateMatchDto = {
+      side0: {
+        playerIds: [
+          match.get('players.team1.one').value.id,
+          match.get('players.team1.two').value.id,
+        ],
+      },
+      side1: {
+        playerIds: [
+          match.get('players.team2.one').value.id,
+          match.get('players.team2.two').value.id,
+        ],
+      },
+      rounds: MatchesService.buildRounds(match),
     };
 
-    for (let i = 0; i < dominationsTeam1; i++) {
-      dominations.push(doc(this.db, `${environment.prefix}Teams/${team1}`));
-      defeats.push(doc(this.db, `${environment.prefix}Teams/${team2}`));
-    }
-
-    for (let j = 0; j < dominationsTeam2; j++) {
-      dominations.push(doc(this.db, `${environment.prefix}Teams/${team2}`));
-      defeats.push(doc(this.db, `${environment.prefix}Teams/${team1}`));
-    }
-
-    const resultMatch: IMatch = {
-      defeats,
-      dominations,
-      players,
-      result,
-      teams,
-      type: `${winTeam1}:${winTeam2}`,
-      date: Timestamp.now(),
-    };
-
-    return await addDoc(this.collection, resultMatch)
-      .then(() => {
-        this.infoBar.openCustomSnackBar(this.infoText, this.closeText, 5);
-      })
-      .catch((err) => {
-        this.infoBar.openComponentSnackBar(5);
-        console.log('ERROR', err);
-      });
+    return this.submit(dto);
   }
 
   public async addSingleMatch(match: UntypedFormGroup): Promise<void> {
     const player1 = (match.get('players.team1.one').value as IUser).id;
     const player2 = (match.get('players.team2.one').value as IUser).id;
 
-    const winPlayer1 = MatchesService.getRoundInfos('team1', match, 'win');
-    const winPlayer2 = MatchesService.getRoundInfos('team2', match, 'win');
-
-    const dominationsPlayer1 = MatchesService.getRoundInfos(
-      'team1',
-      match,
-      'dominationTeamOne'
-    );
-    const dominationsPlayer2 = MatchesService.getRoundInfos(
-      'team2',
-      match,
-      'dominationTeamTwo'
-    );
-
-    const defeats: DocumentReference[] = [];
-    const dominations: DocumentReference[] = [];
-
-    const result = {
-      [player1]: winPlayer1,
-      [player2]: winPlayer2,
+    const dto: CreateMatchDto = {
+      side0: { playerIds: [player1] },
+      side1: { playerIds: [player2] },
+      rounds: MatchesService.buildRounds(match),
     };
 
-    for (let i = 0; i < dominationsPlayer1; i++) {
-      dominations.push(doc(this.db, `${environment.prefix}Users/${player1}`));
-      defeats.push(doc(this.db, `${environment.prefix}Users/${player2}`));
-    }
-
-    for (let j = 0; j < dominationsPlayer2; j++) {
-      dominations.push(doc(this.db, `${environment.prefix}Users/${player2}`));
-      defeats.push(doc(this.db, `${environment.prefix}Users/${player1}`));
-    }
-
-    const resultMatch: ISingleMatch = {
-      defeats,
-      dominations,
-      result,
-      type: `${winPlayer1}:${winPlayer2}`,
-      date: Timestamp.now(),
-    };
-
-    return await addDoc(this.singleMatchCollection, resultMatch)
-      .then(() => {
-        this.infoBar.openCustomSnackBar(this.infoText, this.closeText, 5);
-      })
-      .catch((err) => {
-        this.infoBar.openComponentSnackBar(5);
-        console.log('ERROR', err);
-      });
+    return this.submit(dto);
   }
 
-  async delete(matchId) {
-    await deleteDoc(doc(this.db, this.collection.path, matchId));
+  private async submit(dto: CreateMatchDto): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.http.post(`${this.config.apiUrl}/matches`, dto)
+      );
+      this.infoBar.openCustomSnackBar(this.infoText, this.closeText, 5);
+      this.refreshAffectedData();
+    } catch (err) {
+      this.infoBar.openComponentSnackBar(5);
+      console.log('ERROR', err);
+    }
+  }
+
+  async delete(matchId: string) {
+    await firstValueFrom(
+      this.http.delete(`${this.config.apiUrl}/matches/${matchId}`)
+    );
+    this.refreshAffectedData();
+  }
+
+  /** A match mutation can affect users (auto-provisioning), teams (auto-creation) and leaderboards. */
+  private refreshAffectedData() {
+    this.refresh$.next();
+    this.usersService.refresh();
+    this.teamsService.refresh();
+    this.leaderboardService.refresh();
   }
 }

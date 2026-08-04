@@ -1,10 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatchesService } from 'src/app/shared/services/matches.service';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { MatchesService } from '../../../shared/services/matches.service';
 import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
-import { ILeaderboard } from 'src/app/shared/interfaces/statistic.interface';
+import { map } from 'rxjs/operators';
+import { ILeaderboard } from '../../../shared/interfaces/statistic.interface';
 import { SortDirection } from '@angular/material/sort';
 import { TableService } from '../../../shared/services/table.service';
 import { ChartsService } from '../../../shared/services/charts.service';
+import { TeamsService } from '../../../shared/services/teams.service';
 import {
   zeroTwo,
   oneTwo,
@@ -20,16 +27,53 @@ import {
   totalMatches,
   elo,
 } from '../../../shared/global-variables';
+import { IMatch, IPlayers } from '../../../shared/interfaces/match.interface';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
 import {
-  IMatch,
-  IPlayers,
-  ISingleMatch,
-} from '../../../shared/interfaces/match.interface';
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+} from '@angular/material/card';
+import { LoadingDataComponent } from '../../../shared/components/loading-data/loading-data.component';
+import { LeaderboardComponent } from './leaderboard/leaderboard.component';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { SelectionWithSearchComponent } from '../../../shared/components/selection-with-search/selection-with-search.component';
+import { DatepickerComponent } from '../../../shared/components/datepicker/datepicker.component';
+import { NgStyle } from '@angular/common';
+import { BarLineChartComponent } from './bar-line-chart/bar-line-chart.component';
+import { MatchesChartComponent } from './matches-chart/matches-chart.component';
+import { ResultDoughnutChartComponent } from './result-doughnut-chart/result-doughnut-chart.component';
+import { PlaytimeChartComponent } from './playtime-chart/playtime-chart.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-statistic',
   templateUrl: './statistic.component.html',
   styleUrls: ['./statistic.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatRadioGroup,
+    FormsModule,
+    MatRadioButton,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    LoadingDataComponent,
+    LeaderboardComponent,
+    MatTabGroup,
+    MatTab,
+    SelectionWithSearchComponent,
+    DatepickerComponent,
+    NgStyle,
+    BarLineChartComponent,
+    MatchesChartComponent,
+    ResultDoughnutChartComponent,
+    PlaytimeChartComponent,
+    TranslatePipe,
+  ],
 })
 export class StatisticComponent implements OnInit, OnDestroy {
   playersMap = new Map<string, ILeaderboard>();
@@ -162,7 +206,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
   constructor(
     private matchesService: MatchesService,
     private tableService: TableService,
-    private chartsService: ChartsService
+    private chartsService: ChartsService,
+    private teamsService: TeamsService
   ) {}
 
   ngOnInit(): void {
@@ -172,20 +217,30 @@ export class StatisticComponent implements OnInit, OnDestroy {
       }
     });
 
+    const teamPlayersById$ = this.teamsService.teams$.pipe(
+      map(
+        (teams) =>
+          new Map(teams.map((team) => [team.id, team.players.map((p) => p.id)]))
+      )
+    );
+
     this.statisticsDataSub = combineLatest([
       this.tableService.playerData$,
       this.tableService.teamData$,
       this.matchesService.matchesSub$,
       this.matchesService.singleMatchesSub$,
+      teamPlayersById$,
     ]).subscribe(
       (
         data: [
           [Map<string, ILeaderboard>, Map<string, ILeaderboard>],
           Map<string, ILeaderboard>,
           IMatch[],
-          ISingleMatch[]
+          IMatch[],
+          Map<string, string[]>
         ]
       ) => {
+        const teamPlayersById = data[4];
         if (data[0]) {
           this.receivedDataP = true;
           this.playerDataAvailable = data[0][0].size > 0;
@@ -218,7 +273,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
               this.doughnutDataPlayer,
             ] = this.chartsService.createStatisticPlayerData(
               data[2],
-              this.playersMap
+              this.playersMap,
+              teamPlayersById
             );
             this.playersTable = this.getTable(this.playersMap);
             this.playerTableData$.next(this.playersTable);
@@ -236,7 +292,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
               this.doughnutDataTeam,
             ] = this.chartsService.createStatisticTeamData(
               data[2],
-              this.teamsMap
+              this.teamsMap,
+              teamPlayersById
             );
             this.teamsTable = this.getTable(this.teamsMap);
             this.teamsTableData$.next(this.teamsTable);
@@ -258,7 +315,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
               this.doughnutDataPlayerSM,
             ] = this.chartsService.createStatisticPlayerData(
               data[3],
-              this.playersMapSM
+              this.playersMapSM,
+              teamPlayersById
             );
             this.playersTableSM = this.getTable(this.playersMapSM);
             this.playerTableDataSM$.next(this.playersTableSM);

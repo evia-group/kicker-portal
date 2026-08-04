@@ -1,4 +1,10 @@
-import { AfterContentChecked, Component, Input, OnInit } from '@angular/core';
+import {
+  AfterContentChecked,
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ITeam, IUser } from '../../interfaces/user.interface';
 import { BehaviorSubject, combineLatestWith, Observable } from 'rxjs';
 import { MatchesService } from '../../services/matches.service';
@@ -7,12 +13,47 @@ import {
   Validators,
   UntypedFormBuilder,
   UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardTitle,
+  MatCardContent,
+  MatCardActions,
+} from '@angular/material/card';
+import { MatDivider } from '@angular/material/list';
+import { SelectPlayersComponent } from './select-players/select-players.component';
+import { RoundResultComponent } from './round-result/round-result.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-match',
   templateUrl: './add-match.component.html',
   styleUrls: ['./add-match.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatDivider,
+    FormsModule,
+    ReactiveFormsModule,
+    SelectPlayersComponent,
+    RoundResultComponent,
+    MatCardActions,
+    MatButton,
+    MatIcon,
+    MatProgressSpinner,
+    AsyncPipe,
+    TranslatePipe,
+  ],
 })
 export class AddMatchComponent implements AfterContentChecked, OnInit {
   @Input()

@@ -52,8 +52,13 @@ storage.rules
 Thumbs.db
 
 # Project Files
-/src/environments/**
+/src/config.json
 /database.rules.json
 /emulator_data
 /firestore.indexes.json
 /firestore.rules
+
+# Secrets
+.env
+.env.*
+!.env.example

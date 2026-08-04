@@ -9,9 +9,8 @@
   <div class="mat-elevation-z8">
     <div class="table-container">
       <table mat-table [dataSource]="boardData" matSort>
-        <ng-container
-          *ngFor="let header of displayedColumns; let i = index"
-          [matColumnDef]="header">
+        @for (header of displayedColumns; track header; let i = $index) {
+        <ng-container [matColumnDef]="header">
           <th
             [ngClass]="{
               'sticky-column-left': header === 'name',
@@ -22,9 +21,11 @@
             *matHeaderCellDef
             mat-sort-header>
             {{ displayedColumnsText[i] | translate }}
-            <div *ngIf="header === 'elo'">
+            @if (header === 'elo') {
+            <div>
               <span class="material-symbols-outlined"> trophy </span>
             </div>
+            }
           </th>
           <td
             [ngClass]="{
@@ -36,6 +37,7 @@
             {{ row[header] }}
           </td>
         </ng-container>
+        }
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>

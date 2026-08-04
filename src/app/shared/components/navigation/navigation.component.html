@@ -4,7 +4,8 @@
     <h1 class="app-name">{{ 'app.name' | translate }}</h1>
     <span class="toolbar-spacer"></span>
     <ng-container
-      ><span *ngIf="!showDropdown">
+      >@if (!showDropdown) {
+      <span>
         <mat-chip-listbox>
           <mat-chip-option
             [ngClass]="{
@@ -22,52 +23,47 @@
           </mat-chip-option>
         </mat-chip-listbox>
       </span>
-      <mat-icon class="available-icon" *ngIf="showDropdown && kickerStatus"
-        >check_circle_outline</mat-icon
-      >
-      <mat-icon class="blocked-icon" *ngIf="showDropdown && !kickerStatus"
-        >block</mat-icon
-      >
+      } @if (showDropdown && kickerStatus) {
+      <mat-icon class="available-icon">check_circle_outline</mat-icon>
+      } @if (showDropdown && !kickerStatus) {
+      <mat-icon class="blocked-icon">block</mat-icon>
+      }
     </ng-container>
-    <ng-container *ngIf="!showDropdown">
-      <button mat-icon-button (click)="goToBuglist()">
+    @if (!showDropdown) {
+    <button mat-icon-button (click)="goToBuglist()">
+      <ng-container *ngTemplateOutlet="bugButton"></ng-container>
+    </button>
+    <button mat-icon-button (click)="goToGithub()">
+      <ng-container *ngTemplateOutlet="githubButton"></ng-container>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menuLanguage">
+      <ng-container *ngTemplateOutlet="languageButton"></ng-container>
+    </button>
+    @if (isLoggedIn$ | async) {
+    <button mat-icon-button [matMenuTriggerFor]="menuPerson">
+      <ng-container *ngTemplateOutlet="personButton"></ng-container>
+    </button>
+    } } @if (showDropdown) {
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="goToBuglist()">
         <ng-container *ngTemplateOutlet="bugButton"></ng-container>
       </button>
-      <button mat-icon-button (click)="goToGithub()">
+      <button mat-menu-item (click)="goToGithub()">
         <ng-container *ngTemplateOutlet="githubButton"></ng-container>
       </button>
-      <button mat-icon-button [matMenuTriggerFor]="menuLanguage">
+      <button mat-menu-item [matMenuTriggerFor]="menuLanguage">
         <ng-container *ngTemplateOutlet="languageButton"></ng-container>
       </button>
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="menuPerson"
-        *ngIf="isLoggedIn$ | async">
+      @if (isLoggedIn$ | async) {
+      <button mat-menu-item [matMenuTriggerFor]="menuPerson">
         <ng-container *ngTemplateOutlet="personButton"></ng-container>
       </button>
-    </ng-container>
-    <ng-container *ngIf="showDropdown">
-      <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="goToBuglist()">
-          <ng-container *ngTemplateOutlet="bugButton"></ng-container>
-        </button>
-        <button mat-menu-item (click)="goToGithub()">
-          <ng-container *ngTemplateOutlet="githubButton"></ng-container>
-        </button>
-        <button mat-menu-item [matMenuTriggerFor]="menuLanguage">
-          <ng-container *ngTemplateOutlet="languageButton"></ng-container>
-        </button>
-        <button
-          mat-menu-item
-          [matMenuTriggerFor]="menuPerson"
-          *ngIf="isLoggedIn$ | async">
-          <ng-container *ngTemplateOutlet="personButton"></ng-container>
-        </button>
-      </mat-menu>
-    </ng-container>
+      }
+    </mat-menu>
+    }
   </mat-toolbar>
 
   <mat-drawer-container class="sidenav-container">
@@ -100,7 +96,9 @@
 <ng-template #bugButton>
   <mat-icon class="icon" aria-hidden="false" aria-label="bugreport icon"
     >bug_report</mat-icon
-  ><span *ngIf="showDropdown">{{ 'common.toolbar.bugs' | translate }}</span>
+  >@if (showDropdown) {
+  <span>{{ 'common.toolbar.bugs' | translate }}</span>
+  }
 </ng-template>
 
 <ng-template #githubButton>
@@ -110,19 +108,25 @@
     aria-hidden="false"
     aria-label="github icon">
   </mat-icon>
-  <span *ngIf="showDropdown">{{ 'common.toolbar.github' | translate }}</span>
+  @if (showDropdown) {
+  <span>{{ 'common.toolbar.github' | translate }}</span>
+  }
 </ng-template>
 
 <ng-template #languageButton>
   <mat-icon class="icon" aria-hidden="false" aria-label="language icon"
     >language</mat-icon
   >
-  <span *ngIf="showDropdown">{{ 'common.toolbar.language' | translate }}</span>
+  @if (showDropdown) {
+  <span>{{ 'common.toolbar.language' | translate }}</span>
+  }
 </ng-template>
 
 <ng-template #personButton>
   <mat-icon class="icon" aria-hidden="false" aria-label="personal icon"
     >person</mat-icon
   >
-  <span *ngIf="showDropdown">{{ 'common.toolbar.user' | translate }}</span>
+  @if (showDropdown) {
+  <span>{{ 'common.toolbar.user' | translate }}</span>
+  }
 </ng-template>

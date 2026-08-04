@@ -8,9 +8,7 @@ import {
 } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 
-@Directive({
-  selector: '[appMatTabScroll]',
-})
+@Directive({ selector: '[appMatTabScroll]' })
 export class MatTabScrollDirective implements OnInit, AfterViewInit, OnDestroy {
   private tabListContainer: HTMLElement;
   private tabList: HTMLElement;

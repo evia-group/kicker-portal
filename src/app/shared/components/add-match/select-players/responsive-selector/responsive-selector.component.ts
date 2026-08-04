@@ -1,15 +1,36 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { TwoSelectionsDialogComponent } from '../two-selections-dialog/two-selections-dialog.component';
 import { ISelectionsData } from '../../../../interfaces/match.interface';
+import { TwoSelectionsComponent } from '../two-selections/two-selections.component';
+import { MatButton } from '@angular/material/button';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { AutocompleteSelectionComponent } from '../../../autocomplete-selection/autocomplete-selection.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-responsive-selector',
   templateUrl: './responsive-selector.component.html',
   styleUrls: ['./responsive-selector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    TwoSelectionsComponent,
+    MatButton,
+    MatChipListbox,
+    MatChipOption,
+    AutocompleteSelectionComponent,
+    TranslatePipe,
+  ],
 })
 export class ResponsiveSelectorComponent
   implements OnInit, OnDestroy, OnChanges
