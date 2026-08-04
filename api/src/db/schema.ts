@@ -1,12 +1,61 @@
 import {
   boolean,
+  index,
+  jsonb,
   pgTable,
   primaryKey,
+  real,
   smallint,
   text,
   timestamp,
   uuid,
 } from 'drizzle-orm/pg-core';
+
+/**
+ * Eine spielbare Disziplin samt Regelwerk. Vorher war Kicker fest verdrahtet:
+ * Best-of-3 stand in `@ArrayMaxSize(3)`, in `round1/2/3` und in einer
+ * ELO-Umrechnung mit den Konstanten 1.5 und 1.0. Damit kostete jede weitere
+ * Spielart eine Kopie dieser Logik.
+ *
+ * Das Regelwerk steht deshalb als Daten hier, nicht als Code. Eine dritte
+ * Disziplin ist danach eine Zeile in dieser Tabelle und keine Schemaaenderung.
+ */
+export const gameTypes = pgTable('game_types', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  /** Stabiler Schluessel fuer Routen, API-Parameter und i18n. */
+  key: text('key').notNull().unique(),
+  displayName: text('display_name').notNull(),
+  /** Material-Symbol-Name, damit das Icon nicht im Frontend haengt. */
+  icon: text('icon').notNull(),
+  /**
+   * Erste Seite mit so vielen gewonnenen Runden gewinnt das Spiel. Kicker 2
+   * (Best of 3), Dart 3 (Best of 5 Legs). Aus diesem einen Wert folgen
+   * Mindest- und Hoechstrundenzahl, deshalb werden sie nicht zusaetzlich
+   * gespeichert und koennen nicht widerspruechlich werden.
+   */
+  roundsToWin: smallint('rounds_to_win').notNull(),
+  /** i18n-Key fuer die Rundenbezeichnung: Runde beim Kicker, Leg beim Dart. */
+  roundLabelKey: text('round_label_key').notNull(),
+  /**
+   * Kennt die Spielart eine Sonderwertung dafuer, dass der Verlierer einer
+   * Runde ohne Punkt bleibt (Kicker "zu Null", Dart Whitewash).
+   */
+  supportsDomination: boolean('supports_domination').notNull().default(false),
+  /** Erlaubte Mannschaftsgroessen, etwa {1,2} fuer Einzel und Doppel. */
+  teamSizes: smallint('team_sizes').array().notNull(),
+  /**
+   * Zuschlag je zusaetzlicher Rundendifferenz in der ELO-Gewichtung. Das
+   * Gewicht ist `1 + (|Differenz| - 1) * step`, mit 0,5 ergibt das fuer Kicker
+   * genau die bisherigen Werte (2:0 -> 1,5 und 2:1 -> 1,0) und skaliert
+   * gleichzeitig auf jede andere Rundenzahl.
+   */
+  eloMarginStep: real('elo_margin_step').notNull().default(0.5),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: smallint('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -40,16 +89,36 @@ export const teamPlayers = pgTable(
   (table) => [primaryKey({ columns: [table.teamId, table.userId] })],
 );
 
-export const matches = pgTable('matches', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  playedAt: timestamp('played_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  isSingle: boolean('is_single').notNull().default(false),
-});
+export const matches = pgTable(
+  'matches',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    playedAt: timestamp('played_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    gameTypeId: uuid('game_type_id')
+      .notNull()
+      .references(() => gameTypes.id),
+    /**
+     * Spieler pro Seite: 1 ist ein Einzelspiel, 2 ein Doppel. Ersetzt das
+     * bisherige `is_single`, das nur zwei Zustaende kannte und den Fall
+     * "Dart im Doppel" nicht von "Kicker im Doppel" unterscheiden konnte.
+     * Die API liefert `isSingle` weiterhin abgeleitet mit, damit bestehende
+     * Clients nicht brechen.
+     */
+    teamSize: smallint('team_size').notNull().default(2),
+  },
+  (table) => [
+    // Jede Auswertung filtert nach Spielart und sortiert nach Datum.
+    index('matches_game_type_played_at_idx').on(
+      table.gameTypeId,
+      table.playedAt,
+    ),
+  ],
+);
 
 /** side 0 or 1. Exactly two rows per match. team_id XOR user_id is set,
- *  depending on matches.is_single. */
+ *  depending on whether matches.team_size is 1. */
 export const matchParticipants = pgTable('match_participants', {
   id: uuid('id').primaryKey().defaultRandom(),
   matchId: uuid('match_id')
@@ -63,9 +132,17 @@ export const matchParticipants = pgTable('match_participants', {
     onDelete: 'cascade',
   }),
   roundsWon: smallint('rounds_won').notNull().default(0),
+  /**
+   * Spielartspezifische Kennzahlen dieser Seite, etwa 180er, Checkout-Quote
+   * und Average beim Dart. Absichtlich schemalos: solche Kennzahlen
+   * unterscheiden sich je Disziplin vollstaendig, und eine Spalte je Kennzahl
+   * wuerde die Tabelle mit Spalten fuellen, die fuer Kicker immer leer sind.
+   */
+  stats: jsonb('stats'),
 });
 
-/** One row per played round (best of 3, so up to 3 rows per match). */
+/** Eine Zeile je gespielter Runde. Wie viele es hoechstens sein duerfen, ergibt
+ *  sich aus `game_types.rounds_to_win` der jeweiligen Spielart. */
 export const matchRounds = pgTable('match_rounds', {
   id: uuid('id').primaryKey().defaultRandom(),
   matchId: uuid('match_id')
@@ -73,7 +150,11 @@ export const matchRounds = pgTable('match_rounds', {
     .references(() => matches.id, { onDelete: 'cascade' }),
   roundNo: smallint('round_no').notNull(),
   winnerSide: smallint('winner_side').notNull(),
+  /** Verlierer der Runde blieb ohne Punkt. Nur sinnvoll, wenn die Spielart
+   *  `supports_domination` gesetzt hat. */
   domination: boolean('domination').notNull().default(false),
+  /** Feinere Rundendaten, etwa der Legstand oder geworfene Aufnahmen. */
+  detail: jsonb('detail'),
 });
 
 export const playtime = pgTable('playtime', {

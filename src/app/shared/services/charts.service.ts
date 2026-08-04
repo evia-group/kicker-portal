@@ -2,15 +2,12 @@ import { Injectable } from '@angular/core';
 import { IMatch } from '../interfaces/match.interface';
 import { CurrentUserService } from './current-user.service';
 import { ILeaderboard } from '../interfaces/statistic.interface';
-import {
-  lossesTimeline,
-  winsTimeline,
-  twoZero,
-  zeroTwo,
-  twoOne,
-  oneTwo,
-  name,
-} from '../global-variables';
+import { lossesTimeline, winsTimeline, name } from '../global-variables';
+import { eloMarginWeight, resultKeys } from '../game-rules';
+
+/** Fallback, wenn ein Match keine Spielart mitbringt (Altdaten, Altclient).
+ *  0,5 entspricht der bisher fest verdrahteten Kicker-Gewichtung. */
+const DEFAULT_ELO_MARGIN_STEP = 0.5;
 
 interface IMatchData {
   team1: string;
@@ -129,7 +126,8 @@ export class ChartsService {
           dominationsSide0,
           dominationsSide1,
           resultTeam1,
-          resultTeam2
+          resultTeam2,
+          match.gameType?.eloMarginStep ?? DEFAULT_ELO_MARGIN_STEP
         );
       });
 
@@ -281,7 +279,8 @@ export class ChartsService {
           dominationsSide0,
           dominationsSide1,
           resultTeam1,
-          resultTeam2
+          resultTeam2,
+          match.gameType?.eloMarginStep ?? DEFAULT_ELO_MARGIN_STEP
         );
       });
 
@@ -380,7 +379,8 @@ export class ChartsService {
     dominationsT1: number,
     dominationsT2: number,
     resultTeam1: number,
-    resultTeam2: number
+    resultTeam2: number,
+    eloMarginStep: number
   ) {
     const T1P1 = playersTeam1[0];
     const T1P2 = playersTeam1[1];
@@ -417,8 +417,14 @@ export class ChartsService {
       const ST1 = resultTeam1 > resultTeam2 ? 1 : 0;
       const ST2 = resultTeam2 > resultTeam1 ? 1 : 0;
 
-      const resultDifferenceT1 = this.convertValue(resultTeam1 - resultTeam2);
-      const resultDifferenceT2 = this.convertValue(resultTeam2 - resultTeam1);
+      const resultDifferenceT1 = eloMarginWeight(
+        eloMarginStep,
+        resultTeam1 - resultTeam2
+      );
+      const resultDifferenceT2 = eloMarginWeight(
+        eloMarginStep,
+        resultTeam2 - resultTeam1
+      );
 
       const PT1 = Math.abs(
         resultDifferenceT1 + dominationsT1 * 0.5 - defeatsT1 * 0.5
@@ -467,20 +473,6 @@ export class ChartsService {
 
   getNewRating(oldRating: number, P: number, S: number, E: number) {
     return Math.round(oldRating + 32 * P * (S - E));
-  }
-
-  convertValue(inputValue: number) {
-    if (inputValue === 2) {
-      return 1.5;
-    } else if (inputValue === 1) {
-      return 1;
-    } else if (inputValue === -1) {
-      return -1;
-    } else if (inputValue === -2) {
-      return -1.5;
-    } else {
-      return 0;
-    }
   }
 
   sortByName(list: { id: string; name: string }[]) {
@@ -550,16 +542,18 @@ export class ChartsService {
     return yearsList;
   }
 
-  getDoughnutData(data: ILeaderboard) {
+  /**
+   * Kennzahlen fuer die drei Doughnuts: Siege/Niederlagen, Zu-Null-Wertung und
+   * ab Index 4 die Einzelergebnisse. Wie viele Einzelergebnisse folgen, haengt
+   * an der Spielart, deshalb `roundsToWin`; vorher waren es vier feste Keys.
+   */
+  getDoughnutData(data: ILeaderboard, roundsToWin = 2) {
     return [
       data.wins,
       data.losses,
       data.dominations,
       data.defeats,
-      data[twoZero],
-      data[twoOne],
-      data[oneTwo],
-      data[zeroTwo],
+      ...resultKeys(roundsToWin).map((key) => data[key] ?? 0),
     ];
   }
 

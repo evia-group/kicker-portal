@@ -17,7 +17,8 @@
     },
     "settings": "Einstellungen",
     "logout": "Abmelden",
-    "welcome": "Willkommen im EVIA Desk"
+    "welcome": "Willkommen im EVIA Desk",
+    "darts": "Dart"
   },
   "auth": {
     "email": "Email",
@@ -135,5 +136,13 @@
     "NEXT_PAGE": "Nächste Seite",
     "PREVIOUS_PAGE": "Vorherige Seite",
     "OF": "von"
+  },
+  "gameType": {
+    "round": "Runde",
+    "roundPlural": "Runden",
+    "leg": "Leg",
+    "legPlural": "Legs",
+    "kicker": "Kicker",
+    "darts": "Dart"
   }
 }

@@ -13,10 +13,6 @@ import { TableService } from '../../../shared/services/table.service';
 import { ChartsService } from '../../../shared/services/charts.service';
 import { TeamsService } from '../../../shared/services/teams.service';
 import {
-  zeroTwo,
-  oneTwo,
-  twoZero,
-  twoOne,
   rank,
   name,
   wins,
@@ -27,6 +23,7 @@ import {
   totalMatches,
   elo,
 } from '../../../shared/global-variables';
+import { resultKeys } from '../../../shared/game-rules';
 import { IMatch, IPlayers } from '../../../shared/interfaces/match.interface';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
@@ -113,6 +110,22 @@ export class StatisticComponent implements OnInit, OnDestroy {
 
   statisticsDataSub: Subscription;
 
+  /**
+   * Rundenzahl der angezeigten Spielart. Bestimmt, welche Ergebnisspalten es
+   * gibt. Vorerst fest auf Kicker, bis die Seite eine Spielart-Umschaltung
+   * bekommt; die Ableitung darunter ist bereits spielartunabhaengig.
+   */
+  roundsToWin = 2;
+
+  /**
+   * Die Ergebnisspalten (2:0, 2:1, 1:2, 0:2 beim Kicker) kommen aus
+   * `resultKeys()`. Spalten und Kopfzeilen wurden vorher in zwei Arrays
+   * getrennt aufgezaehlt, die an zwei Positionen unterschiedlich sortiert
+   * waren: die Spalte "0:2" trug dadurch die Ueberschrift "1:2" und umgekehrt.
+   * Aus einer Liste abgeleitet koennen sie nicht mehr auseinanderlaufen.
+   */
+  resultColumns: string[] = resultKeys(this.roundsToWin);
+
   displayedColumnsTranslationKeysPlayer =
     this.getTranslationKeysForDisplayedColumns(false);
 
@@ -127,10 +140,7 @@ export class StatisticComponent implements OnInit, OnDestroy {
     diff,
     dominations,
     defeats,
-    twoZero,
-    twoOne,
-    zeroTwo,
-    oneTwo,
+    ...this.resultColumns,
     totalMatches,
     elo,
   ];
@@ -388,10 +398,10 @@ export class StatisticComponent implements OnInit, OnDestroy {
       'stats.difference',
       'stats.dominations',
       'stats.defeats',
-      twoZero,
-      twoOne,
-      oneTwo,
-      zeroTwo,
+      // Dieselbe Liste wie `displayedColumns`, damit Spalte und Ueberschrift
+      // zwingend zusammenpassen. Ergebnisschluessel haben keine Uebersetzung,
+      // ngx-translate gibt sie unveraendert zurueck.
+      ...this.resultColumns,
       'app.matches',
       '',
     ];
@@ -409,7 +419,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
         this.yearDateTeam = this.getDateFromYear(this.selectedYearTeam);
       }
       this.doughnutDataTeam = this.chartsService.getDoughnutData(
-        this.teamsMap.get(this.selectedTeam)
+        this.teamsMap.get(this.selectedTeam),
+        this.roundsToWin
       );
       this.matchesChartDataTeam = this.chartsService.getMatchesChartData(
         this.teamsMap.get(this.selectedTeam),
@@ -426,7 +437,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
         this.yearDatePlayer = this.getDateFromYear(this.selectedYearPlayer);
       }
       this.doughnutDataPlayer = this.chartsService.getDoughnutData(
-        this.playersMap.get(this.selectedPlayer)
+        this.playersMap.get(this.selectedPlayer),
+        this.roundsToWin
       );
       this.matchesChartDataPlayer = this.chartsService.getMatchesChartData(
         this.playersMap.get(this.selectedPlayer),
@@ -443,7 +455,8 @@ export class StatisticComponent implements OnInit, OnDestroy {
         this.yearDatePlayerSM = this.getDateFromYear(this.selectedYearPlayerSM);
       }
       this.doughnutDataPlayerSM = this.chartsService.getDoughnutData(
-        this.playersMapSM.get(this.selectedPlayerSM)
+        this.playersMapSM.get(this.selectedPlayerSM),
+        this.roundsToWin
       );
       this.matchesChartDataPlayerSM = this.chartsService.getMatchesChartData(
         this.playersMapSM.get(this.selectedPlayerSM),

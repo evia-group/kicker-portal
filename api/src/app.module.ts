@@ -7,6 +7,7 @@ import { MatchesModule } from './matches/matches.module';
 import { PlaytimeModule } from './playtime/playtime.module';
 import { LeaderboardModule } from './leaderboard/leaderboard.module';
 import { KickerModule } from './kicker/kicker.module';
+import { GameTypesModule } from './game-types/game-types.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -15,6 +16,7 @@ import { HealthController } from './health/health.controller';
     AuthModule,
     UsersModule,
     TeamsModule,
+    GameTypesModule,
     MatchesModule,
     PlaytimeModule,
     LeaderboardModule,

@@ -4,6 +4,7 @@ import {
   LeaderboardService,
   LeaderboardEntry,
 } from '../src/leaderboard/leaderboard.service';
+import { GameTypesService } from '../src/game-types/game-types.service';
 import { FirestoreCollections } from './migrate-core';
 
 interface RefAggregate {
@@ -276,7 +277,13 @@ export async function verifyMigration(
   const userTeamAggregatesByUuid = mapAggregatesToUuid(userTeamAggregates);
   const userSingleAggregatesByUuid = mapAggregatesToUuid(userSingleAggregates);
 
-  const leaderboardService = new LeaderboardService(db);
+  // Bewusst ohne gameType-Argument: die Migration erzeugt ausschliesslich
+  // Kickerspiele, und die Gegenprobe soll dieselben Zahlen sehen wie vor der
+  // Einfuehrung der Spielarten.
+  const leaderboardService = new LeaderboardService(
+    db,
+    new GameTypesService(db),
+  );
   const actualTeams = await leaderboardService.getTeamLeaderboard();
   const actualUserTeams = await leaderboardService.getUserLeaderboard('team');
   const actualUserSingles = await leaderboardService.getUserLeaderboard(

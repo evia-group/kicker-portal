@@ -30,7 +30,6 @@ export class EntraAuthGuard implements CanActivate {
   constructor(@Inject(DRIZZLE) private readonly db: Database) {
     this.authDisabled = process.env.AUTH_DISABLED === 'true';
     if (this.authDisabled) {
-      // eslint-disable-next-line no-console
       console.warn(
         '\n⚠️  AUTH_DISABLED=true - every request is authenticated as a ' +
           'fixed local-dev admin user, no token is checked. Never set this ' +

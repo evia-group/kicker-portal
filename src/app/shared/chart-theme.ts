@@ -60,15 +60,45 @@ function withAlpha(color: string, alpha: number): string {
 const AREA_ALPHA = 0.7;
 
 /**
- * Diverging-Skala fuer Ergebnisse, von "klar gewonnen" bis "klar verloren".
- * Die Enden sind die semantischen Anker (Brand-Gruen, Signalrot), die Mitten
- * sind Tonwerte 70 aus den generierten M3-Paletten in
- * `src/styles/_theme-colors.scss` und damit ebenfalls aus dem CD abgeleitet.
+ * Endpunkte der Ergebnisskala auf der Verlierer-Seite. Die Gewinner-Seite
+ * verankert das Brand-Gruen, die Verlierer-Seite das Signalrot; dazwischen wird
+ * interpoliert. Die Zwischenwerte entsprechen fuer die vierstufige
+ * Kicker-Skala den Tonwerten 70 der generierten M3-Paletten in
+ * `src/styles/_theme-colors.scss`.
  */
-const RESULT_SCALE_MIDS = {
-  winNarrow: '#97b800',
-  lossNarrow: '#ff8a7b',
+const RESULT_SCALE_INNER = {
+  win: '#97b800',
+  loss: '#ff8a7b',
 } as const;
+
+function parseHex(color: string): [number, number, number] | null {
+  const match = /^#([0-9a-f]{6})$/i.exec(color);
+  if (!match) {
+    return null;
+  }
+  const int = parseInt(match[1], 16);
+  return [(int >> 16) & 0xff, (int >> 8) & 0xff, int & 0xff];
+}
+
+function toHex([r, g, b]: [number, number, number]): string {
+  return `#${[r, g, b]
+    .map((c) => Math.round(c).toString(16).padStart(2, '0'))
+    .join('')}`;
+}
+
+/** Lineare Interpolation zwischen zwei Hexfarben. */
+function mix(from: string, to: string, ratio: number): string {
+  const a = parseHex(from);
+  const b = parseHex(to);
+  if (!a || !b) {
+    return from;
+  }
+  return toHex([
+    a[0] + (b[0] - a[0]) * ratio,
+    a[1] + (b[1] - a[1]) * ratio,
+    a[2] + (b[2] - a[2]) * ratio,
+  ]);
+}
 
 export const chartTheme = {
   /** Achsenbeschriftungen und Legendentext. Laut CD Sekundaertext. */
@@ -106,14 +136,25 @@ export const chartTheme = {
     return cssVar('--evia-pink');
   },
 
-  /** Vierstufige Ergebnisskala: 2:0, 2:1, 1:2, 0:2. */
-  get resultScale(): string[] {
-    return [
-      cssVar('--evia-green'),
-      RESULT_SCALE_MIDS.winNarrow,
-      RESULT_SCALE_MIDS.lossNarrow,
-      cssVar('--evia-error'),
-    ];
+  /**
+   * Ergebnisskala als Verlauf vom klarsten Sieg zur klarsten Niederlage, passend
+   * zur Reihenfolge aus `resultKeys()`. `winCount` ist die Zahl der
+   * Siegergebnisse, also `roundsToWin`: 2 beim Kicker (vier Stufen), 3 beim Dart
+   * (sechs Stufen). Vorher waren es vier festverdrahtete Farben, womit eine
+   * Spielart mit mehr Ergebnissen ohne Farben dagestanden haette.
+   */
+  resultScale(winCount: number): string[] {
+    const green = cssVar('--evia-green');
+    const error = cssVar('--evia-error');
+    const wins: string[] = [];
+    const losses: string[] = [];
+    for (let step = 0; step < winCount; step++) {
+      // Bei nur einer Stufe je Seite bleibt es beim reinen Ankerwert.
+      const ratio = winCount === 1 ? 0 : step / (winCount - 1);
+      wins.push(mix(green, RESULT_SCALE_INNER.win, ratio));
+      losses.unshift(mix(error, RESULT_SCALE_INNER.loss, ratio));
+    }
+    return [...wins, ...losses];
   },
 
   /** Flaechenfarbe einer Serie (teiltransparent). */

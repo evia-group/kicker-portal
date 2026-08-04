@@ -1,4 +1,5 @@
 import { UntypedFormControl } from '@angular/forms';
+import { IGameType } from './game-type.interface';
 
 export interface IRounds {
   win: boolean;
@@ -44,7 +45,14 @@ export interface IMatchRound {
 export interface IMatch {
   id: string;
   playedAt: string;
+  /** Abgeleitet aus `teamSize === 1`. Bleibt fuer Kompatibilitaet erhalten. */
   isSingle: boolean;
+  /** Spieler pro Seite: 1 im Einzel, 2 im Doppel. */
+  teamSize: number;
+  gameTypeId: string;
+  /** Regelwerk der Spielart. Null nur, wenn ein Datensatz auf eine geloeschte
+   *  Spielart zeigt. */
+  gameType: IGameType | null;
   participants: IMatchParticipant[];
   rounds: IMatchRound[];
 }
