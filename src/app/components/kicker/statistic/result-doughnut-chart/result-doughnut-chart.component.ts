@@ -14,6 +14,7 @@ import {
   zeroTwo,
 } from '../../../../shared/global-variables';
 import { BaseChartDirective } from 'ng2-charts';
+import { chartTheme } from '../../../../shared/chart-theme';
 
 @Component({
   selector: 'app-result-doughnut-chart',
@@ -64,28 +65,15 @@ export class ResultDoughnutChartComponent implements OnChanges {
   public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
     plugins: {
-      legend: {
-        labels: {
-          color: 'rgb(199,199,199)',
-          boxWidth: 20,
-        },
-      },
+      legend: chartTheme.legend(),
     },
   };
 
-  backgroundColors = [
-    'rgba(40, 164, 40, 0.7)',
-    'rgba(153, 215, 91, 0.7)',
-    'rgba(255, 129, 87, 0.7)',
-    'rgba(255, 51, 51, 0.7)',
-  ];
+  // Vierstufige Ergebnisskala (2:0, 2:1, 1:2, 0:2). Index 0 ist der klarste
+  // Sieg, Index 3 die klarste Niederlage.
+  backgroundColors = chartTheme.areas(chartTheme.resultScale);
 
-  hoverColors = [
-    'rgba(40, 164, 40, 1)',
-    'rgba(153, 215, 91, 1)',
-    'rgba(255, 129, 87, 1)',
-    'rgba(255, 51, 51, 1)',
-  ];
+  hoverColors = chartTheme.resultScale;
 
   @Output()
   doughnutChartIsReadyEvent = new EventEmitter<boolean>();

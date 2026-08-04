@@ -1,0 +1,40 @@
+// evia Corporate Design: Rohwerte.
+//
+// Diese Datei enthaelt ausschliesslich die verbindlichen Brand-Konstanten. Sie
+// vergibt keine Semantik und emittiert kein CSS. Wer eine Farbe braucht, nimmt
+// die semantischen Rollen aus `_theme.scss` beziehungsweise die daraus
+// erzeugten `--evia-*` Custom Properties, nicht diese Variablen direkt.
+//
+// Quelle: evia Brand System. Farben und Schrift sind verbindlich und duerfen
+// auch nicht "nur fuer diese eine Komponente" abweichen.
+
+@use 'sass:color';
+
+// Grundfarben
+$black: #05060a; //     Standard-Hintergrund
+$bg-card: #0d0e18; //   Cards, erhoehte Flaechen
+$green: #bee600; //     Primaer: Headlines, Zahlen, Highlights
+$cyan: #00e7ff; //      Sekundaer: Charts, Tags, Flows
+$pink: #ff00ac; //      Tertiaer: Kontraste, Prioritaeten
+$white: #ffffff; //     Text auf Dunkel
+$gray: #eeeeee; //      Sekundaertext
+$dark-gray: #222233; // Trennlinien, Subtext
+
+// Fehlerzustaende sind kein Brand-Akzent. Die Palette kennt kein Rot, also
+// bleibt das bisherige Signalrot der Anwendung erhalten. Pink ist laut CD
+// Prioritaet und Kontrast, nicht Fehler, und wird hier bewusst nicht verwendet.
+$error: #ef3f33;
+
+// Hoehere Elevationsstufen gibt es im CD nicht, weil Folien flach sind. Fuer
+// eine App braucht Material aber eine Rampe. Sie wird aus `$bg-card` in
+// Richtung `$dark-gray` gemischt, damit keine fremden Farbwerte entstehen.
+$surface-high: color.mix($dark-gray, $bg-card, 25%); //  #12131f
+$surface-highest: color.mix($dark-gray, $bg-card, 50%); // #181826
+
+// Typografie: immer Arial, kein Ersatz. Arial ist Systemschrift, dadurch
+// entfaellt jeder externe Font-Request und die App bleibt offline nutzbar.
+$font-family: Arial, Helvetica, sans-serif;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;

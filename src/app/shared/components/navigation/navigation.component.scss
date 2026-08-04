@@ -10,18 +10,30 @@
   .toolbar-spacer {
     flex: 1 1 auto;
   }
+  // Die Kopfzeile trug bisher `color="primary"`. Unter M3 hat das keine
+  // Wirkung mehr, und es waere hier auch falsch: eine vollflaechig gruene
+  // Kopfzeile widerspricht "Gruen nur fuer das Wichtigste". Stattdessen eine
+  // erhoehte Flaeche mit dezenter Trennlinie, damit sie sich ueberhaupt vom
+  // schwarzen Grundzustand abgrenzt.
   .navigation-toolbar {
+    --mat-toolbar-container-background-color: var(
+      --mat-sys-surface-container-low
+    );
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+
     button {
       margin: 0 5px;
     }
   }
 
+  // Tischstatus. Die bisherigen Werte (#11590a, #b3362a) lagen auf dunklem
+  // Grund bei rund 1,6:1 und waren damit praktisch unsichtbar.
   .available-icon {
-    color: #11590a;
+    color: var(--evia-green);
   }
 
   .blocked-icon {
-    color: #b3362a;
+    color: var(--evia-error);
   }
 }
 
@@ -50,20 +62,23 @@ h1.app-name {
   }
 }
 
+// Statusanzeige des Kickertischs. Traegt jetzt eine neutrale Flaeche und
+// signalisiert ueber Rand und Beschriftung, statt die Akzentfarbe als
+// Hintergrund zu verbrauchen. Gruen bleibt damit dem Wichtigsten vorbehalten.
 .chip-container {
   color: transparent;
-  border: 2px solid #000000;
-  --mat-chip-elevated-container-color: #d4e157;
+  border: 2px solid var(--mat-sys-outline-variant);
+  --mat-chip-elevated-container-color: var(--mat-sys-surface-container-high);
   pointer-events: none;
 
   &.success {
-    border-color: #11590a;
-    --mat-chip-label-text-color: #11590a;
+    border-color: var(--evia-green);
+    --mat-chip-label-text-color: var(--evia-green);
   }
 
   &.error {
-    border-color: #b3362a;
-    --mat-chip-label-text-color: #b3362a;
+    border-color: var(--evia-error);
+    --mat-chip-label-text-color: var(--evia-error);
   }
 }
 

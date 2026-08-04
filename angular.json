@@ -55,7 +55,7 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets", "src/config.json"],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
+              "@fontsource/material-icons/latin-400.css",
               "src/styles.scss"
             ],
             "scripts": [],

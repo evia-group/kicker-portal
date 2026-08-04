@@ -28,6 +28,7 @@ import {
 } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
 import { NgClass } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -54,6 +55,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     MatRowDef,
     MatRow,
     MatPaginator,
+    MatIcon,
     TranslatePipe,
   ],
 })

@@ -14,6 +14,7 @@ import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { TranslatePipe } from '@ngx-translate/core';
+import { chartTheme } from '../../../../shared/chart-theme';
 
 @Component({
   selector: 'app-playtime-chart',
@@ -78,34 +79,29 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     scales: {
       x: {
         ticks: {
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
         },
         grid: {
-          color: 'rgb(89,89,89)',
+          color: chartTheme.gridColor,
         },
       },
       y: {
         ticks: {
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
           precision: 0,
         },
         grid: {
-          color: 'rgb(89,89,89)',
+          color: chartTheme.gridColor,
         },
         title: {
           display: true,
           text: '',
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
         },
       },
     },
     plugins: {
-      legend: {
-        labels: {
-          color: 'rgb(199,199,199)',
-          boxWidth: 20,
-        },
-      },
+      legend: chartTheme.legend(),
     },
   };
 
@@ -429,9 +425,9 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
           type: 'bar',
           data: chartData,
           label: this.legendLabel,
-          backgroundColor: ['rgba(51, 133, 255, 0.7)'],
-          borderColor: ['rgba(51, 133, 255, 1)'],
-          hoverBackgroundColor: ['rgba(51, 133, 255, 1)'],
+          backgroundColor: [chartTheme.area(chartTheme.neutral)],
+          borderColor: [chartTheme.neutral],
+          hoverBackgroundColor: [chartTheme.neutral],
         },
       ],
     };

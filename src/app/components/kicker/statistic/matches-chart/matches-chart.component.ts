@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { chartTheme } from '../../../../shared/chart-theme';
 
 @Component({
   selector: 'app-matches-chart',
@@ -38,29 +39,24 @@ export class MatchesChartComponent implements OnChanges {
     scales: {
       x: {
         ticks: {
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
         },
         grid: {
-          color: 'rgb(89,89,89)',
+          color: chartTheme.gridColor,
         },
       },
       y: {
         ticks: {
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
           precision: 0,
         },
         grid: {
-          color: 'rgb(89,89,89)',
+          color: chartTheme.gridColor,
         },
       },
     },
     plugins: {
-      legend: {
-        labels: {
-          color: 'rgb(199,199,199)',
-          boxWidth: 20,
-        },
-      },
+      legend: chartTheme.legend(),
     },
   };
 
@@ -81,9 +77,9 @@ export class MatchesChartComponent implements OnChanges {
           type: 'bar',
           data: this.chartData,
           label: this.legendLabel,
-          backgroundColor: ['rgba(51, 133, 255, 0.7)'],
-          borderColor: ['rgba(51, 133, 255, 1)'],
-          hoverBackgroundColor: ['rgba(51, 133, 255, 1)'],
+          backgroundColor: [chartTheme.area(chartTheme.neutral)],
+          borderColor: [chartTheme.neutral],
+          hoverBackgroundColor: [chartTheme.neutral],
         },
       ],
     };

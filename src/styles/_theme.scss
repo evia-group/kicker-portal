@@ -1,0 +1,112 @@
+// evia Corporate Design: semantische Ebene.
+//
+// Hier wird das Angular-Material-Theme (M3) aus den generierten Tonal-Paletten
+// aufgebaut und anschliessend werden die Rollen, die das CD exakt festlegt, auf
+// die genauen Brand-Hexwerte gepinnt. Ohne dieses Pinning liefert M3 fuer ein
+// Dark-Theme abgeleitete Tonwerte (Primaer waere Tonwert 80, also #b0d500
+// statt #bee600), und die Anwendung waere "ungefaehr evia" statt evia.
+
+@use '@angular/material' as mat;
+@use './brand';
+@use './theme-colors';
+
+// Rollen, die das CD verbindlich festlegt. Alles was hier nicht steht, leitet
+// M3 aus den Paletten ab.
+//
+// Kontrastwerte gegen WCAG 2.2 (geprueft gegen $black als Hintergrund):
+//   #bee600 auf #05060a  14,3:1  Text und Grafik  ok
+//   #00e7ff auf #05060a  13,5:1  Text und Grafik  ok
+//   #ff00ac auf #05060a   4,8:1  ab AA fuer Text  ok
+//   #eeeeee auf #05060a  17,4:1  Sekundaertext    ok
+// Auf farbigen Flaechen traegt nur Schwarz: Weiss auf #bee600 kommt auf 1,4:1
+// und auf #ff00ac auf 4,0:1, beides unter AA. Deshalb ist jedes `on-*` der
+// Akzentfarben schwarz und nicht weiss.
+$_overrides: (
+  // Flaechen: Schwarz als Grundzustand, Cards eine Stufe heller.
+  background: brand.$black,
+  surface: brand.$black,
+  surface-dim: brand.$black,
+  surface-container-lowest: brand.$black,
+  surface-container-low: brand.$bg-card,
+  surface-container: brand.$bg-card,
+  surface-container-high: brand.$surface-high,
+  surface-container-highest: brand.$surface-highest,
+  surface-bright: brand.$surface-highest,
+  surface-variant: brand.$surface-high,
+
+  // Text auf Dunkel
+  on-background: brand.$white,
+  on-surface: brand.$white,
+  on-surface-variant: brand.$gray,
+
+  // Primaer: das wichtigste Element. Gruen nur fuer das Wichtigste, sonst hebt
+  // nichts hervor. Die Zurueckhaltung passiert in den Komponenten, nicht hier.
+  primary: brand.$green,
+  on-primary: brand.$black,
+
+  // Sekundaer: Charts, Tags, Flows
+  secondary: brand.$cyan,
+  on-secondary: brand.$black,
+
+  // Tertiaer: Kontraste und Prioritaeten
+  tertiary: brand.$pink,
+  on-tertiary: brand.$black,
+
+  // Trennlinien laut CD dezent ($dark-gray). Interaktive Umrisse wie
+  // Form-Field-Raender brauchen dagegen 3:1 gegen den Hintergrund
+  // (WCAG 1.4.11), das erfuellt #222233 mit 1,4:1 nicht. Deshalb bekommt
+  // `outline` den neutralen Tonwert 60 und nur `outline-variant`, also die
+  // rein dekorativen Linien, den CD-Wert.
+  outline: #908f9d,
+  outline-variant: brand.$dark-gray,
+
+  // Invertierte Flaechen (Snackbar, Tooltip)
+  inverse-surface: brand.$gray,
+  inverse-on-surface: brand.$black,
+  inverse-primary: #536600
+);
+
+@mixin apply() {
+  @include mat.theme(
+    (
+      color: (
+        primary: theme-colors.$primary-palette,
+        tertiary: theme-colors.$tertiary-palette,
+        // Die App ist bewusst dark-only, nicht `color-scheme`. Das CD kennt
+        // keinen hellen Modus, und ein automatisch abgeleiteter Light-Modus
+        // waere kein evia.
+        theme-type: dark,
+      ),
+      typography: (
+        plain-family: brand.$font-family,
+        brand-family: brand.$font-family,
+        regular-weight: brand.$font-weight-regular,
+        medium-weight: brand.$font-weight-medium,
+        bold-weight: brand.$font-weight-bold,
+      ),
+      density: 0,
+    ),
+    $_overrides
+  );
+
+  // Native Steuerelemente, Scrollbars und Autofill sollen ebenfalls dunkel
+  // rendern. `mat.theme()` emittiert nur Tokens, kein `color-scheme`.
+  color-scheme: dark;
+
+  // Brand-Token als Custom Properties, damit Komponenten-SCSS keine Hexwerte
+  // mehr enthaelt und auch TypeScript sie ueber getComputedStyle lesen kann.
+  --evia-black: #{brand.$black};
+  --evia-bg-card: #{brand.$bg-card};
+  --evia-green: #{brand.$green};
+  --evia-cyan: #{brand.$cyan};
+  --evia-pink: #{brand.$pink};
+  --evia-white: #{brand.$white};
+  --evia-gray: #{brand.$gray};
+  --evia-dark-gray: #{brand.$dark-gray};
+  --evia-error: #{brand.$error};
+
+  // Halbtransparente Ableitungen fuer Hover- und Zebra-Flaechen. Als
+  // color-mix, damit sie mit der Flaeche darunter arbeiten statt sie zu decken.
+  --evia-overlay-hover: #{rgba(brand.$white, 0.08)};
+  --evia-overlay-selected: #{rgba(brand.$green, 0.12)};
+}
