@@ -28,6 +28,9 @@ export interface ILeaderboard {
 }
 
 export interface IPlaytime {
+  /** ISO-8601-Zeitstempel, so wie `GET /playtime` sie liefert. Bewusst kein
+   *  Epochenwert: die Firestore-Variante speicherte Sekunden, das Backend
+   *  liefert seit der Umstellung Zeitstempel. */
   startTime: string;
   endTime: string;
 }
