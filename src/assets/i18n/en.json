@@ -172,5 +172,13 @@
       "declined": "Someone can't make it. You're back in the queue.",
       "expired": "The proposal expired. You're back in the queue."
     }
+  },
+  "push": {
+    "enabled": "Notifications are on.",
+    "notEnabled": "No notifications. You'll still see it while the page is open.",
+    "needsInstall": "Add the app to your home screen to get notifications.",
+    "settings": "Notifications",
+    "proposalReceived": "When a match has been found",
+    "tableFree": "When the table frees up"
   }
 }

@@ -19,6 +19,10 @@ import {
 import { GameTypesService } from '../game-types/game-types.service';
 import { validateTeamSize } from '../game-types/ruleset';
 import { MatchmakingGateway } from './matchmaking.gateway';
+import { NotificationsService } from '../notifications/notifications.service';
+
+/** Ziel eines Klicks auf eine Benachrichtigung. */
+const MATCHMAKING_URL = '/kicker/matchmaking';
 
 /**
  * Wie lange ein Eintrag in der Warteschlange gilt. Lang genug fuer eine
@@ -40,6 +44,7 @@ export class MatchmakingService {
     @Inject(DRIZZLE) private readonly db: Database,
     private readonly gameTypesService: GameTypesService,
     private readonly gateway: MatchmakingGateway,
+    private readonly notifications: NotificationsService,
   ) {}
 
   async join(userId: string, gameTypeKey: string, teamSize: number) {
@@ -79,7 +84,7 @@ export class MatchmakingService {
     }
 
     await this.publishQueue(gameType.key, gameType.id);
-    await this.tryMatch(gameType.key, gameType.id, teamSize);
+    await this.tryMatch(gameType, teamSize);
     return { status: 'waiting' as const };
   }
 
@@ -178,8 +183,33 @@ export class MatchmakingService {
    * Sitzung endet, und ist damit der natuerliche Anlass, die Wartenden zu
    * erinnern.
    */
-  announceTableFree(gameTypeKey: string): void {
+  async announceTableFree(gameTypeKey: string): Promise<void> {
     this.gateway.broadcastTableFree(gameTypeKey);
+
+    const gameType = await this.gameTypesService.requireByKey(gameTypeKey);
+    const waiting = await this.db
+      .select({ userId: queueEntries.userId })
+      .from(queueEntries)
+      .where(
+        and(
+          eq(queueEntries.gameTypeId, gameType.id),
+          eq(queueEntries.status, 'waiting'),
+        ),
+      );
+
+    // Nur an Wartende. Wer nicht in der Schlange steht, hat nicht gefragt.
+    await this.notifications.notify(
+      waiting.map((row) => row.userId),
+      'tableFree',
+      {
+        title: gameType.displayName,
+        body: 'Der Tisch ist frei geworden.',
+        url: MATCHMAKING_URL,
+        // Gleicher Tag: eine zweite Meldung ersetzt die erste, statt sich zu
+        // stapeln, wenn kurz hintereinander mehrere Sitzungen enden.
+        tag: `table-free-${gameType.key}`,
+      },
+    );
   }
 
   /**
@@ -233,10 +263,10 @@ export class MatchmakingService {
    * Nutzungsdaten geraten. FIFO ist nachvollziehbar und fuehlt sich gerecht an.
    */
   private async tryMatch(
-    gameTypeKey: string,
-    gameTypeId: string,
+    gameType: typeof gameTypes.$inferSelect,
     teamSize: number,
   ) {
+    const gameTypeId = gameType.id;
     const needed = teamSize * 2;
 
     const waiting = await this.db
@@ -288,9 +318,27 @@ export class MatchmakingService {
 
     const names = await this.namesFor(chosen.map((entry) => entry.userId));
 
+    // Push zusaetzlich zum Socket: der Vorschlag laeuft nach zwei Minuten ab,
+    // wer die App nicht offen hat, wuerde ihn sonst verpassen. Bei offenem Tab
+    // sieht man beides, was hier richtig ist: die Frist ist knapp.
+    await this.notifications.notify(
+      chosen.map((entry) => entry.userId),
+      'proposalReceived',
+      {
+        title: `${gameType.displayName}: Paarung gefunden`,
+        body: chosen
+          .map((entry) => names.get(entry.userId) ?? entry.userId)
+          .join(', '),
+        url: MATCHMAKING_URL,
+        tag: `proposal-${proposal.id}`,
+        // Verlangt eine Entscheidung, soll also nicht von allein verschwinden.
+        requireInteraction: true,
+      },
+    );
+
     this.gateway.broadcastProposal({
       proposalId: proposal.id,
-      gameTypeKey,
+      gameTypeKey: gameType.key,
       teamSize,
       expiresAt: expiresAt.toISOString(),
       players: chosen.map((entry) => ({
@@ -300,7 +348,7 @@ export class MatchmakingService {
       })),
     });
 
-    await this.publishQueue(gameTypeKey, gameTypeId);
+    await this.publishQueue(gameType.key, gameTypeId);
   }
 
   /**
@@ -368,7 +416,7 @@ export class MatchmakingService {
       await this.publishQueue(gameType.key, gameType.id);
       if (status !== 'accepted') {
         // Nach dem Zurueckstellen kann sofort eine neue Paarung moeglich sein.
-        await this.tryMatch(gameType.key, gameType.id, proposal.teamSize);
+        await this.tryMatch(gameType, proposal.teamSize);
       }
     }
   }

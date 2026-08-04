@@ -239,6 +239,52 @@ export const matchProposalPlayers = pgTable(
   (table) => [primaryKey({ columns: [table.proposalId, table.userId] })],
 );
 
+/**
+ * Ein Endgeraet, das Push-Benachrichtigungen empfangen kann.
+ *
+ * Ein Nutzer hat oft mehrere: Telefon, Arbeitsrechner, Tablet. Deshalb je
+ * Endpunkt eine Zeile und nicht ein Feld am Nutzer. `endpoint` ist die vom
+ * Browser vergebene, eindeutige Adresse und damit der natuerliche Schluessel.
+ */
+export const pushSubscriptions = pgTable(
+  'push_subscriptions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    endpoint: text('endpoint').notNull().unique(),
+    /** Oeffentlicher Schluessel des Geraets, aus der PushSubscription. */
+    p256dh: text('p256dh').notNull(),
+    auth: text('auth').notNull(),
+    /** Nur zur Wiedererkennung in einer Geraeteliste, nicht funktional. */
+    userAgent: text('user_agent'),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    /** Letzter erfolgreicher Versand, damit tote Geraete auffallen. */
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true }),
+  },
+  (table) => [index('push_subscriptions_user_idx').on(table.userId)],
+);
+
+/**
+ * Welche Benachrichtigungen ein Nutzer will.
+ *
+ * Standardmaessig alles an: wer sich in eine Warteschlange eintraegt, will
+ * offensichtlich Bescheid bekommen. Abschalten muss aber je Anlass moeglich
+ * sein, sonst schaltet man am Ende alles ab.
+ */
+export const notificationPreferences = pgTable('notification_preferences', {
+  userId: uuid('user_id')
+    .primaryKey()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  /** Eine Paarung wurde vorgeschlagen und wartet auf Bestaetigung. */
+  proposalReceived: boolean('proposal_received').notNull().default(true),
+  /** Der Tisch ist frei geworden, waehrend ich warte. */
+  tableFree: boolean('table_free').notNull().default(true),
+});
+
 export const playtime = pgTable('playtime', {
   id: uuid('id').primaryKey().defaultRandom(),
   startTime: timestamp('start_time', { withTimezone: true }).notNull(),

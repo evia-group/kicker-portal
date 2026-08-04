@@ -24,7 +24,7 @@ export class KickerService {
       // Eine beendete Sitzung heisst: der Tisch ist frei. Das ist der
       // natuerliche Anlass, die Wartenden zu erinnern, und er kommt vom Tisch
       // selbst statt aus einer Vermutung im Frontend.
-      this.matchmaking.announceTableFree(KICKER_GAME_TYPE_KEY);
+      await this.matchmaking.announceTableFree(KICKER_GAME_TYPE_KEY);
     }
     this.gateway.broadcastStatus(dto);
   }

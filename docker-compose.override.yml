@@ -41,8 +41,10 @@ services:
       AUTH_DISABLED: 'true'
       # ng serve runs on 4200 in dev mode (docker-compose.yml's CORS_ORIGIN
       # default is 8080, the production nginx port) - override so the
-      # browser's requests aren't blocked by CORS.
-      CORS_ORIGIN: http://localhost:4200
+      # browser's requests aren't blocked by CORS. 8081 ist fuer ein lokal
+      # gebautes runtime-Image, um den Service Worker und Push zu pruefen; der
+      # Dev-Server schaltet beides ab.
+      CORS_ORIGIN: http://localhost:4200,http://localhost:8081
     depends_on:
       db:
         condition: service_healthy

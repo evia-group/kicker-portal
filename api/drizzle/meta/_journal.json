@@ -29,6 +29,13 @@
       "when": 1785842579677,
       "tag": "0003_matchmaking_queue",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785848379302,
+      "tag": "0004_push_notifications",
+      "breakpoints": true
     }
   ]
 }

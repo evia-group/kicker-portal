@@ -10,6 +10,7 @@ import { LeaderboardModule } from './leaderboard/leaderboard.module';
 import { KickerModule } from './kicker/kicker.module';
 import { GameTypesModule } from './game-types/game-types.module';
 import { MatchmakingModule } from './matchmaking/matchmaking.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -24,6 +25,7 @@ import { HealthController } from './health/health.controller';
     MatchesModule,
     PlaytimeModule,
     LeaderboardModule,
+    NotificationsModule,
     MatchmakingModule,
     KickerModule,
   ],

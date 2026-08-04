@@ -19,6 +19,10 @@ const config = {
     tenant: process.env.MS_TENANT ?? '',
     clientId: process.env.MS_CLIENT_ID ?? '',
   },
+  // Öffentlicher VAPID-Schlüssel. Muss zur Laufzeit kommen und nicht als
+  // Build-Konstante, weil ein Image gegen mehrere Umgebungen läuft und jede
+  // ihr eigenes Schlüsselpaar hat. Leer heißt: kein Push (siehe PushService).
+  vapidPublicKey: process.env.VAPID_PUBLIC_KEY ?? '',
 };
 
 writeFileSync(targetPath, JSON.stringify(config, null, 2));

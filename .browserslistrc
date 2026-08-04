@@ -1,0 +1,18 @@
+# Browser-Baseline der Anwendung.
+#
+# Ohne diese Datei greift die Voreinstellung von browserslist, und die enthaelt
+# unter anderem `and_qq 14.9` und `and_uc 15.5`. Das hat zwei Folgen: der Build
+# baut Code fuer Browser zurueck, die hier niemand benutzt, und der
+# Testrunner scheitert, weil das erzeugte Test-Setup Top-Level-await verwendet,
+# das diese Browser nicht koennen.
+#
+# Web Push braucht auf iOS mindestens 16.4 (siehe docs/pwa.md), Angular 22
+# unterstuetzt aber selbst erst ab iOS 17 und warnt bei allem darunter. Die
+# effektive Untergrenze ist damit Angular, nicht Push.
+
+last 2 Chrome versions
+last 2 Edge versions
+last 2 Firefox versions
+last 2 Safari versions
+iOS >= 17
+not dead

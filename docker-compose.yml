@@ -38,6 +38,12 @@ services:
       ENTRA_TENANT_ID: ${MS_TENANT:-}
       ENTRA_AUDIENCE: ${ENTRA_AUDIENCE:-}
       AUTH_DISABLED: ${AUTH_DISABLED:-false}
+      # VAPID-Paar für Web Push. Fehlt eines, protokolliert der
+      # NotificationsService eine Warnung und verschickt nichts, statt beim
+      # Start abzubrechen: die Anwendung soll auch ohne Push laufen.
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-}
     ports:
       # The browser calls API_URL (localhost:3000 by default) directly -
       # there's no reverse proxy in this base setup (only compose.prod.yml's
@@ -62,6 +68,9 @@ services:
       MS_TENANT: ${MS_TENANT:-}
       MS_CLIENT_ID: ${MS_CLIENT_ID:-}
       DISABLE_SSO: ${DISABLE_SSO:-false}
+      # Nur der öffentliche Schlüssel. Fehlt er, läuft die App ohne
+      # Benachrichtigungen weiter, deshalb kein :? wie bei API_URL.
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
     ports:
       - '8080:8080'
     depends_on:

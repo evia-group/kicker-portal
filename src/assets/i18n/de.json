@@ -173,5 +173,13 @@
       "declined": "Jemand kann nicht. Du stehst wieder in der Warteschlange.",
       "expired": "Der Vorschlag ist abgelaufen. Du stehst wieder in der Warteschlange."
     }
+  },
+  "push": {
+    "enabled": "Benachrichtigungen sind aktiv.",
+    "notEnabled": "Ohne Benachrichtigungen. Bei offener Seite siehst du es trotzdem.",
+    "needsInstall": "Für Benachrichtigungen die App zum Home-Bildschirm hinzufügen.",
+    "settings": "Benachrichtigungen",
+    "proposalReceived": "Wenn eine Paarung gefunden wurde",
+    "tableFree": "Wenn der Tisch frei wird"
   }
 }

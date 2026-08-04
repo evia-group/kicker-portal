@@ -22,6 +22,7 @@ import {
 } from '../../../shared/services/matchmaking-socket.service';
 import { CurrentUserService } from '../../../shared/services/current-user.service';
 import { InfoBarService } from '../../../shared/services/info-bar.service';
+import { PushService } from '../../../core/push.service';
 
 /** Diese Seite zeigt vorerst nur Kicker. Die Spielart-Umschaltung kommt mit den
  *  /darts-Routen. */
@@ -50,6 +51,7 @@ export class MatchFinderComponent implements OnInit {
   private readonly socket = inject(MatchmakingSocketService);
   private readonly currentUser = inject(CurrentUserService);
   private readonly infoBar = inject(InfoBarService);
+  private readonly push = inject(PushService);
   private readonly translate = inject(TranslateService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -146,7 +148,10 @@ export class MatchFinderComponent implements OnInit {
   join(): void {
     this.busy.set(true);
     this.matchmaking.join(GAME_TYPE_KEY, this.teamSize).subscribe({
-      next: () => this.busy.set(false),
+      next: () => {
+        this.busy.set(false);
+        void this.offerNotifications();
+      },
       error: () => {
         this.busy.set(false);
         this.infoBar.openCustomSnackBar(
@@ -157,6 +162,47 @@ export class MatchFinderComponent implements OnInit {
         );
       },
     });
+  }
+
+  /**
+   * Fragt die Benachrichtigungs-Berechtigung erst hier, nach dem Beitritt.
+   *
+   * Beim Laden der Anwendung gefragt wird sie verlaesslich abgelehnt, weil kein
+   * Anlass erkennbar ist, und eine Ablehnung laesst sich nicht zurueckholen.
+   * Hier ist der Anlass offensichtlich: der Vorschlag laeuft nach zwei Minuten
+   * ab, ohne Benachrichtigung verpasst man ihn.
+   *
+   * Schlaegt es fehl, bleibt der Beitritt bestehen. Der Socket liefert die
+   * Meldung bei offenem Tab ohnehin.
+   */
+  private async offerNotifications(): Promise<void> {
+    const reason = this.push.unavailableReason();
+    if (reason === 'denied' || reason === 'notConfigured') {
+      // Nicht erneut fragen und nicht belehren.
+      return;
+    }
+    if (reason === 'needsInstall') {
+      this.infoBar.openCustomSnackBar(
+        this.translate.instant('push.needsInstall'),
+        '',
+        7
+      );
+      return;
+    }
+    if (reason) {
+      return;
+    }
+
+    if (await this.push.isSubscribed()) {
+      return;
+    }
+
+    const granted = await this.push.enable();
+    this.infoBar.openCustomSnackBar(
+      this.translate.instant(granted ? 'push.enabled' : 'push.notEnabled'),
+      '',
+      5
+    );
   }
 
   leave(): void {

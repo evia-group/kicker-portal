@@ -17,12 +17,34 @@ jobs:
         run: node generate-config.js
       - run: npm run build
       - run: npm run lint
+      - run: npm test
 
   api:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: api
+    # Die Tests laufen gegen eine echte Datenbank, weil sie das Zusammenspiel
+    # mit dem partiellen Unique-Index und den Transaktionen pruefen. Ein Mock
+    # hat beides nicht, siehe matchmaking.service.spec.ts.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: kicker
+          POSTGRES_PASSWORD: kicker-ci
+          POSTGRES_DB: kicker
+        ports:
+          - 5432:5432
+        # Ohne Healthcheck starten die Migrationen, bevor Postgres Verbindungen
+        # annimmt.
+        options: >-
+          --health-cmd "pg_isready -U kicker"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://kicker:kicker-ci@localhost:5432/kicker
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,3 +55,32 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run lint
+      - name: Apply migrations
+        run: npm run db:migrate
+      - run: npm test
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # Blockierend nur fuer Laufzeit-Abhaengigkeiten (`--omit=dev`), also fuer
+      # das, was tatsaechlich ausgeliefert wird. Beide Projekte stehen hier auf
+      # null Funden, die Grenze ist damit echt und nicht bloss Dekoration.
+      - name: Audit runtime dependencies (blocking)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Audit api runtime dependencies (blocking)
+        working-directory: api
+        run: npm audit --omit=dev --audit-level=high
+
+      # Build-Werkzeug getrennt und nicht blockierend. Dort haengt ein Fund
+      # meist an der Angular-CLI-Kette und liesse sich nur mit einem Breaking
+      # Change beheben; ein dauerhaft rotes Gate wuerde nur ignoriert werden.
+      # Sichtbar bleibt es trotzdem.
+      - name: Audit build tooling (report only)
+        continue-on-error: true
+        run: |
+          npm audit --audit-level=high
+          cd api && npm audit --audit-level=high

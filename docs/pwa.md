@@ -91,6 +91,30 @@ die App bleibt auf dem alten Stand stehen.
 ## iOS
 
 Web Push funktioniert auf iOS erst ab 16.4 und nur in der **installierten** PWA,
-nicht im Safari-Tab. Der Hinweis zum Hinzufuegen zum Home-Bildschirm
-(`add-to-home-screen`-Komponente) ist deshalb keine Politur, sondern die
-Voraussetzung dafuer, dass Benachrichtigungen auf iOS ueberhaupt ankommen.
+nicht im Safari-Tab. Der Hinweis zum Hinzufuegen zum Home-Bildschirm in
+`PwaService` ist deshalb keine Politur, sondern die Voraussetzung dafuer, dass
+Benachrichtigungen auf iOS ueberhaupt ankommen. `PushService.unavailableReason()`
+meldet in diesem Fall `needsInstall`, erkennbar daran, dass `Notification` im
+Safari-Tab gar nicht existiert.
+
+Die Browser-Baseline in `.browserslistrc` liegt trotzdem bei iOS 17: Angular 22
+unterstuetzt 16.4 selbst nicht und warnt bei allem darunter.
+
+## Bekannte Einschraenkung: doppelte Meldung bei offener Seite
+
+Steht die Seite offen, sieht man eine Paarung zweimal: einmal als Snackbar ueber
+den WebSocket und einmal als Systembenachrichtigung.
+
+Das ist eine Folge einer bewussten Entscheidung. Unterdruecken liesse sich es
+nur auf zwei Wegen, und beide kosten mehr als sie einbringen:
+
+- Der Server schickt keinen Push an gerade verbundene Nutzer. Dafuer muesste der
+  WebSocket wissen, **wer** verbunden ist, und er hat absichtlich keine eigene
+  Authentifizierung (Begruendung in `matchmaking.gateway.ts`). Das nachzuruesten
+  hiesse, den Handshake mit Entra-Tokens zu pruefen.
+- Der Service Worker zeigt die Meldung nicht, wenn ein Fenster sichtbar ist.
+  `@angular/service-worker` bietet dafuer keinen Haken; es braeuchte einen
+  eigenen Worker statt `ngsw-worker.js`.
+
+Abgemildert ist es ueber `tag`: eine zweite Meldung zum selben Vorgang ersetzt
+die erste, statt sich zu stapeln.

@@ -11,6 +11,7 @@ import {
   QueueSnapshot,
 } from './matchmaking.gateway';
 import { MatchmakingService } from './matchmaking.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 /**
  * Integrationstest gegen die echte Datenbank.
@@ -28,6 +29,23 @@ import { MatchmakingService } from './matchmaking.service';
  * wuerde also von fremden Zeilen in der Datenbank abhaengen und je nach
  * Datenstand bestehen oder scheitern. Bestandsdaten werden nicht angefasst.
  */
+
+/**
+ * Sammelt, was benachrichtigt wuerde. Der echte Versand geht nach draussen und
+ * ist in notifications.service.spec.ts fuer sich geprueft.
+ */
+class RecordingNotifications {
+  calls: { userIds: string[]; kind: string; title: string }[] = [];
+
+  notify(
+    userIds: string[],
+    kind: string,
+    payload: { title: string },
+  ): Promise<{ sent: number; pruned: number }> {
+    this.calls.push({ userIds, kind, title: payload.title });
+    return Promise.resolve({ sent: userIds.length, pruned: 0 });
+  }
+}
 
 /** Sammelt, was das Gateway senden wuerde, statt einen Socket zu brauchen. */
 class RecordingGateway {
@@ -55,6 +73,7 @@ describe('MatchmakingService', () => {
   let client: ReturnType<typeof postgres>;
   let service: MatchmakingService;
   let gateway: RecordingGateway;
+  let notifications: RecordingNotifications;
   let userIds: string[];
   /** Eigene Spielart je Lauf, damit die Warteschlange nur Testdaten enthaelt. */
   let gameTypeId: string;
@@ -77,10 +96,12 @@ describe('MatchmakingService', () => {
 
   beforeEach(async () => {
     gateway = new RecordingGateway();
+    notifications = new RecordingNotifications();
     service = new MatchmakingService(
       db,
       new GameTypesService(db),
       gateway as unknown as MatchmakingGateway,
+      notifications as unknown as NotificationsService,
     );
 
     const suffix = `${Date.now()}-${Math.round(process.hrtime()[1] / 1000)}`;
@@ -158,6 +179,29 @@ describe('MatchmakingService', () => {
     expect(snapshot.entries.filter((e) => userIds.includes(e.userId))).toEqual(
       [],
     );
+  });
+
+  it('benachrichtigt genau die Spieler eines Vorschlags', async () => {
+    await service.join(userIds[0], gameTypeKey, 1);
+    await service.join(userIds[1], gameTypeKey, 1);
+
+    const proposalPush = notifications.calls.filter(
+      (c) => c.kind === 'proposalReceived',
+    );
+    expect(proposalPush).toHaveLength(1);
+    expect(proposalPush[0].userIds.sort()).toEqual(
+      [userIds[0], userIds[1]].sort(),
+    );
+  });
+
+  it('benachrichtigt beim freien Tisch nur die Wartenden', async () => {
+    await service.join(userIds[0], gameTypeKey, 2);
+    await service.announceTableFree(gameTypeKey);
+
+    const tablePush = notifications.calls.filter((c) => c.kind === 'tableFree');
+    expect(tablePush).toHaveLength(1);
+    expect(tablePush[0].userIds).toEqual([userIds[0]]);
+    expect(gateway.tableFree).toEqual([gameTypeKey]);
   });
 
   it('braucht vier Spieler fuer ein Doppel, nicht zwei', async () => {
