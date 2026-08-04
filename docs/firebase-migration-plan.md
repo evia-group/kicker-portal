@@ -12,7 +12,7 @@
 | 5 Frontend umschalten      | Fertig. Direkt gegen die neue API umgestellt (kein Feature-Flag-Rollback auf Firestore, siehe Abweichung unten)                                                                                            | `migration/phase-4-data-migration`  |
 | 6 Auth auf Entra ID        | Code fertig, direkter Cutover (kein Dual-Issuer-Zwischenschritt, siehe unten). App-Registrierung, `entra_oid`-Backfill für Bestandsnutzer und `is_admin`-Seeding stehen noch aus                           | `migration/phase-4-data-migration`  |
 | 7 Angular 21 und 22        | Fertig, in zwei Commits (20→21, 21→22)                                                                                                                                                                     | `migration/phase-4-data-migration`  |
-| 8 Containerisierung und CI | Offen                                                                                                                                                                                                      | —                                   |
+| 8 Containerisierung und CI | Fertig                                                                                                                                                                                                     | `migration/phase-4-data-migration`  |
 
 **Abweichungen von Phase 5/6 gegenüber diesem Plan:** Phase 5 hat Firestore
 direkt vollständig durch die REST-API ersetzt statt hinter einem
@@ -26,6 +26,12 @@ verlangt) ändert den Default von `strict` auf `true`. Dieses Projekt lief nie
 unter Strict Mode, daher jetzt explizit `"strict": false` in `tsconfig.json`
 gesetzt, um das bisherige Verhalten zu erhalten - eine echte Strict-Mode-
 Einführung wäre ein eigenes, deutlich größeres Vorhaben.
+
+**Unerwarteter Fund in Phase 8:** `api/package.json`s `start:prod`-Skript
+zeigte auf `node dist/main` statt des tatsächlichen `nest build`-Outputs
+`dist/src/main` (bedingt durch `sourceRoot: "src"` in `nest-cli.json`) - ein
+vorbestehender Bug, der nie auffiel, weil lokal immer `start:dev` lief. Erst
+beim Bauen des Produktions-Docker-Images sichtbar geworden und korrigiert.
 
 **Zugriff auf `evia-desk` eingerichtet:** Ein Firebase-Service-Account-Schlüssel liegt lokal
 unter `~/secrets/evia-desk-adminsdk.json` (nicht im Repo, gitignored referenziert über
@@ -304,7 +310,7 @@ Jetzt ohne die `@angular/fire`-Deckelung möglich.
 
 **Fertig heißt:** Build auf Angular 22.1, Vitest-Suite grün.
 
-### Phase 8: Containerisierung und CI (3 bis 4 PT) — offen
+### Phase 8: Containerisierung und CI (3 bis 4 PT) — erledigt
 
 - `Dockerfile` Frontend: Multi-Stage, Build in `node:24-alpine`, Auslieferung über
   `nginx:alpine` als Non-Root, SPA-Fallback, Entrypoint aus Phase 2 (`generate-config.js`
@@ -339,7 +345,7 @@ inklusive Login und Live-Kickerstatus.
 | 5 Frontend umschalten      | 3 bis 5           | ✅                      |
 | 6 Auth auf Entra ID        | 3 bis 4           | Code ✅, Rollout offen  |
 | 7 Angular 21 und 22        | 3 bis 5           | ✅                      |
-| 8 Containerisierung und CI | 3 bis 4           | offen                   |
+| 8 Containerisierung und CI | 3 bis 4           | ✅                      |
 | **Summe**                  | **29,5 bis 45,5** | ~17,5 bis 26,5 erledigt |
 
 ---

@@ -8,15 +8,20 @@ basiert). `firebase-admin` wird nur noch von den Migrationsskripten in
 
 ## Setup
 
+Am einfachsten über `docker compose up` im Projekt-Root (siehe
+[README.md](../README.md#docker-full-stack)) - das baut API, Postgres, führt
+die Migration aus und startet alles zusammen mit dem Frontend.
+
+Für die Arbeit isoliert an der API ohne Docker:
+
 ```sh
 npm install
 cp .env.example .env   # ausfüllen: DATABASE_URL, KICKER_API_KEY,
-                        # GOOGLE_APPLICATION_CREDENTIALS
+                        # ENTRA_TENANT_ID, ENTRA_AUDIENCE
 ```
 
-Eine PostgreSQL-Instanz wird benötigt (lokal per Docker: siehe
-`docker-compose.yml` im Projekt-Root, folgt in Phase 8; bis dahin z.B.
-`docker run -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:17-alpine`).
+Eine PostgreSQL-Instanz wird benötigt, z.B.
+`docker run -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:17-alpine`.
 
 Migrationen anwenden:
 
@@ -29,6 +34,11 @@ Entwicklung starten:
 ```sh
 npm run start:dev
 ```
+
+`Dockerfile` hat vier Stages (`build`, `dev`, `migrate`, `runtime`) -
+`docker-compose.override.yml` im Projekt-Root nutzt `dev` mit Bind-Mount für
+lokale Entwicklung, `docker-compose.yml` nutzt `runtime`/`migrate` für den
+eigentlichen Betrieb.
 
 ## Datenmodell
 
@@ -117,8 +127,6 @@ Einzelspiele, inklusive der oben genannten Bugs.
 - `EntraAuthGuard` ist ohne echte App-Registrierung (Client-ID/Audience) im
   evia-Tenant nicht end-to-end testbar; die Guard-Logik selbst wurde mit
   ungültigen/fehlenden Tokens gegen eine echte Postgres-Instanz verifiziert.
-- Dockerfile, docker-compose.yml und der Entrypoint für
-  `GOOGLE_APPLICATION_CREDENTIALS`/`DATABASE_URL` folgen in Phase 8.
 
 ## Frontend-Anbindung (Phase 5)
 
@@ -163,3 +171,18 @@ die Migrationsskripte.
   Entra-Login neue, von der migrierten Historie getrennte Nutzer-Zeilen an -
   vor dem Produktiv-Cutover per einmaligem SQL-Update zu klären.
 - `is_admin`-Rollen initial setzen (manuelles SQL-Update, keine Codeänderung).
+
+## Containerisierung (Phase 8)
+
+`Dockerfile` (vier Stages: `build`, `dev`, `migrate`, `runtime`) baut ein
+Non-Root-Produktions-Image; `HEALTHCHECK` ruft `GET /health` direkt über
+Node auf, kein zusätzliches Binary (curl/wget) nötig. `migrate` ist eine
+eigene Stage mit vollem `npm ci` (kein `--omit=dev`), weil `drizzle-kit` ein
+Dev-Dependency ist und in der schlanken `runtime`-Stage nicht existiert.
+
+Im Root-`docker-compose.yml` läuft `migrate` einmalig vor `api`
+(`depends_on: service_completed_successfully`) - ein frischer
+`docker compose up` legt das Schema also automatisch an, ohne dass jemand
+`npm run db:migrate` von Hand ausführen muss. Details und der volle Stack
+(inklusive Frontend, Backup-Cron, optionaler Caddy-TLS-Overlay) stehen in
+[README.md](../README.md#docker-full-stack).

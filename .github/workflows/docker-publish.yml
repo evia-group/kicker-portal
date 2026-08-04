@@ -1,0 +1,60 @@
+name: Build and publish Docker images
+
+on:
+  push:
+    branches:
+      - production
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lowercase image name
+        id: vars
+        # GHCR image names must be lowercase; github.repository can contain
+        # uppercase (org/repo names aren't case-restricted).
+        run: echo "repo=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: runtime
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.vars.outputs.repo }}-web:latest
+            ${{ env.REGISTRY }}/${{ steps.vars.outputs.repo }}-web:${{ github.sha }}
+
+  api:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lowercase image name
+        id: vars
+        run: echo "repo=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./api
+          target: runtime
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.vars.outputs.repo }}-api:latest
+            ${{ env.REGISTRY }}/${{ steps.vars.outputs.repo }}-api:${{ github.sha }}

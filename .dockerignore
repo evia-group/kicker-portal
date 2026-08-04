@@ -1,0 +1,12 @@
+node_modules
+dist
+.git
+.angular
+.env
+.env.*
+!.env.example
+src/config.json
+coverage
+api
+docs
+functions

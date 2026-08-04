@@ -9,8 +9,7 @@
 
 ## Prerequisites
 
-- npm >= 8.1.2
-- node >= 16.13.1
+- node >= 22.12 (Angular 22 requirement) or Docker, see [Docker](#docker-full-stack) below
 
 ## Install
 
@@ -55,6 +54,41 @@ Login goes directly through Microsoft Entra ID (Auth Code Flow + PKCE via
 `angular-auth-oidc-client`). Set `MS_TENANT` and `MS_CLIENT_ID` in `.env` to
 the App Registration's tenant and client ID and regenerate the config
 (`npm run init`).
+
+## Docker (full stack)
+
+```sh
+cp .env.example .env   # fill in MS_TENANT/MS_CLIENT_ID/ENTRA_AUDIENCE once
+                        # the App Registration exists, and KICKER_API_KEY
+                        # (also needed on the physical kicker table). The
+                        # rest already has working local-dev defaults.
+docker compose up -d
+docker compose ps      # everything should end up "healthy"
+```
+
+**`docker compose up` defaults to local-dev mode** - `docker-compose.override.yml`
+is loaded automatically (standard Docker Compose behaviour) and runs
+`web`/`api` via `ng serve`/`nest start --watch` against the live source
+instead of a built image. In this mode the frontend is on
+**`http://localhost:4200`**, not 8080.
+
+To run the actual production build instead (nginx + compiled API, no
+bind-mounts, no watch mode), explicitly exclude the override:
+
+```sh
+docker compose -f docker-compose.yml up -d --build
+```
+
+That's the mode where the frontend is on **`http://localhost:8080`**.
+
+For a real deployment behind TLS, add the Caddy overlay on top of that:
+
+```sh
+DOMAIN=kicker.example.com docker compose -f docker-compose.yml -f compose.prod.yml up -d
+```
+
+See [api/README.md](api/README.md) for the API's own env vars and
+`docker/` for the Dockerfiles, nginx config and backup cron job.
 
 ## Linting
 

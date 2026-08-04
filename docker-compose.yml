@@ -1,0 +1,85 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: kicker
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d kicker']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: ./api
+      target: migrate
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/kicker
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build:
+      context: ./api
+      target: runtime
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/kicker
+      CORS_ORIGIN: ${CORS_ORIGIN:?CORS_ORIGIN is required}
+      KICKER_API_KEY: ${KICKER_API_KEY:?KICKER_API_KEY is required}
+      # Required unless AUTH_DISABLED=true (see docker-compose.override.yml
+      # and EntraAuthGuard) - not enforced here so local dev without a real
+      # App Registration doesn't need placeholder values.
+      ENTRA_TENANT_ID: ${MS_TENANT:-}
+      ENTRA_AUDIENCE: ${ENTRA_AUDIENCE:-}
+      AUTH_DISABLED: ${AUTH_DISABLED:-false}
+    ports:
+      # The browser calls API_URL (localhost:3000 by default) directly -
+      # there's no reverse proxy in this base setup (only compose.prod.yml's
+      # Caddy overlay proxies /api internally without needing this published).
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  web:
+    build:
+      context: .
+      target: runtime
+    environment:
+      PRODUCTION: 'true'
+      API_URL: ${API_URL:?API_URL is required}
+      # Required unless DISABLE_SSO=true (see docker-compose.override.yml
+      # and auth.service.ts) - not enforced here for the same reason as
+      # ENTRA_TENANT_ID/ENTRA_AUDIENCE above.
+      MS_TENANT: ${MS_TENANT:-}
+      MS_CLIENT_ID: ${MS_CLIENT_ID:-}
+      DISABLE_SSO: ${DISABLE_SSO:-false}
+    ports:
+      - '8080:8080'
+    depends_on:
+      api:
+        condition: service_healthy
+
+  backup:
+    build:
+      context: ./docker/backup
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - backup-data:/backups
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  backup-data:
