@@ -18,13 +18,27 @@ interface EntraTokenPayload extends JWTPayload {
   preferred_username?: string;
 }
 
+const LOCAL_DEV_OID = 'local-dev';
+
 @Injectable()
 export class EntraAuthGuard implements CanActivate {
-  private readonly jwks: ReturnType<typeof createRemoteJWKSet>;
-  private readonly issuer: string;
-  private readonly audience: string;
+  private readonly authDisabled: boolean;
+  private readonly jwks?: ReturnType<typeof createRemoteJWKSet>;
+  private readonly issuer?: string;
+  private readonly audience?: string;
 
   constructor(@Inject(DRIZZLE) private readonly db: Database) {
+    this.authDisabled = process.env.AUTH_DISABLED === 'true';
+    if (this.authDisabled) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '\n⚠️  AUTH_DISABLED=true - every request is authenticated as a ' +
+          'fixed local-dev admin user, no token is checked. Never set this ' +
+          'outside local development.\n',
+      );
+      return;
+    }
+
     const tenantId = process.env.ENTRA_TENANT_ID;
     const audience = process.env.ENTRA_AUDIENCE;
     if (!tenantId) {
@@ -45,12 +59,22 @@ export class EntraAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+
+    if (this.authDisabled) {
+      request.user = await this.findOrProvisionUser(
+        LOCAL_DEV_OID,
+        'Local Dev User',
+        true,
+      );
+      return true;
+    }
+
     const token = this.extractToken(request);
     if (!token) {
       throw new UnauthorizedException('Missing bearer token');
     }
 
-    const { payload } = await jwtVerify<EntraTokenPayload>(token, this.jwks, {
+    const { payload } = await jwtVerify<EntraTokenPayload>(token, this.jwks!, {
       issuer: this.issuer,
       audience: this.audience,
     }).catch(() => {
@@ -82,7 +106,11 @@ export class EntraAuthGuard implements CanActivate {
    * their history here if entra_oid was backfilled beforehand via the
    * UID-mapping step - otherwise this provisions a fresh, disconnected user.
    */
-  private async findOrProvisionUser(entraOid: string, displayName: string) {
+  private async findOrProvisionUser(
+    entraOid: string,
+    displayName: string,
+    isAdmin = false,
+  ) {
     const [existing] = await this.db
       .select()
       .from(users)
@@ -98,7 +126,7 @@ export class EntraAuthGuard implements CanActivate {
 
     const [created] = await this.db
       .insert(users)
-      .values({ entraOid, name: displayName })
+      .values({ entraOid, name: displayName, isAdmin })
       .returning();
 
     return { id: created.id, name: created.name, isAdmin: created.isAdmin };

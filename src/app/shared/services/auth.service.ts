@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { APP_CONFIG, AppConfig } from '../../core/app-config';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,15 @@ export class AuthService {
 
   constructor(
     private oidcSecurityService: OidcSecurityService,
-    public router: Router
+    private router: Router,
+    @Inject(APP_CONFIG) private config: AppConfig
   ) {
+    if (this.config.disableSso) {
+      this.loggedIn.next(true);
+      this.router.navigate(['/kicker']);
+      return;
+    }
+
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
       if (isAuthenticated) {
         this.loggedIn.next(true);
@@ -29,14 +37,23 @@ export class AuthService {
   }
 
   logout() {
+    if (this.config.disableSso) {
+      return;
+    }
     this.oidcSecurityService.logoff().subscribe();
   }
 
   loginWithMicrosoft() {
+    if (this.config.disableSso) {
+      return;
+    }
     this.oidcSecurityService.authorize();
   }
 
   getAccessToken(): Observable<string> {
+    if (this.config.disableSso) {
+      return of('');
+    }
     return this.oidcSecurityService.getAccessToken();
   }
 }

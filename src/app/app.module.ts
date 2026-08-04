@@ -130,12 +130,17 @@ import { SelectionWithSearchComponent } from './shared/components/selection-with
     provideAuth({
       loader: {
         provide: StsConfigLoader,
+        // With disableSso, AuthService never calls checkAuth()/authorize(),
+        // so these values are never actually used - just need to be
+        // non-empty so the OIDC client's own config validation passes.
         useFactory: (config: AppConfig) =>
           new StsConfigStaticLoader({
-            authority: `https://login.microsoftonline.com/${config.ms.tenant}/v2.0`,
+            authority: config.disableSso
+              ? 'https://sso-disabled.invalid'
+              : `https://login.microsoftonline.com/${config.ms.tenant}/v2.0`,
             redirectUrl: window.location.origin,
             postLogoutRedirectUri: window.location.origin,
-            clientId: config.ms.clientId,
+            clientId: config.disableSso ? 'sso-disabled' : config.ms.clientId,
             scope: 'openid profile email',
             responseType: 'code',
             silentRenew: true,

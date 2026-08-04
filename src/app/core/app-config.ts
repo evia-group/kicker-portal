@@ -4,6 +4,8 @@ export interface AppConfig {
   production: boolean;
   versionNumber: string;
   apiUrl: string;
+  /** Local-dev-only escape hatch - skips the Entra ID login flow entirely. */
+  disableSso: boolean;
   ms: {
     tenant: string;
     clientId: string;
