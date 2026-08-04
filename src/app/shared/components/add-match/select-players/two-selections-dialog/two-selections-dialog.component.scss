@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 .mat-mdc-dialog-content {
   padding-bottom: 0;
 }
@@ -6,11 +8,16 @@ button {
   margin-bottom: 15px;
 }
 
-@media (max-width: 440px) {
-  .mat-mdc-dialog-actions {
-    flex-direction: column;
-    button:nth-child(2) {
-      margin-left: 0;
-    }
+// Mobile First: die Dialogaktionen stapeln sich, damit beide Buttons auch bei
+// 320px die volle Tippflaeche behalten. Ab `medium` stehen sie nebeneinander.
+.mat-mdc-dialog-actions {
+  flex-direction: column;
+
+  button:nth-child(2) {
+    margin-left: 0;
+  }
+
+  @include bp.from(medium) {
+    flex-direction: row;
   }
 }

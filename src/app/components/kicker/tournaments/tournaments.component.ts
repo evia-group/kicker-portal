@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { isCompact } from '../../../shared/breakpoints';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import {
   MatCard,
@@ -35,7 +36,7 @@ import { AsyncPipe } from '@angular/common';
 })
 export class TournamentsComponent {
   /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+  cards = this.breakpointObserver.observe(isCompact()).pipe(
     map(({ matches }) => {
       if (matches) {
         return [

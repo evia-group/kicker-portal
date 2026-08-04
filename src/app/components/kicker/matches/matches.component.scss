@@ -1,7 +1,8 @@
+@use 'breakpoints' as bp;
+
 .grid-container {
   margin: auto;
   max-width: 1200px;
-  min-width: 360px;
 
   .radio-container {
     display: flex;
@@ -11,8 +12,14 @@
     .mat-mdc-radio-group {
       margin-top: 10px;
 
+      // Auf schmalen Geraeten muessen "2 vs 2" und "1 vs 1" nebeneinander
+      // passen, ohne dass der Abstand die Zeile umbricht.
       .mat-mdc-radio-button ~ .mat-mdc-radio-button {
-        margin-left: 25px;
+        margin-left: 8px;
+
+        @include bp.from(medium) {
+          margin-left: 25px;
+        }
       }
     }
   }

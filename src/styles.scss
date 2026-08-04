@@ -7,11 +7,13 @@
 
 @use '@angular/material' as mat;
 @use './styles/theme';
+@use './styles/breakpoints' as bp;
 
 @include mat.elevation-classes();
 
 :root {
   @include theme.apply();
+  @include bp.custom-properties();
 }
 
 html,
@@ -21,6 +23,26 @@ body {
   background: var(--mat-sys-background);
   color: var(--mat-sys-on-background);
   font-family: var(--mat-sys-body-medium-font);
+}
+
+// Nichts darf die Seite breiter machen als das Fenster. Ohne das reicht eine
+// zu breite Tabelle, damit das gesamte Layout horizontal verschiebbar wird.
+// Breite Inhalte scrollen in ihrem eigenen Container, nicht im Body.
+body {
+  overflow-x: hidden;
+}
+
+// Auf Geraeten ohne praezisen Zeiger muessen Bedienelemente gross genug sein.
+// Material haelt das bei Buttons ein, bei Icon-Buttons in dichten Leisten und
+// bei Tab-Links nicht immer.
+@include bp.coarse-pointer {
+  .mat-mdc-icon-button,
+  .mat-mdc-tab-link,
+  .mdc-radio,
+  .mat-mdc-slide-toggle .mdc-switch {
+    min-width: var(--evia-touch-target);
+    min-height: var(--evia-touch-target);
+  }
 }
 
 // Material Icons wird selbst gehostet (siehe `angular.json` styles). Das
@@ -95,14 +117,36 @@ body {
   display: flex;
 }
 
-@media (max-width: 390px) {
-  .mat-mdc-paginator-range-label {
-    margin: 0 16px 0 8px !important;
+// Bottom Navigation: Icon ueber Label, wie auf Mobilgeraeten ueblich. Muss
+// global stehen, weil `.mdc-tab__text-label` zur View von MatTabLink gehoert
+// und damit von den gekapselten Styles der Kicker-Komponente nicht erreicht
+// wird. Ab `medium` sitzt die Leiste oben und die Beschriftung wieder daneben.
+.section-nav .mdc-tab__text-label {
+  flex-direction: column;
+  gap: 2px;
+
+  @include bp.from(medium) {
+    flex-direction: row;
+    gap: 0;
   }
 }
 
-@media (max-width: 650px) {
-  .playtime-flex-box .mdc-radio {
-    padding-left: 5px !important;
+// Mobile First: die enge Variante ist der Grundzustand, ab `medium` wird auf
+// die Material-Standardabstaende hochskaliert. `!important` bleibt noetig, weil
+// Material seine Komponenten-Styles erst beim Erzeugen der Komponente in den
+// Head injiziert und damit nach diesem Stylesheet steht.
+.mat-mdc-paginator-range-label {
+  margin: 0 16px 0 8px !important;
+
+  @include bp.from(medium) {
+    margin: 0 32px 0 24px !important;
+  }
+}
+
+.playtime-flex-box .mdc-radio {
+  padding-left: 5px !important;
+
+  @include bp.from(medium) {
+    padding-left: 10px !important;
   }
 }

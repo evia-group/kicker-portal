@@ -1,6 +1,15 @@
+@use 'breakpoints' as bp;
+
+// Kein `min-width: 275px`: bei 320px Viewport plus 2x20px Rand blieben nur
+// 280px, die Karte lag also direkt an der Grenze und kippte mit jedem
+// zusaetzlichen Innenabstand ins horizontale Scrollen. Der Rand skaliert
+// stattdessen mit.
 .mat-mdc-card {
-  min-width: 275px;
-  margin: 20px;
+  margin: 12px;
+
+  @include bp.from(medium) {
+    margin: 20px;
+  }
 
   .mat-mdc-card-content {
     margin-top: 10px;
