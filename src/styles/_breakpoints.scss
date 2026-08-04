@@ -1,0 +1,86 @@
+// Breakpoints nach den Material-3-Window-Size-Classes.
+//
+// Vorher lagen im Projekt sieben unterschiedliche Werte verteilt in einzelnen
+// Komponenten (390, 395, 440, 650, 700, 740, 1000 px). Sie waren nicht
+// aufeinander abgestimmt, dadurch konnten zwei Komponenten auf derselben
+// Bildschirmbreite in unterschiedlichen Layoutzustaenden stehen.
+//
+// Mobile First heisst hier: die Basis-Styles gelten fuer die kleinste Breite
+// und stehen ohne Media Query. Hochskaliert wird ausschliesslich mit `from()`,
+// also `min-width`. `until()` existiert fuer die Faelle, in denen ein
+// Desktop-Detail wirklich nur unterhalb einer Grenze verschwinden soll, und
+// sollte die Ausnahme bleiben.
+
+@use 'sass:map';
+@use 'sass:math';
+
+// Untergrenze jeder Klasse. `compact` braucht keinen Eintrag, das ist der
+// Grundzustand ab 0 px.
+//
+//   compact      ab   0 px  Telefon hochkant
+//   medium       ab 600 px  Tablet hochkant, Telefon quer
+//   expanded     ab 840 px  grosses Tablet, schmales Desktop-Fenster
+//   large        ab 1200 px Desktop
+//   extra-large  ab 1600 px breiter Desktop
+$sizes: (
+  medium: 600px,
+  expanded: 840px,
+  large: 1200px,
+  extra-large: 1600px,
+);
+
+/// Kleinste unterstuetzte Breite. Darunter wird nicht optimiert, aber es darf
+/// auch nichts abgeschnitten werden oder horizontal scrollen.
+$min-supported: 320px;
+
+@function size($name) {
+  @if not map.has-key($sizes, $name) {
+    @error 'Unbekannte Window-Size-Class "#{$name}". Erlaubt: #{map.keys($sizes)}.';
+  }
+  @return map.get($sizes, $name);
+}
+
+/// Ab dieser Klasse aufwaerts. Der Regelfall.
+@mixin from($name) {
+  @media (min-width: size($name)) {
+    @content;
+  }
+}
+
+/// Unterhalb dieser Klasse. Nur verwenden, wenn etwas gezielt entfallen soll.
+/// Die 0,02px Abstand verhindern, dass sich `from()` und `until()` bei
+/// gebrochenen Viewport-Breiten (Zoom, Geraete-Pixelverhaeltnis) ueberlappen.
+@mixin until($name) {
+  @media (max-width: size($name) - 0.02px) {
+    @content;
+  }
+}
+
+/// Genau eine Klasse.
+@mixin only($from, $until) {
+  @media (min-width: size($from)) and (max-width: size($until) - 0.02px) {
+    @content;
+  }
+}
+
+/// Geraete ohne praezisen Zeiger. Ersetzt die UserAgent-Erkennung: gefragt ist
+/// nicht "ist das ein Telefon", sondern "kann hier ueberhaupt gehovert werden".
+@mixin coarse-pointer {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+/// Mindestgroesse einer Tippflaeche.
+$touch-target: 48px;
+
+/// Emittiert die Werte als Custom Properties, damit TypeScript dieselben
+/// Grenzen lesen kann (siehe `src/app/shared/breakpoints.ts`) und es keine
+/// zweite Liste von Zahlen gibt.
+@mixin custom-properties() {
+  @each $name, $value in $sizes {
+    --evia-bp-#{$name}: #{$value};
+  }
+  --evia-touch-target: #{$touch-target};
+  --evia-min-supported: #{$min-supported};
+}

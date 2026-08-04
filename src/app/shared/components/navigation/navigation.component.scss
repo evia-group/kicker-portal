@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 .navigation-container {
   display: flex;
   flex-direction: column;
@@ -10,69 +12,79 @@
   .toolbar-spacer {
     flex: 1 1 auto;
   }
+
+  // Als installierte PWA reicht der Viewport bis in die Statusleiste und hinter
+  // die Aussparung. Ohne diese Einrueckung sitzt der Titel unter der Uhr.
   .navigation-toolbar {
+    padding-top: env(safe-area-inset-top);
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    height: auto;
+  }
+  // Die Kopfzeile trug bisher `color="primary"`. Unter M3 hat das keine
+  // Wirkung mehr, und es waere hier auch falsch: eine vollflaechig gruene
+  // Kopfzeile widerspricht "Gruen nur fuer das Wichtigste". Stattdessen eine
+  // erhoehte Flaeche mit dezenter Trennlinie, damit sie sich ueberhaupt vom
+  // schwarzen Grundzustand abgrenzt.
+  .navigation-toolbar {
+    --mat-toolbar-container-background-color: var(
+      --mat-sys-surface-container-low
+    );
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+
     button {
       margin: 0 5px;
     }
   }
 
+  // Tischstatus. Die bisherigen Werte (#11590a, #b3362a) lagen auf dunklem
+  // Grund bei rund 1,6:1 und waren damit praktisch unsichtbar.
   .available-icon {
-    color: #11590a;
+    color: var(--evia-green);
   }
 
   .blocked-icon {
-    color: #b3362a;
+    color: var(--evia-error);
   }
-}
-
-.is-mobile .navigation-toolbar {
-  position: fixed;
-  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
-  z-index: 2;
 }
 
 h1.app-name {
   margin-left: 8px;
-}
+  // Der Titel darf die Kopfzeile nicht sprengen, wenn daneben Statuschip und
+  // Icons stehen.
+  font-size: 1.125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-.sidenav-container {
-  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
-     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
-  flex: 1;
-  .mat-sidenav {
-    width: 20%;
-
-    .footer {
-      position: absolute;
-      bottom: 1rem;
-      right: 1rem;
-    }
+  @include bp.from(medium) {
+    font-size: 1.5rem;
   }
 }
 
+// Nimmt den Platz unter der Kopfzeile ein und ist das scrollende Element.
+.content-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+// Statusanzeige des Kickertischs. Traegt jetzt eine neutrale Flaeche und
+// signalisiert ueber Rand und Beschriftung, statt die Akzentfarbe als
+// Hintergrund zu verbrauchen. Gruen bleibt damit dem Wichtigsten vorbehalten.
 .chip-container {
   color: transparent;
-  border: 2px solid #000000;
-  --mat-chip-elevated-container-color: #d4e157;
+  border: 2px solid var(--mat-sys-outline-variant);
+  --mat-chip-elevated-container-color: var(--mat-sys-surface-container-high);
   pointer-events: none;
 
   &.success {
-    border-color: #11590a;
-    --mat-chip-label-text-color: #11590a;
+    border-color: var(--evia-green);
+    --mat-chip-label-text-color: var(--evia-green);
   }
 
   &.error {
-    border-color: #b3362a;
-    --mat-chip-label-text-color: #b3362a;
-  }
-}
-
-.is-mobile .sidenav-container {
-  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
-     `<body>` to be our scrolling element for mobile layouts. */
-  flex: 1 0 auto;
-
-  .mat-sidenav {
-    width: 50%;
+    border-color: var(--evia-error);
+    --mat-chip-label-text-color: var(--evia-error);
   }
 }

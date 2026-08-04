@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import type { Database } from '../src/db/drizzle.module';
 import * as schema from '../src/db/schema';
 import {
@@ -48,6 +48,19 @@ export async function runMigration(
       truncate table match_rounds, match_participants, matches,
         team_players, teams, playtime, users restart identity cascade
     `);
+
+    // Alles aus Firestore ist ein Kickerspiel, eine andere Disziplin gab es
+    // dort nicht. `game_types` wird vom truncate oben nicht erfasst: cascade
+    // folgt Fremdschluesseln auf die geleerten Tabellen zu, nicht von ihnen weg.
+    const [kicker] = await tx
+      .select({ id: schema.gameTypes.id })
+      .from(schema.gameTypes)
+      .where(eq(schema.gameTypes.key, 'kicker'));
+    if (!kicker) {
+      throw new Error(
+        'Game type "kicker" is missing - run the drizzle migrations first',
+      );
+    }
 
     const firestoreIdToUserId = new Map<string, string>();
     for (const doc of collections.users) {
@@ -114,7 +127,8 @@ export async function runMigration(
         .insert(schema.matches)
         .values({
           ...(resolved.playedAt ? { playedAt: resolved.playedAt } : {}),
-          isSingle: false,
+          gameTypeId: kicker.id,
+          teamSize: 2,
         })
         .returning();
 
@@ -170,7 +184,8 @@ export async function runMigration(
         .insert(schema.matches)
         .values({
           ...(resolved.playedAt ? { playedAt: resolved.playedAt } : {}),
-          isSingle: true,
+          gameTypeId: kicker.id,
+          teamSize: 1,
         })
         .returning();
 

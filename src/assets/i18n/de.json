@@ -17,7 +17,8 @@
     },
     "settings": "Einstellungen",
     "logout": "Abmelden",
-    "welcome": "Willkommen im EVIA Desk"
+    "welcome": "Willkommen im EVIA Desk",
+    "darts": "Dart"
   },
   "auth": {
     "email": "Email",
@@ -135,5 +136,50 @@
     "NEXT_PAGE": "Nächste Seite",
     "PREVIOUS_PAGE": "Vorherige Seite",
     "OF": "von"
+  },
+  "gameType": {
+    "round": "Runde",
+    "roundPlural": "Runden",
+    "leg": "Leg",
+    "legPlural": "Legs",
+    "kicker": "Kicker",
+    "darts": "Dart"
+  },
+  "pwa": {
+    "updateAvailable": "Eine neue Version ist bereit.",
+    "reload": "Neu laden",
+    "iosInstallHint": "Zum Home-Bildschirm hinzufügen, damit Benachrichtigungen ankommen.",
+    "understood": "Verstanden"
+  },
+  "matchmaking": {
+    "intro": "Trag dich ein und wir sagen dir, sobald genug Leute da sind.",
+    "join": "Ich will spielen",
+    "leave": "Aus der Warteschlange austreten",
+    "inQueue": "Du stehst in der Warteschlange.",
+    "stillMissing": "Es fehlen noch {{count}} Mitspieler.",
+    "singles": "Einzel (1 vs 1)",
+    "doubles": "Doppel (2 vs 2)",
+    "waiting": "Wer wartet",
+    "nobodyWaiting": "Gerade wartet niemand.",
+    "proposalFound": "Paarung gefunden",
+    "proposalHint": "Bitte bestätigen, gültig bis",
+    "accept": "Bin dabei",
+    "decline": "Kann nicht",
+    "waitingForOthers": "Zugesagt. Warten auf die anderen.",
+    "tableFree": "Der Tisch ist frei geworden.",
+    "joinFailed": "Eintragen hat nicht geklappt.",
+    "resolved": {
+      "accepted": "Alle haben zugesagt. Viel Spaß!",
+      "declined": "Jemand kann nicht. Du stehst wieder in der Warteschlange.",
+      "expired": "Der Vorschlag ist abgelaufen. Du stehst wieder in der Warteschlange."
+    }
+  },
+  "push": {
+    "enabled": "Benachrichtigungen sind aktiv.",
+    "notEnabled": "Ohne Benachrichtigungen. Bei offener Seite siehst du es trotzdem.",
+    "needsInstall": "Für Benachrichtigungen die App zum Home-Bildschirm hinzufügen.",
+    "settings": "Benachrichtigungen",
+    "proposalReceived": "Wenn eine Paarung gefunden wurde",
+    "tableFree": "Wenn der Tisch frei wird"
   }
 }

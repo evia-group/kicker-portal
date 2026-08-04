@@ -8,12 +8,14 @@ import {
 import { ChartConfiguration } from 'chart.js';
 import { take } from 'rxjs';
 import { MatchesService } from '../../../../shared/services/matches.service';
+import { IPlaytime } from '../../../../shared/interfaces/statistic.interface';
 import { LoadingDataComponent } from '../../../../shared/components/loading-data/loading-data.component';
 import { DatepickerComponent } from '../../../../shared/components/datepicker/datepicker.component';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { TranslatePipe } from '@ngx-translate/core';
+import { chartTheme } from '../../../../shared/chart-theme';
 
 @Component({
   selector: 'app-playtime-chart',
@@ -78,34 +80,29 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
     scales: {
       x: {
         ticks: {
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
         },
         grid: {
-          color: 'rgb(89,89,89)',
+          color: chartTheme.gridColor,
         },
       },
       y: {
         ticks: {
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
           precision: 0,
         },
         grid: {
-          color: 'rgb(89,89,89)',
+          color: chartTheme.gridColor,
         },
         title: {
           display: true,
           text: '',
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
         },
       },
     },
     plugins: {
-      legend: {
-        labels: {
-          color: 'rgb(199,199,199)',
-          boxWidth: 20,
-        },
-      },
+      legend: chartTheme.legend(),
     },
   };
 
@@ -151,15 +148,24 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.matchesService.playtime$
       .pipe(take(1))
-      .subscribe((playtimeData: [{ startTime: string; endTime: string }]) => {
+      .subscribe((playtimeData: IPlaytime[]) => {
         this.waitingForData = false;
         if (playtimeData.length > 0) {
-          const playtimeNumData = playtimeData.map((item) => {
-            return {
-              startTime: Number(item.startTime) * 1000,
-              endTime: Number(item.endTime) * 1000,
-            };
-          });
+          // `GET /playtime` liefert ISO-8601-Zeitstempel. Vorher stand hier
+          // `Number(item.startTime) * 1000`, was aus der Firestore-Zeit stammt,
+          // in der das Feld Epochensekunden enthielt. Auf einen ISO-String
+          // angewandt ergibt Number() NaN, damit blieb die Auswertung leer und
+          // getYearData lief anschliessend in ein undefined.map und brach die
+          // gesamte Statistikseite ab.
+          const playtimeNumData = playtimeData
+            .map((item) => ({
+              startTime: Date.parse(item.startTime),
+              endTime: Date.parse(item.endTime),
+            }))
+            .filter(
+              (item) =>
+                Number.isFinite(item.startTime) && Number.isFinite(item.endTime)
+            );
           playtimeNumData.forEach((item) => {
             let startTime = item.startTime;
             const endTime = item.endTime;
@@ -389,7 +395,12 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   getMonthData(year: number, month: number) {
-    return this.playtimeChartData.get(year)[month].map((item: number[]) =>
+    const monthData = this.playtimeChartData.get(year)?.[month];
+    if (!monthData) {
+      // Gleiche Absicherung wie in getYearData: Tage des Monats mit Nullen.
+      return new Array(this.getDaysInMonth(year, month)).fill(0) as number[];
+    }
+    return monthData.map((item: number[]) =>
       item.reduce((accumulator, value) => {
         return accumulator + value;
       }, 0)
@@ -397,7 +408,13 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
   }
 
   getYearData(year: number) {
-    return this.playtimeChartData.get(year).map((monthArray) => {
+    const yearData = this.playtimeChartData.get(year);
+    if (!yearData) {
+      // Ein Jahr ohne Daten liefert zwoelf Nullen statt zu werfen. Sonst reicht
+      // ein Datum ausserhalb des Datenbestands, um die Seite abzubrechen.
+      return new Array(12).fill(0) as number[];
+    }
+    return yearData.map((monthArray) => {
       return monthArray
         .map((item) =>
           item.reduce((accumulator, value) => {
@@ -429,9 +446,9 @@ export class PlaytimeChartComponent implements OnInit, OnChanges {
           type: 'bar',
           data: chartData,
           label: this.legendLabel,
-          backgroundColor: ['rgba(51, 133, 255, 0.7)'],
-          borderColor: ['rgba(51, 133, 255, 1)'],
-          hoverBackgroundColor: ['rgba(51, 133, 255, 1)'],
+          backgroundColor: [chartTheme.area(chartTheme.neutral)],
+          borderColor: [chartTheme.neutral],
+          hoverBackgroundColor: [chartTheme.neutral],
         },
       ],
     };

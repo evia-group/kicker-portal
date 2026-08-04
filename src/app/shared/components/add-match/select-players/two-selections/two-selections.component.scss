@@ -1,19 +1,25 @@
+@use 'breakpoints' as bp;
+
+// Mobile First: die beiden Spielerfelder stehen untereinander und erst ab
+// `large` nebeneinander. Der frueher verwendete Wert 1000px lag zwischen zwei
+// Window Size Classes; `large` (1200px) ist die naechste passende Grenze, denn
+// zwei Felder mit je 48% brauchen echte Desktop-Breite, um lesbar zu bleiben.
 .select-player-team-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: stretch;
   justify-content: space-around;
+
   .selection-width {
     display: flex;
-    width: 48%;
+    width: 100%;
   }
-}
 
-@media (max-width: 1000px) {
-  .select-player-team-container {
-    flex-direction: column;
+  @include bp.from(large) {
+    flex-direction: row;
+
     .selection-width {
-      width: 100%;
+      width: 48%;
     }
   }
 }

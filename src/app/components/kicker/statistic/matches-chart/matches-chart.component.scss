@@ -1,9 +1,9 @@
-.chart-container {
-  height: 500px;
-}
+@use 'breakpoints' as bp;
 
-@media (max-width: 700px) {
-  .chart-container {
-    height: 300px;
+.chart-container {
+  height: 300px;
+
+  @include bp.from(medium) {
+    height: 500px;
   }
 }

@@ -1,7 +1,7 @@
 .map-container {
   padding: 50px;
   .map {
-    stroke: white;
+    stroke: var(--evia-white);
     stroke-width: 2;
   }
 
@@ -12,8 +12,7 @@
   }
 
   .active {
-    //fill: #629c2842;
-    stroke: #d9f357;
+    stroke: var(--evia-green);
     stroke-width: 5;
   }
 }

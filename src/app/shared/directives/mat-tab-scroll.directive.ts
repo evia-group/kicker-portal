@@ -7,6 +7,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
+import { COARSE_POINTER } from '../breakpoints';
 
 @Directive({ selector: '[appMatTabScroll]' })
 export class MatTabScrollDirective implements OnInit, AfterViewInit, OnDestroy {
@@ -19,14 +20,24 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit, OnDestroy {
   private nextButton: HTMLButtonElement;
   private maxScroll: number;
   private subscriptions: Subscription[] = [];
-  private isMobileDevice = false;
+  private coarsePointer: MediaQueryList;
 
   constructor(private matTabNav: ElementRef, private renderer: Renderer2) {}
 
   ngOnInit(): void {
-    this.isMobileDevice =
-      ('ontouchstart' in window || navigator.maxTouchPoints > 0) &&
-      window.screen.width < 768;
+    // Vorher wurde hier auf `ontouchstart`, `navigator.maxTouchPoints` und
+    // `window.screen.width < 768` geprueft. Das ist zweimal die falsche Frage:
+    // `screen.width` ist die physische Bildschirmbreite und nicht die des
+    // Fensters, und relevant ist nicht der Geraetetyp, sondern ob hier
+    // ueberhaupt gewischt statt geklickt wird. Genau das beantwortet die
+    // Pointer-Media-Query, und sie aendert sich mit, wenn eine Maus
+    // angeschlossen wird.
+    this.coarsePointer = window.matchMedia(COARSE_POINTER);
+    this.subscriptions.push(
+      fromEvent(this.coarsePointer, 'change').subscribe(() =>
+        this.handleWindowResize()
+      )
+    );
   }
 
   ngAfterViewInit(): void {
@@ -64,9 +75,11 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit, OnDestroy {
       )
     );
     this.renderer.appendChild(this.tabList, style);
-    this.tabList.addEventListener('scroll', () => {
-      this.toggleButtons();
-    });
+    // Ueber fromEvent statt addEventListener, damit die Registrierung in
+    // `subscriptions` landet und in ngOnDestroy wieder abgemeldet wird.
+    this.subscriptions.push(
+      fromEvent(this.tabList, 'scroll').subscribe(() => this.toggleButtons())
+    );
 
     const matTabLinks =
       this.matTabNavNativeElement.querySelectorAll('.mat-mdc-tab-link');
@@ -78,7 +91,9 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit, OnDestroy {
         })
       );
     });
-    window.addEventListener('resize', () => this.handleWindowResize());
+    this.subscriptions.push(
+      fromEvent(window, 'resize').subscribe(() => this.handleWindowResize())
+    );
     this.previousButton = this.createButton('before');
     this.previousButton.addEventListener('click', () => {
       const scrollX = Math.max(
@@ -180,7 +195,10 @@ export class MatTabScrollDirective implements OnInit, AfterViewInit, OnDestroy {
       this.setMaxScroll();
       const matTabNavWidth = this.matTabNavNativeElement.offsetWidth;
       const matTabListScrollWidth = this.tabList.scrollWidth;
-      if (matTabListScrollWidth <= matTabNavWidth || this.isMobileDevice) {
+      if (
+        matTabListScrollWidth <= matTabNavWidth ||
+        this.coarsePointer?.matches
+      ) {
         this.hideButtons();
       } else {
         this.showButtons();

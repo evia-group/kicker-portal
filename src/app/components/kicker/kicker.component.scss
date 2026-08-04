@@ -1,3 +1,10 @@
+@use 'breakpoints' as bp;
+
+// Mobile First: die Abschnittsnavigation liegt unten im Daumenbereich. Sie
+// steht dazu auch im DOM hinter dem Inhalt, es braucht also keine Umsortierung
+// und Tastatur- sowie Screenreader-Reihenfolge bleiben korrekt. Ab `medium`
+// zieht `order: -1` sie nach oben, weil auf einem Zeigergeraet die Tab-Leiste
+// oben erwartet wird.
 .container {
   width: 100%;
   height: 100%;
@@ -5,13 +12,46 @@
   flex-direction: column;
 }
 
-.header {
-  flex-shrink: 0;
-  flex-grow: 0;
+.section-nav {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container-low);
+  // Auf Geraeten mit Wischleiste am unteren Rand.
+  padding-bottom: env(safe-area-inset-bottom);
+
+  .mat-mdc-tab-link {
+    min-height: var(--evia-touch-target);
+  }
+
+  // Die Stapelung von Icon und Label steht in `src/styles.scss`: sie muss
+  // `.mdc-tab__text-label` treffen, und das Element gehoert zur View von
+  // MatTabLink, traegt also das Encapsulation-Attribut dieser Komponente nicht.
+
+  .section-nav-label {
+    font-size: 0.6875rem;
+    line-height: 1.2;
+  }
+
+  @include bp.from(medium) {
+    order: -1;
+    border-top: 0;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    background: none;
+    padding-bottom: 0;
+
+    .section-nav-label {
+      font-size: inherit;
+    }
+
+    .mat-icon {
+      padding-right: 10px;
+    }
+  }
 }
 
 .content {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -22,15 +62,12 @@
   flex: 1 1 auto;
 }
 
-.mat-icon {
-  padding-right: 10px;
-}
-
 .router-container {
   flex: 1;
 }
 
+// Kein `min-width: 360px` mehr: das erzwang auf 320px-Geraeten horizontales
+// Scrollen der gesamten Seite, obwohl hier nur die Versionsnummer steht.
 .toolbar-container {
   flex: 0;
-  min-width: 360px;
 }

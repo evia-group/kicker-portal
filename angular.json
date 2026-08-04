@@ -10,26 +10,7 @@
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss",
-          "skipTests": true
-        },
-        "@schematics/angular:class": {
-          "skipTests": true
-        },
-        "@schematics/angular:directive": {
-          "skipTests": true
-        },
-        "@schematics/angular:guard": {
-          "skipTests": true
-        },
-        "@schematics/angular:module": {
-          "skipTests": true
-        },
-        "@schematics/angular:pipe": {
-          "skipTests": true
-        },
-        "@schematics/angular:service": {
-          "skipTests": true
+          "style": "scss"
         }
       },
       "architect": {
@@ -53,11 +34,22 @@
             "index": "src/index.html",
             "polyfills": ["src/polyfills.ts"],
             "tsConfig": "src/tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets", "src/config.json"],
+            "assets": [
+              "src/assets",
+              "src/config.json",
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "."
+              }
+            ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
+              "@fontsource/material-icons/latin-400.css",
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/styles"]
+            },
             "scripts": [],
             "browser": "src/main.ts"
           },
@@ -75,7 +67,8 @@
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
                 }
-              ]
+              ],
+              "serviceWorker": "ngsw-config.json"
             }
           }
         },

@@ -1,37 +1,45 @@
+@use 'breakpoints' as bp;
+
+// Mobile First: gestapelt ist der Grundzustand, nebeneinander erst ab `medium`.
 .playtime-flex-box {
   display: flex;
-  align-items: center;
+  flex-flow: column-reverse;
+  align-items: flex-start;
   margin-top: 20px;
   margin-left: 10px;
 
   .mat-mdc-radio-group,
   .mat-mdc-radio-button {
-    margin-left: 20px;
     margin-bottom: 10px;
   }
-}
 
-@media (max-width: 650px) {
-  .playtime-flex-box {
-    flex-flow: column-reverse;
-    align-items: flex-start;
+  .mat-mdc-radio-group {
+    margin-left: -20px;
 
-    .mat-mdc-radio-group {
-      margin-left: -20px;
+    .mat-mdc-radio-button .mdc-radio {
+      padding-left: 0;
+    }
+  }
 
-      .mat-mdc-radio-button .mdc-radio {
-        padding-left: 0;
-      }
+  @include bp.from(medium) {
+    flex-flow: row;
+    align-items: center;
+
+    .mat-mdc-radio-group,
+    .mat-mdc-radio-button {
+      margin-left: 20px;
+    }
+
+    .mat-mdc-radio-group .mat-mdc-radio-button .mdc-radio {
+      padding-left: 10px;
     }
   }
 }
 
 .chart-container {
-  height: 500px;
-}
+  height: 300px;
 
-@media (max-width: 700px) {
-  .chart-container {
-    height: 300px;
+  @include bp.from(medium) {
+    height: 500px;
   }
 }

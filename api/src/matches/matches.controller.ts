@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { EntraAuthGuard } from '../auth/entra-auth.guard';
@@ -17,9 +18,11 @@ import { CreateMatchDto } from './dto/create-match.dto';
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
 
+  /** `?gameType=kicker|darts` filtert auf eine Spielart. Ohne Parameter kommen
+   *  alle, damit bestehende Clients unveraendert funktionieren. */
   @Get()
-  findAll() {
-    return this.matchesService.findAll();
+  findAll(@Query('gameType') gameType?: string) {
+    return this.matchesService.findAll(gameType);
   }
 
   @Post()

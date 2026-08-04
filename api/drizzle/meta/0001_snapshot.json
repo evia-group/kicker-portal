@@ -1,0 +1,518 @@
+{
+  "id": "a67f97ee-cf8f-4e96-bd8b-7d6519b18cfb",
+  "prevId": "caed8403-a0f5-4df7-99da-83b12e2e695d",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.game_types": {
+      "name": "game_types",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "icon": {
+          "name": "icon",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rounds_to_win": {
+          "name": "rounds_to_win",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "round_label_key": {
+          "name": "round_label_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "supports_domination": {
+          "name": "supports_domination",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "team_sizes": {
+          "name": "team_sizes",
+          "type": "smallint[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "elo_margin_step": {
+          "name": "elo_margin_step",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0.5
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "game_types_key_unique": {
+          "name": "game_types_key_unique",
+          "nullsNotDistinct": false,
+          "columns": ["key"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.match_participants": {
+      "name": "match_participants",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "match_id": {
+          "name": "match_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "side": {
+          "name": "side",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rounds_won": {
+          "name": "rounds_won",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "stats": {
+          "name": "stats",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "match_participants_match_id_matches_id_fk": {
+          "name": "match_participants_match_id_matches_id_fk",
+          "tableFrom": "match_participants",
+          "tableTo": "matches",
+          "columnsFrom": ["match_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "match_participants_team_id_teams_id_fk": {
+          "name": "match_participants_team_id_teams_id_fk",
+          "tableFrom": "match_participants",
+          "tableTo": "teams",
+          "columnsFrom": ["team_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "match_participants_user_id_users_id_fk": {
+          "name": "match_participants_user_id_users_id_fk",
+          "tableFrom": "match_participants",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.match_rounds": {
+      "name": "match_rounds",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "match_id": {
+          "name": "match_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "round_no": {
+          "name": "round_no",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_side": {
+          "name": "winner_side",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "domination": {
+          "name": "domination",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "detail": {
+          "name": "detail",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "match_rounds_match_id_matches_id_fk": {
+          "name": "match_rounds_match_id_matches_id_fk",
+          "tableFrom": "match_rounds",
+          "tableTo": "matches",
+          "columnsFrom": ["match_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.matches": {
+      "name": "matches",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "played_at": {
+          "name": "played_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "game_type_id": {
+          "name": "game_type_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_single": {
+          "name": "is_single",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "team_size": {
+          "name": "team_size",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 2
+        }
+      },
+      "indexes": {
+        "matches_game_type_played_at_idx": {
+          "name": "matches_game_type_played_at_idx",
+          "columns": [
+            {
+              "expression": "game_type_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "played_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "matches_game_type_id_game_types_id_fk": {
+          "name": "matches_game_type_id_game_types_id_fk",
+          "tableFrom": "matches",
+          "tableTo": "game_types",
+          "columnsFrom": ["game_type_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.playtime": {
+      "name": "playtime",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.team_players": {
+      "name": "team_players",
+      "schema": "",
+      "columns": {
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "team_players_team_id_teams_id_fk": {
+          "name": "team_players_team_id_teams_id_fk",
+          "tableFrom": "team_players",
+          "tableTo": "teams",
+          "columnsFrom": ["team_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "team_players_user_id_users_id_fk": {
+          "name": "team_players_user_id_users_id_fk",
+          "tableFrom": "team_players",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "team_players_team_id_user_id_pk": {
+          "name": "team_players_team_id_user_id_pk",
+          "columns": ["team_id", "user_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.teams": {
+      "name": "teams",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "legacy_firebase_uid": {
+          "name": "legacy_firebase_uid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "entra_oid": {
+          "name": "entra_oid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_admin": {
+          "name": "is_admin",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_legacy_firebase_uid_unique": {
+          "name": "users_legacy_firebase_uid_unique",
+          "nullsNotDistinct": false,
+          "columns": ["legacy_firebase_uid"]
+        },
+        "users_entra_oid_unique": {
+          "name": "users_entra_oid_unique",
+          "nullsNotDistinct": false,
+          "columns": ["entra_oid"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -2,7 +2,13 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/spec",
-    "types": ["node"]
+    // Vorher `["node"]`. Die Tests brauchen keine Node-APIs, und die
+    // Typdefinitionen aktueller @types/node-Fassungen sind mit der hier
+    // gesetzten lib nicht vertraeglich (Buffer gegen ArrayBufferView), was den
+    // Testlauf schon beim Typcheck abgebrochen hat. Leer statt
+    // `vitest/globals`: die Specs importieren describe/it/expect ausdruecklich,
+    // und ein Typpaket dieses Namens gibt es in Vitest 4 nicht mehr.
+    "types": []
   },
   "include": ["**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {

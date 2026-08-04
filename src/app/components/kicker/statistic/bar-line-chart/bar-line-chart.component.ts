@@ -13,6 +13,7 @@ import {
   winsTimeline,
 } from '../../../../shared/global-variables';
 import { BaseChartDirective } from 'ng2-charts';
+import { chartTheme } from '../../../../shared/chart-theme';
 
 @Component({
   selector: 'app-bar-line-chart',
@@ -58,10 +59,10 @@ export class BarLineChartComponent implements OnChanges {
     scales: {
       x: {
         ticks: {
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
         },
         grid: {
-          color: 'rgb(89,89,89)',
+          color: chartTheme.gridColor,
         },
       },
       y: {
@@ -70,11 +71,11 @@ export class BarLineChartComponent implements OnChanges {
             const numVal = Number(val);
             return numVal < 0 ? -numVal : numVal;
           },
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
           precision: 0,
         },
         grid: {
-          color: 'rgb(89,89,89)',
+          color: chartTheme.gridColor,
         },
       },
       qouteAxis: {
@@ -83,7 +84,7 @@ export class BarLineChartComponent implements OnChanges {
           callback: (val) => {
             return val + '%';
           },
-          color: 'rgb(199,199,199)',
+          color: chartTheme.tickColor,
         },
         grid: {
           display: false,
@@ -91,12 +92,7 @@ export class BarLineChartComponent implements OnChanges {
       },
     },
     plugins: {
-      legend: {
-        labels: {
-          color: 'rgb(199,199,199)',
-          boxWidth: 20,
-        },
-      },
+      legend: chartTheme.legend(),
       tooltip: {
         callbacks: {
           label: (item) => {
@@ -135,9 +131,9 @@ export class BarLineChartComponent implements OnChanges {
           type: 'bar',
           data: this.getWins(),
           label: this.topBarLegendLabel,
-          backgroundColor: ['rgba(40, 164, 40, 0.7)'],
-          borderColor: ['rgba(40, 164, 40, 1)'],
-          hoverBackgroundColor: ['rgba(40, 164, 40, 1)'],
+          backgroundColor: [chartTheme.area(chartTheme.positive)],
+          borderColor: [chartTheme.positive],
+          hoverBackgroundColor: [chartTheme.positive],
           stack: 'a',
           order: 2,
         },
@@ -145,9 +141,9 @@ export class BarLineChartComponent implements OnChanges {
           type: 'bar',
           data: this.getLosses(),
           label: this.lowerBarLegendLabel,
-          backgroundColor: ['rgba(255, 51, 51, 0.7)'],
-          borderColor: ['rgba(255, 51, 51, 1)'],
-          hoverBackgroundColor: ['rgba(255, 51, 51, 1)'],
+          backgroundColor: [chartTheme.area(chartTheme.negative)],
+          borderColor: [chartTheme.negative],
+          hoverBackgroundColor: [chartTheme.negative],
           stack: 'a',
           order: 2,
         },
@@ -156,9 +152,9 @@ export class BarLineChartComponent implements OnChanges {
           data: this.getWinningQuotes(),
           tension: 0.3,
           label: this.lineLegendLabel,
-          backgroundColor: ['rgba(248, 209, 99, 1)'],
-          borderColor: ['rgba(248, 209, 99, 1)'],
-          hoverBackgroundColor: ['rgba(248, 209, 99, 1)'],
+          backgroundColor: [chartTheme.emphasis],
+          borderColor: [chartTheme.emphasis],
+          hoverBackgroundColor: [chartTheme.emphasis],
           order: 1,
           yAxisID: 'qouteAxis',
         },

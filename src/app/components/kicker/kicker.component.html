@@ -1,7 +1,25 @@
+<!-- Die Reihenfolge im DOM folgt der Lesereihenfolge: Inhalt zuerst, Navigation
+     danach. Auf schmalen Geraeten steht die Tab-Leiste per CSS unten (im
+     Daumenbereich), ab `medium` ordnet flex sie wieder nach oben. Damit bleibt
+     die Tastatur- und Screenreader-Reihenfolge in beiden Faellen sinnvoll und es
+     braucht keine zweite Navigationskomponente. -->
 <div class="container">
-  <div class="header">
+  <div class="content">
+    <div class="router-container">
+      <mat-tab-nav-panel #tabPanel>
+        <router-outlet></router-outlet>
+      </mat-tab-nav-panel>
+    </div>
+    <div class="toolbar-container">
+      <mat-toolbar>
+        <span class="toolbar-spacer"></span>
+        <span>{{ versionNumber }}</span></mat-toolbar
+      >
+    </div>
+  </div>
+  <div class="section-nav">
     <nav mat-tab-nav-bar [tabPanel]="tabPanel" appMatTabScroll>
-      @for (link of navLinks; track link) {
+      @for (link of navLinks; track link.link) {
       <a
         mat-tab-link
         [routerLink]="link.link"
@@ -10,21 +28,9 @@
         #rla="routerLinkActive"
         [active]="rla.isActive">
         <mat-icon>{{ link.icon }}</mat-icon>
-        {{ link.label | translate }}
+        <span class="section-nav-label">{{ link.label | translate }}</span>
       </a>
       }
     </nav>
-    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
-  </div>
-  <div class="content">
-    <div class="router-container">
-      <router-outlet></router-outlet>
-    </div>
-    <div class="toolbar-container">
-      <mat-toolbar>
-        <span class="toolbar-spacer"></span>
-        <span>{{ versionNumber }}</span></mat-toolbar
-      >
-    </div>
   </div>
 </div>

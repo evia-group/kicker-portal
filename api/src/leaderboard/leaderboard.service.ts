@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, gt, inArray, type SQL } from 'drizzle-orm';
 import { DRIZZLE } from '../db/drizzle.module';
 import type { Database } from '../db/drizzle.module';
 import {
@@ -8,6 +8,7 @@ import {
   matches,
   teamPlayers,
 } from '../db/schema';
+import { GameTypesService } from '../game-types/game-types.service';
 
 interface EntityMatchRow {
   entityId: string;
@@ -27,9 +28,27 @@ export interface LeaderboardEntry {
 
 @Injectable()
 export class LeaderboardService {
-  constructor(@Inject(DRIZZLE) private readonly db: Database) {}
+  constructor(
+    @Inject(DRIZZLE) private readonly db: Database,
+    private readonly gameTypesService: GameTypesService,
+  ) {}
 
-  async getTeamLeaderboard(): Promise<LeaderboardEntry[]> {
+  /**
+   * Einzel- und Doppelspiele werden getrennt gewertet, seit dieser Aenderung
+   * zusaetzlich getrennt je Spielart. Ohne diese Trennung wuerden Kicker- und
+   * Dart-Ergebnisse in einer Bestenliste zusammenlaufen und waeren nicht mehr
+   * vergleichbar. Ohne `gameTypeKey` bleibt das Verhalten wie bisher, also
+   * ueber alle Spielarten, damit bestehende Clients nichts verlieren.
+   */
+  private async matchFilter(gameTypeKey?: string): Promise<SQL | undefined> {
+    if (!gameTypeKey) {
+      return undefined;
+    }
+    const gameType = await this.gameTypesService.requireByKey(gameTypeKey);
+    return eq(matches.gameTypeId, gameType.id);
+  }
+
+  async getTeamLeaderboard(gameTypeKey?: string): Promise<LeaderboardEntry[]> {
     const participants = await this.db
       .select({
         matchId: matchParticipants.matchId,
@@ -38,7 +57,7 @@ export class LeaderboardService {
       })
       .from(matchParticipants)
       .innerJoin(matches, eq(matches.id, matchParticipants.matchId))
-      .where(eq(matches.isSingle, false));
+      .where(and(gt(matches.teamSize, 1), await this.matchFilter(gameTypeKey)));
 
     const entityRows: EntityMatchRow[] = participants
       .filter((p) => p.teamId)
@@ -58,7 +77,10 @@ export class LeaderboardService {
    */
   async getUserLeaderboard(
     mode: 'team' | 'single',
+    gameTypeKey?: string,
   ): Promise<LeaderboardEntry[]> {
+    const gameTypeCondition = await this.matchFilter(gameTypeKey);
+
     if (mode === 'single') {
       const singleParticipants = await this.db
         .select({
@@ -68,7 +90,7 @@ export class LeaderboardService {
         })
         .from(matchParticipants)
         .innerJoin(matches, eq(matches.id, matchParticipants.matchId))
-        .where(eq(matches.isSingle, true));
+        .where(and(eq(matches.teamSize, 1), gameTypeCondition));
 
       const entityRows: EntityMatchRow[] = singleParticipants
         .filter((p) => p.userId)
@@ -89,7 +111,7 @@ export class LeaderboardService {
       })
       .from(matchParticipants)
       .innerJoin(matches, eq(matches.id, matchParticipants.matchId))
-      .where(eq(matches.isSingle, false));
+      .where(and(gt(matches.teamSize, 1), gameTypeCondition));
 
     const teamIds = [
       ...new Set(teamParticipants.map((p) => p.teamId).filter(Boolean)),

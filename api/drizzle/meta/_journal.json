@@ -8,6 +8,34 @@
       "when": 1785784765944,
       "tag": "0000_opposite_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785836872313,
+      "tag": "0001_add_game_types",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785836939929,
+      "tag": "0002_drop_is_single",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785842579677,
+      "tag": "0003_matchmaking_queue",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785848379302,
+      "tag": "0004_push_notifications",
+      "breakpoints": true
     }
   ]
 }

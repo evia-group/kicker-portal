@@ -1,5 +1,5 @@
 <div class="navigation-container">
-  <mat-toolbar color="primary" class="navigation-toolbar">
+  <mat-toolbar class="navigation-toolbar">
     <mat-icon>sports_soccer</mat-icon>
     <h1 class="app-name">{{ 'app.name' | translate }}</h1>
     <span class="toolbar-spacer"></span>
@@ -66,11 +66,15 @@
     }
   </mat-toolbar>
 
-  <mat-drawer-container class="sidenav-container">
-    <mat-drawer-content>
-      <ng-content></ng-content>
-    </mat-drawer-content>
-  </mat-drawer-container>
+  <!-- Hier stand ein mat-drawer-container ohne mat-drawer, also ein
+       Drawer-Gehaeuse ohne Drawer. Es hat den Inhalt nur durchgereicht und dafuer
+       zwei Material-Komponenten mitgebracht. Die Hauptnavigation liegt in
+       kicker.component als Tab-Leiste (auf schmalen Geraeten unten), die
+       Nebenaktionen im Ueberlaufmenue der Kopfzeile. Ein Drawer haette darin
+       nichts Eigenes zu zeigen. -->
+  <div class="content-container">
+    <ng-content></ng-content>
+  </div>
 </div>
 
 <mat-menu #menuLanguage="matMenu">

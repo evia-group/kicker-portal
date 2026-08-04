@@ -1,0 +1,14 @@
+<!-- Maskable-Variante des App-Icons. Gleiche Formensprache wie app-icon.svg,
+     aber das Motiv ist kleiner, damit es im Beschnitt auf einen Kreis mit 80%
+     Durchmesser vollstaendig sichtbar bleibt. Der Hintergrund geht dafuer
+     randlos durch, sonst zeigt Android weisse Ecken. -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 512 512"
+  width="512"
+  height="512">
+  <rect width="512" height="512" fill="#05060A" />
+  <circle cx="256" cy="256" r="120" fill="#BEE600" />
+  <circle cx="256" cy="256" r="82" fill="#05060A" />
+  <circle cx="256" cy="256" r="44" fill="#BEE600" />
+</svg>

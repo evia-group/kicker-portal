@@ -1,8 +1,18 @@
-$column-border-color: #ffffff1f;
-$column-background-color: #424242;
+// Die fixierten Spalten muessen deckend sein, damit der horizontal scrollende
+// Inhalt dahinter verschwindet. Eine Stufe heller als die Tabellenflaeche, damit
+// sie als aufliegend lesbar sind.
+$column-border-color: var(--mat-sys-outline-variant);
+$column-background-color: var(--mat-sys-surface-container-high);
 
 .leaderboard-container {
   margin: 0 14px 10px;
+
+  .leaderboard-elo-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+  }
 
   .mat-mdc-form-field {
     width: 100%;

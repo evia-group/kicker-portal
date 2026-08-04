@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ReplaySubject, Subscription } from 'rxjs';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { isCompact } from '../../../../breakpoints';
 import { MatDialog } from '@angular/material/dialog';
 import { TwoSelectionsDialogComponent } from '../two-selections-dialog/two-selections-dialog.component';
 import { ISelectionsData } from '../../../../interfaces/match.interface';
@@ -108,7 +109,10 @@ export class ResponsiveSelectorComponent
       ? 'common.choosePlayer'
       : 'common.choosePlayers';
     this.breakpointObserverSubscription = this.breakpointObserver
-      .observe(Breakpoints.XSmall)
+      // Bisher Breakpoints.XSmall aus dem CDK. Das ist zwar dieselbe Grenze
+      // (599,98px), stammt aber aus dem Material-2-Raster. Ueber isCompact()
+      // haengt es an derselben Quelle wie die Styles.
+      .observe(isCompact())
       .subscribe((result) => {
         this.showButton = result.matches;
         if (typeof this.firstPlayerControl.value === 'string') {

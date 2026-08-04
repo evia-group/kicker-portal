@@ -7,13 +7,9 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { ChartConfiguration, ChartData } from 'chart.js';
-import {
-  oneTwo,
-  twoOne,
-  twoZero,
-  zeroTwo,
-} from '../../../../shared/global-variables';
 import { BaseChartDirective } from 'ng2-charts';
+import { chartTheme } from '../../../../shared/chart-theme';
+import { resultKeys } from '../../../../shared/game-rules';
 
 @Component({
   selector: 'app-result-doughnut-chart',
@@ -41,11 +37,19 @@ export class ResultDoughnutChartComponent implements OnChanges {
   @Input()
   allChartsReady = false;
 
+  /**
+   * Rundenzahl, mit der die Spielart entschieden ist. Bestimmt, wie viele
+   * Ergebnisse es gibt: vier beim Kicker (roundsToWin 2), sechs beim Dart.
+   * Standard 2, damit bestehende Aufrufer ohne Angabe unveraendert bleiben.
+   */
+  @Input()
+  roundsToWin = 2;
+
   showStats = false;
   showWL = false;
   showDD = false;
 
-  doughnutChartLabelsStats = [twoZero, twoOne, oneTwo, zeroTwo];
+  doughnutChartLabelsStats: string[] = resultKeys(2);
   doughnutChartDataStats: ChartData<'doughnut'> = {
     labels: this.doughnutChartLabelsStats,
     datasets: [],
@@ -64,33 +68,24 @@ export class ResultDoughnutChartComponent implements OnChanges {
   public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
     plugins: {
-      legend: {
-        labels: {
-          color: 'rgb(199,199,199)',
-          boxWidth: 20,
-        },
-      },
+      legend: chartTheme.legend(),
     },
   };
 
-  backgroundColors = [
-    'rgba(40, 164, 40, 0.7)',
-    'rgba(153, 215, 91, 0.7)',
-    'rgba(255, 129, 87, 0.7)',
-    'rgba(255, 51, 51, 0.7)',
-  ];
+  /** Ergebnisskala als Verlauf. Index 0 ist der klarste Sieg, der letzte Index
+   *  die klarste Niederlage. Laenge folgt der Spielart. */
+  backgroundColors: string[] = [];
 
-  hoverColors = [
-    'rgba(40, 164, 40, 1)',
-    'rgba(153, 215, 91, 1)',
-    'rgba(255, 129, 87, 1)',
-    'rgba(255, 51, 51, 1)',
-  ];
+  hoverColors: string[] = [];
 
   @Output()
   doughnutChartIsReadyEvent = new EventEmitter<boolean>();
 
   ngOnChanges(): void {
+    this.doughnutChartLabelsStats = resultKeys(this.roundsToWin);
+    this.hoverColors = chartTheme.resultScale(this.roundsToWin);
+    this.backgroundColors = chartTheme.areas(this.hoverColors);
+
     if (
       this.chartData &&
       this.winsLegendLabel &&
@@ -117,7 +112,14 @@ export class ResultDoughnutChartComponent implements OnChanges {
   }
 
   setDataset() {
-    const statsData = this.chartData.slice(4, 8);
+    // Sieg und Niederlage, also die Enden des Verlaufs. Vorher stand hier der
+    // feste Index 3, der nur bei vier Ergebnissen die klarste Niederlage traf.
+    const best = 0;
+    const worst = this.hoverColors.length - 1;
+
+    // Ab Index 4 stehen die Einzelergebnisse. Wie viele es sind, haengt an der
+    // Spielart, deshalb ohne obere Grenze (vorher `slice(4, 8)`).
+    const statsData = this.chartData.slice(4);
     const sumStats = this.sumArray(statsData);
     if (sumStats > 0) {
       this.showStats = true;
@@ -145,11 +147,14 @@ export class ResultDoughnutChartComponent implements OnChanges {
           {
             data: WLData,
             backgroundColor: [
-              this.backgroundColors[0],
-              this.backgroundColors[3],
+              this.backgroundColors[best],
+              this.backgroundColors[worst],
             ],
-            hoverBackgroundColor: [this.hoverColors[0], this.hoverColors[3]],
-            hoverBorderColor: [this.hoverColors[0], this.hoverColors[3]],
+            hoverBackgroundColor: [
+              this.hoverColors[best],
+              this.hoverColors[worst],
+            ],
+            hoverBorderColor: [this.hoverColors[best], this.hoverColors[worst]],
           },
         ],
       };
@@ -166,11 +171,14 @@ export class ResultDoughnutChartComponent implements OnChanges {
           {
             data: DDData,
             backgroundColor: [
-              this.backgroundColors[0],
-              this.backgroundColors[3],
+              this.backgroundColors[best],
+              this.backgroundColors[worst],
             ],
-            hoverBackgroundColor: [this.hoverColors[0], this.hoverColors[3]],
-            hoverBorderColor: [this.hoverColors[0], this.hoverColors[3]],
+            hoverBackgroundColor: [
+              this.hoverColors[best],
+              this.hoverColors[worst],
+            ],
+            hoverBorderColor: [this.hoverColors[best], this.hoverColors[worst]],
           },
         ],
       };

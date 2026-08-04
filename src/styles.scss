@@ -1,47 +1,76 @@
-/* You can add global styles to this file, and also import other style files */
+// Globale Styles.
+//
+// Farben, Flaechen und Typografie kommen ausschliesslich aus dem Theme. Wer
+// hier oder in einer Komponente einen Hexwert schreibt, umgeht das Corporate
+// Design: stattdessen die Material-System-Variablen (`--mat-sys-*`) oder die
+// `--evia-*` Custom Properties aus `styles/_theme.scss` verwenden.
+
 @use '@angular/material' as mat;
-// Plus imports for other components in your app.
+@use './styles/theme';
+@use './styles/breakpoints' as bp;
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
 @include mat.elevation-classes();
-@include mat.app-background();
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$kicker-app-primary: mat.m2-define-palette(mat.$m2-lime-palette, 400);
-$kicker-app-accent: mat.m2-define-palette(mat.$m2-lime-palette, A100);
+:root {
+  @include theme.apply();
+  @include bp.custom-properties();
+}
 
-// The warn palette is optional (defaults to red).
-$kicker-app-warn: mat.m2-define-palette(mat.$m2-red-palette);
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+  font-family: var(--mat-sys-body-medium-font);
+}
 
-$kicker-app-typography: mat.m2-define-typography-config(
-  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
-);
+// Nichts darf die Seite breiter machen als das Fenster. Ohne das reicht eine
+// zu breite Tabelle, damit das gesamte Layout horizontal verschiebbar wird.
+// Breite Inhalte scrollen in ihrem eigenen Container, nicht im Body.
+body {
+  overflow-x: hidden;
+}
 
-// Create the theme object (a Sass map containing all of the palettes).
-$kicker-app-theme: mat.m2-define-dark-theme(
-  (
-    color: (
-      primary: $kicker-app-primary,
-      accent: $kicker-app-accent,
-      warn: $kicker-app-warn,
-    ),
-    typography: $kicker-app-typography,
-    density: 0,
-  )
-);
+// Auf Geraeten ohne praezisen Zeiger muessen Bedienelemente gross genug sein.
+// Material haelt das bei Buttons ein, bei Icon-Buttons in dichten Leisten und
+// bei Tab-Links nicht immer.
+@include bp.coarse-pointer {
+  .mat-mdc-icon-button,
+  .mat-mdc-tab-link,
+  .mdc-radio,
+  .mat-mdc-slide-toggle .mdc-switch {
+    min-width: var(--evia-touch-target);
+    min-height: var(--evia-touch-target);
+  }
+}
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include mat.all-component-themes($kicker-app-theme);
+// Material Icons wird selbst gehostet (siehe `angular.json` styles). Das
+// Fontsource-Paket liefert nur die @font-face-Regel, die Ligatur-Utility-Klasse
+// gehoert uns. Ohne `font-feature-settings: 'liga'` rendert `<mat-icon>` den
+// Icon-Namen als Text.
+.material-icons,
+.mat-icon {
+  font-family: 'Material Icons', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  // Material setzt am Icon nur Breite und Hoehe, die Glyphengroesse kommt aus
+  // der Icon-Font-CSS. Ohne diese Zeile erbt das Glyph die Schriftgroesse des
+  // Elternelements und sitzt zu klein in seiner 24px-Box.
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
 
 .alert-snackbar {
-  background: #ef3f33;
-  color: white;
+  background: var(--evia-error);
+  color: var(--evia-white);
 }
 
 .mat-mdc-snack-bar-container {
@@ -73,10 +102,6 @@ $kicker-app-theme: mat.m2-define-dark-theme(
   margin-left: 2px;
 }
 
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
 .select-container {
   .mat-mdc-chip-action-label {
     white-space: normal;
@@ -92,14 +117,36 @@ $kicker-app-theme: mat.m2-define-dark-theme(
   display: flex;
 }
 
-@media (max-width: 390px) {
-  .mat-mdc-paginator-range-label {
-    margin: 0 16px 0 8px !important;
+// Bottom Navigation: Icon ueber Label, wie auf Mobilgeraeten ueblich. Muss
+// global stehen, weil `.mdc-tab__text-label` zur View von MatTabLink gehoert
+// und damit von den gekapselten Styles der Kicker-Komponente nicht erreicht
+// wird. Ab `medium` sitzt die Leiste oben und die Beschriftung wieder daneben.
+.section-nav .mdc-tab__text-label {
+  flex-direction: column;
+  gap: 2px;
+
+  @include bp.from(medium) {
+    flex-direction: row;
+    gap: 0;
   }
 }
 
-@media (max-width: 650px) {
-  .playtime-flex-box .mdc-radio {
-    padding-left: 5px !important;
+// Mobile First: die enge Variante ist der Grundzustand, ab `medium` wird auf
+// die Material-Standardabstaende hochskaliert. `!important` bleibt noetig, weil
+// Material seine Komponenten-Styles erst beim Erzeugen der Komponente in den
+// Head injiziert und damit nach diesem Stylesheet steht.
+.mat-mdc-paginator-range-label {
+  margin: 0 16px 0 8px !important;
+
+  @include bp.from(medium) {
+    margin: 0 32px 0 24px !important;
+  }
+}
+
+.playtime-flex-box .mdc-radio {
+  padding-left: 5px !important;
+
+  @include bp.from(medium) {
+    padding-left: 10px !important;
   }
 }

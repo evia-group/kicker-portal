@@ -1,6 +1,13 @@
+@use 'breakpoints' as bp;
+
+// Kein `min-width: 275px`, siehe add-match.component.scss: der Rand skaliert
+// mit, statt die Karte unter eine feste Breite zu zwingen.
 .mat-mdc-card {
-  min-width: 275px;
-  margin: 20px;
+  margin: 12px;
+
+  @include bp.from(medium) {
+    margin: 20px;
+  }
 
   .mat-mdc-card-content {
     margin-top: 10px;

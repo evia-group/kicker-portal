@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 .selection-container {
   display: flex;
   flex-direction: column;
@@ -13,8 +15,12 @@
   }
 }
 
-@media (max-width: 395px) {
-  .select-button {
-    font-size: 11px;
+// Mobile First: die kleinere Beschriftung ist der Grundzustand, ab `medium`
+// wird auf die Standardgroesse hochskaliert.
+.select-button {
+  font-size: 11px;
+
+  @include bp.from(medium) {
+    font-size: inherit;
   }
 }

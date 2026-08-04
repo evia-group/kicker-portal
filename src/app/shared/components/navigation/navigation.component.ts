@@ -23,10 +23,7 @@ import {
 } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import {
-  MatDrawerContainer,
-  MatDrawerContent,
-} from '@angular/material/sidenav';
+import { until } from '../../breakpoints';
 
 @Component({
   selector: 'app-navigation',
@@ -44,8 +41,6 @@ import {
     MatMenuTrigger,
     MatMenu,
     MatMenuItem,
-    MatDrawerContainer,
-    MatDrawerContent,
     AsyncPipe,
     DatePipe,
     TranslatePipe,
@@ -88,8 +83,12 @@ export class NavigationComponent implements OnDestroy, OnInit {
         }
       }
     );
+    // Bisher ein freistehendes `(max-width: 740px)`. Jetzt die Window Size
+    // Class: unterhalb von `expanded` (840px) passen Titel, Statuschip und vier
+    // Icon-Buttons nicht mehr in eine Zeile, also wandern die Aktionen in das
+    // Ueberlaufmenue.
     this.breakpointObserverSubscription = this.breakpointObserver
-      .observe('(max-width: 740px)')
+      .observe(until('expanded'))
       .subscribe((result) => {
         this.showDropdown = result.matches;
       });
